@@ -4,8 +4,8 @@
 
   // ====== EDIT THESE ======
   var CONFIG = {
-    whatsappNumber: '919999999999', // country code + number, digits only (no + or spaces)
-    email: 'info@example.com'
+    whatsappNumber: '917982644262', // country code + number, digits only (no + or spaces)
+    email: 'arnavjaincena@gmail.com'
   };
   // ========================
 
@@ -35,6 +35,33 @@
       if (e.key === 'Escape') setMenu(false);
     });
     window.matchMedia('(min-width: 900px)').addEventListener('change', function () { setMenu(false); });
+  }
+
+  // ---------- Nav shadow on scroll ----------
+  var nav = document.getElementById('top');
+  function onScroll() { if (nav) nav.classList.toggle('is-scrolled', window.scrollY > 10); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // ---------- Animated counters ----------
+  var counters = document.querySelectorAll('[data-count]');
+  function runCounter(el) {
+    var target = parseInt(el.dataset.count, 10), start = null;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    function step(t) {
+      if (start === null) start = t;
+      var p = Math.min((t - start) / 1400, 1);
+      el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(step);
+    }
+    el.textContent = '0';
+    requestAnimationFrame(step);
+  }
+  if ('IntersectionObserver' in window) {
+    var cio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { runCounter(en.target); cio.unobserve(en.target); } });
+    }, { threshold: 0.6 });
+    counters.forEach(function (el) { cio.observe(el); });
   }
 
   // ---------- Scroll reveal ----------

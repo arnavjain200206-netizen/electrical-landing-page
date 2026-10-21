@@ -32,7 +32,10 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 
-  <link rel="preload" href="assets/hero.svg" as="image" type="image/svg+xml">
+  <link rel="preload" href="assets/products/pvc-sheets.svg" as="image" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 
   <!-- ===== Structured data (placeholder details — edit) ===== -->
@@ -44,14 +47,14 @@
     "description": "Wholesale supplier of rigid PVC sheets for electrical insulation and industrial packaging material.",
     "url": "https://www.example.com/",
     "image": "https://www.example.com/assets/og-image.png",
-    "telephone": "+919999999999",
-    "email": "info@example.com",
+    "telephone": "+917982644262",
+    "email": "arnavjaincena@gmail.com",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "Your Shop / Godown Address",
-      "addressLocality": "Your City",
-      "addressRegion": "Your State",
-      "postalCode": "000000",
+      "streetAddress": "20, Ansari Road, Daryaganj",
+      "addressLocality": "New Delhi",
+      "addressRegion": "Delhi",
+      "postalCode": "110002",
       "addressCountry": "IN"
     },
     "areaServed": "IN",
@@ -71,13 +74,14 @@
 
       <nav id="menu" class="nav__menu" aria-label="Main">
         <ul>
+          <li><a href="#showcase">Showcase</a></li>
           <li><a href="#features">Products</a></li>
+          <li><a href="#process">How it works</a></li>
           <li><a href="#about">About</a></li>
-          <li><a href="#testimonials">Reviews</a></li>
           <li><a href="#faq">FAQ</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
-        <a class="btn btn--wa btn--sm nav__cta" href="https://wa.me/919999999999?text=Hi%2C%20I%20need%20a%20quote%20for%20PVC%20sheets%20%2F%20packaging%20material." target="_blank" rel="noopener">
+        <a class="btn btn--wa btn--sm nav__cta" href="https://wa.me/917982644262?text=Hi%2C%20I%20need%20a%20quote%20for%20PVC%20sheets%20%2F%20packaging%20material." target="_blank" rel="noopener">
           <svg class="icon" aria-hidden="true"><use href="#i-wa"/></svg> WhatsApp
         </a>
       </nav>
@@ -99,10 +103,10 @@
           <p class="lead">Rigid PVC sheets for electrical insulation and everything you need to pack and ship — stretch film, BOPP tape, bubble wrap and strapping. Bulk rates, custom sizes, GST invoice.</p>
 
           <div class="hero__actions">
-            <a class="btn btn--wa btn--lg" href="https://wa.me/919999999999?text=Hi%2C%20I%20need%20a%20quote%20for%20PVC%20sheets%20%2F%20packaging%20material." target="_blank" rel="noopener">
+            <a class="btn btn--wa btn--lg" href="https://wa.me/917982644262?text=Hi%2C%20I%20need%20a%20quote%20for%20PVC%20sheets%20%2F%20packaging%20material." target="_blank" rel="noopener">
               <svg class="icon" aria-hidden="true"><use href="#i-wa"/></svg> Get quote on WhatsApp
             </a>
-            <a class="btn btn--ghost btn--lg" href="mailto:info@example.com?subject=Quote%20request%20-%20PVC%20sheets%20%2F%20packaging">
+            <a class="btn btn--ghost btn--lg" href="mailto:arnavjaincena@gmail.com?subject=Quote%20request%20-%20PVC%20sheets%20%2F%20packaging">
               <svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg> Email us
             </a>
           </div>
@@ -115,21 +119,36 @@
           </ul>
         </div>
 
-        <div class="hero__art">
-          <!-- Placeholder illustration: replace with a real photo of your stock -->
-          <img src="assets/hero.svg" alt="Stack of grey PVC sheets with stretch film and tape rolls" width="640" height="520" fetchpriority="high">
+        <div class="hero__art" aria-hidden="true">
+          <div class="orb orb--1"></div><div class="orb orb--2"></div>
+          <figure class="hero__card hero__card--main"><img src="assets/products/pvc-sheets.svg" alt="" width="600" height="450" fetchpriority="high"></figure>
+          <figure class="hero__card hero__card--a"><img src="assets/products/stretch-film.svg" alt="" width="600" height="450"></figure>
+          <figure class="hero__card hero__card--b"><img src="assets/products/bopp-tape.svg" alt="" width="600" height="450"></figure>
+          <div class="badge badge--1"><svg class="icon"><use href="#i-check"/></svg> GST invoice</div>
+          <div class="badge badge--2"><svg class="icon"><use href="#i-truck"/></svg> Pan-India dispatch</div>
         </div>
       </div>
 
       <div class="container">
         <dl class="stats">
           <!-- Placeholder numbers: edit with your real figures -->
-          <div><dt>10+</dt><dd>Years in trade</dd></div>
-          <div><dt>500+</dt><dd>Business buyers</dd></div>
+          <div><dt><span data-count="10">10</span>+</dt><dd>Years in trade</dd></div>
+          <div><dt><span data-count="500">500</span>+</dt><dd>Business buyers</dd></div>
           <div><dt>1–20 mm</dt><dd>PVC sheet range</dd></div>
           <div><dt>Pan-India</dt><dd>Transport network</dd></div>
         </dl>
       </div>
+    </section>
+
+    <!-- ===================== PRODUCT SHOWCASE (scrolling) ===================== -->
+    <section class="showcase" id="showcase" aria-label="Product showcase">
+      <header class="section__head">
+        <p class="eyebrow eyebrow--dark">Product showcase</p>
+        <h2>Everything you need, <span class="grad">always in stock</span></h2>
+        <p class="section__sub">Hover to pause. Tap any product to ask for a rate on WhatsApp.</p>
+      </header>
+      <div class="marquee"><div class="marquee__track"><a class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20Rigid%20PVC%20sheets." target="_blank" rel="noopener"><img src="assets/products/pvc-sheets.svg" alt="Rigid PVC sheets" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>Rigid PVC sheets</strong><em>1–20 mm</em></span></a><a class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20Stretch%20film." target="_blank" rel="noopener"><img src="assets/products/stretch-film.svg" alt="Stretch film" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>Stretch film</strong><em>Clear &amp; black</em></span></a><a class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20BOPP%20tape." target="_blank" rel="noopener"><img src="assets/products/bopp-tape.svg" alt="BOPP tape" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>BOPP tape</strong><em>Plain &amp; printed</em></span></a><a class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20Bubble%20wrap." target="_blank" rel="noopener"><img src="assets/products/bubble-wrap.svg" alt="Bubble wrap" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>Bubble wrap</strong><em>Rolls up to 1.2 m</em></span></a><a class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20PP%20strapping." target="_blank" rel="noopener"><img src="assets/products/strapping.svg" alt="PP strapping" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>PP strapping</strong><em>Rolls &amp; clips</em></span></a><a class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20EPE%20foam." target="_blank" rel="noopener"><img src="assets/products/foam.svg" alt="EPE foam" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>EPE foam</strong><em>Sheets &amp; rolls</em></span></a><a class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20Edge%20guards." target="_blank" rel="noopener"><img src="assets/products/edge-guard.svg" alt="Edge guards" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>Edge guards</strong><em>Corner protection</em></span></a><a class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20Cut-to-size%20panels." target="_blank" rel="noopener"><img src="assets/products/cut-to-size.svg" alt="Cut-to-size panels" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>Cut-to-size panels</strong><em>As per drawing</em></span></a><a aria-hidden="true" tabindex="-1" class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20Rigid%20PVC%20sheets." target="_blank" rel="noopener"><img src="assets/products/pvc-sheets.svg" alt="Rigid PVC sheets" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>Rigid PVC sheets</strong><em>1–20 mm</em></span></a><a aria-hidden="true" tabindex="-1" class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20Stretch%20film." target="_blank" rel="noopener"><img src="assets/products/stretch-film.svg" alt="Stretch film" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>Stretch film</strong><em>Clear &amp; black</em></span></a><a aria-hidden="true" tabindex="-1" class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20BOPP%20tape." target="_blank" rel="noopener"><img src="assets/products/bopp-tape.svg" alt="BOPP tape" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>BOPP tape</strong><em>Plain &amp; printed</em></span></a><a aria-hidden="true" tabindex="-1" class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20Bubble%20wrap." target="_blank" rel="noopener"><img src="assets/products/bubble-wrap.svg" alt="Bubble wrap" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>Bubble wrap</strong><em>Rolls up to 1.2 m</em></span></a><a aria-hidden="true" tabindex="-1" class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20PP%20strapping." target="_blank" rel="noopener"><img src="assets/products/strapping.svg" alt="PP strapping" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>PP strapping</strong><em>Rolls &amp; clips</em></span></a><a aria-hidden="true" tabindex="-1" class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20EPE%20foam." target="_blank" rel="noopener"><img src="assets/products/foam.svg" alt="EPE foam" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>EPE foam</strong><em>Sheets &amp; rolls</em></span></a><a aria-hidden="true" tabindex="-1" class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20Edge%20guards." target="_blank" rel="noopener"><img src="assets/products/edge-guard.svg" alt="Edge guards" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>Edge guards</strong><em>Corner protection</em></span></a><a aria-hidden="true" tabindex="-1" class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20Cut-to-size%20panels." target="_blank" rel="noopener"><img src="assets/products/cut-to-size.svg" alt="Cut-to-size panels" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>Cut-to-size panels</strong><em>As per drawing</em></span></a></div></div>
+      <div class="marquee marquee--rev"><div class="marquee__track"><a class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20PP%20strapping." target="_blank" rel="noopener"><img src="assets/products/strapping.svg" alt="PP strapping" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>PP strapping</strong><em>Rolls &amp; clips</em></span></a><a class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20EPE%20foam." target="_blank" rel="noopener"><img src="assets/products/foam.svg" alt="EPE foam" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>EPE foam</strong><em>Sheets &amp; rolls</em></span></a><a class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20Edge%20guards." target="_blank" rel="noopener"><img src="assets/products/edge-guard.svg" alt="Edge guards" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>Edge guards</strong><em>Corner protection</em></span></a><a class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20Cut-to-size%20panels." target="_blank" rel="noopener"><img src="assets/products/cut-to-size.svg" alt="Cut-to-size panels" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>Cut-to-size panels</strong><em>As per drawing</em></span></a><a class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20Rigid%20PVC%20sheets." target="_blank" rel="noopener"><img src="assets/products/pvc-sheets.svg" alt="Rigid PVC sheets" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>Rigid PVC sheets</strong><em>1–20 mm</em></span></a><a class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20Stretch%20film." target="_blank" rel="noopener"><img src="assets/products/stretch-film.svg" alt="Stretch film" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>Stretch film</strong><em>Clear &amp; black</em></span></a><a class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20BOPP%20tape." target="_blank" rel="noopener"><img src="assets/products/bopp-tape.svg" alt="BOPP tape" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>BOPP tape</strong><em>Plain &amp; printed</em></span></a><a class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20Bubble%20wrap." target="_blank" rel="noopener"><img src="assets/products/bubble-wrap.svg" alt="Bubble wrap" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>Bubble wrap</strong><em>Rolls up to 1.2 m</em></span></a><a aria-hidden="true" tabindex="-1" class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20PP%20strapping." target="_blank" rel="noopener"><img src="assets/products/strapping.svg" alt="PP strapping" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>PP strapping</strong><em>Rolls &amp; clips</em></span></a><a aria-hidden="true" tabindex="-1" class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20EPE%20foam." target="_blank" rel="noopener"><img src="assets/products/foam.svg" alt="EPE foam" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>EPE foam</strong><em>Sheets &amp; rolls</em></span></a><a aria-hidden="true" tabindex="-1" class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20Edge%20guards." target="_blank" rel="noopener"><img src="assets/products/edge-guard.svg" alt="Edge guards" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>Edge guards</strong><em>Corner protection</em></span></a><a aria-hidden="true" tabindex="-1" class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20Cut-to-size%20panels." target="_blank" rel="noopener"><img src="assets/products/cut-to-size.svg" alt="Cut-to-size panels" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>Cut-to-size panels</strong><em>As per drawing</em></span></a><a aria-hidden="true" tabindex="-1" class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20Rigid%20PVC%20sheets." target="_blank" rel="noopener"><img src="assets/products/pvc-sheets.svg" alt="Rigid PVC sheets" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>Rigid PVC sheets</strong><em>1–20 mm</em></span></a><a aria-hidden="true" tabindex="-1" class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20Stretch%20film." target="_blank" rel="noopener"><img src="assets/products/stretch-film.svg" alt="Stretch film" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>Stretch film</strong><em>Clear &amp; black</em></span></a><a aria-hidden="true" tabindex="-1" class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20BOPP%20tape." target="_blank" rel="noopener"><img src="assets/products/bopp-tape.svg" alt="BOPP tape" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>BOPP tape</strong><em>Plain &amp; printed</em></span></a><a aria-hidden="true" tabindex="-1" class="slide" href="https://wa.me/917982644262?text=Hi%2C%20please%20share%20rate%20for%20Bubble%20wrap." target="_blank" rel="noopener"><img src="assets/products/bubble-wrap.svg" alt="Bubble wrap" width="600" height="450" loading="lazy" draggable="false"><span class="slide__cap"><strong>Bubble wrap</strong><em>Rolls up to 1.2 m</em></span></a></div></div>
     </section>
 
     <!-- ===================== FEATURES ===================== -->
@@ -143,42 +162,42 @@
 
         <div class="grid grid--3 reveal">
           <article class="card">
-            <div class="card__icon"><svg class="icon icon--lg" aria-hidden="true"><use href="#i-layers"/></svg></div>
+            <div class="card__media"><img src="assets/products/pvc-sheets.svg" alt="Rigid PVC sheets" width="600" height="450" loading="lazy"><span class="card__icon"><svg class="icon icon--lg" aria-hidden="true"><use href="#i-layers"/></svg></span></div>
             <h3>Rigid PVC sheets</h3>
             <p>Industrial grey PVC sheets in 1–20 mm (other thickness on request). Used for electrical insulation panels, barriers, linings and machine guards.</p>
             <ul class="ticks"><li>Standard 1220 × 2440 mm</li><li>Cut-to-size on order</li></ul>
           </article>
 
           <article class="card">
-            <div class="card__icon"><svg class="icon icon--lg" aria-hidden="true"><use href="#i-bolt"/></svg></div>
+            <div class="card__media"><img src="assets/products/cut-to-size.svg" alt="Electrical insulation use" width="600" height="450" loading="lazy"><span class="card__icon"><svg class="icon icon--lg" aria-hidden="true"><use href="#i-bolt"/></svg></span></div>
             <h3>Electrical insulation use</h3>
             <p>PVC is a good electrical insulator, easy to cut, drill and fabricate — a practical choice for switch panels, meter boxes and spacer plates.</p>
             <ul class="ticks"><li>Test certificate on request</li><li>Share your spec, we match the grade</li></ul>
           </article>
 
           <article class="card">
-            <div class="card__icon"><svg class="icon icon--lg" aria-hidden="true"><use href="#i-wrap"/></svg></div>
+            <div class="card__media"><img src="assets/products/stretch-film.svg" alt="Stretch film" width="600" height="450" loading="lazy"><span class="card__icon"><svg class="icon icon--lg" aria-hidden="true"><use href="#i-wrap"/></svg></span></div>
             <h3>Stretch film</h3>
             <p>Machine and hand-grade stretch film rolls for pallet wrapping. Multiple widths and micron options in stock.</p>
             <ul class="ticks"><li>Clear &amp; black</li><li>Priced per kg for bulk</li></ul>
           </article>
 
           <article class="card">
-            <div class="card__icon"><svg class="icon icon--lg" aria-hidden="true"><use href="#i-tape"/></svg></div>
+            <div class="card__media"><img src="assets/products/bopp-tape.svg" alt="BOPP tape" width="600" height="450" loading="lazy"><span class="card__icon"><svg class="icon icon--lg" aria-hidden="true"><use href="#i-tape"/></svg></span></div>
             <h3>BOPP tape</h3>
             <p>Strong-adhesion packing tape in clear, brown and custom-printed options. Cartons by the dozen or by the master carton.</p>
             <ul class="ticks"><li>2" and 3" widths</li><li>Printed tape with your logo</li></ul>
           </article>
 
           <article class="card">
-            <div class="card__icon"><svg class="icon icon--lg" aria-hidden="true"><use href="#i-bubble"/></svg></div>
+            <div class="card__media"><img src="assets/products/bubble-wrap.svg" alt="Bubble wrap and foam" width="600" height="450" loading="lazy"><span class="card__icon"><svg class="icon icon--lg" aria-hidden="true"><use href="#i-bubble"/></svg></span></div>
             <h3>Bubble wrap &amp; foam</h3>
             <p>Air bubble rolls and protective wrap for fragile electricals, glass and appliances. Rolls up to 1.2 m wide.</p>
             <ul class="ticks"><li>Single &amp; double layer</li><li>Cut rolls available</li></ul>
           </article>
 
           <article class="card">
-            <div class="card__icon"><svg class="icon icon--lg" aria-hidden="true"><use href="#i-box"/></svg></div>
+            <div class="card__media"><img src="assets/products/strapping.svg" alt="Strapping and accessories" width="600" height="450" loading="lazy"><span class="card__icon"><svg class="icon icon--lg" aria-hidden="true"><use href="#i-box"/></svg></span></div>
             <h3>Strapping &amp; accessories</h3>
             <p>PP strapping rolls, clips, corner protectors and more to finish the pack — so you don't chase three vendors.</p>
             <ul class="ticks"><li>PP / PET strap</li><li>Clips, sealers, edge guards</li></ul>
@@ -194,6 +213,22 @@
             <li><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg><div><strong>Proper billing</strong><span>GST invoice with every order.</span></div></li>
           </ul>
         </div>
+      </div>
+    </section>
+
+    <!-- ===================== PROCESS ===================== -->
+    <section class="section" id="process">
+      <div class="container">
+        <header class="section__head">
+          <p class="eyebrow eyebrow--dark">How it works</p>
+          <h2>From enquiry to delivery in 4 simple steps</h2>
+        </header>
+        <ol class="steps reveal">
+          <li><span class="steps__n">1</span><h3>Send your requirement</h3><p>WhatsApp us the product, size / thickness, quantity and delivery city.</p></li>
+          <li><span class="steps__n">2</span><h3>Get a quick quote</h3><p>We reply with the best bulk rate, freight and delivery time — usually the same day.</p></li>
+          <li><span class="steps__n">3</span><h3>We cut &amp; pack</h3><p>Sheets are cut to your drawing and everything is packed securely for transit.</p></li>
+          <li><span class="steps__n">4</span><h3>Dispatch with GST bill</h3><p>Goods leave by road transport with a GST invoice and LR copy.</p></li>
+        </ol>
       </div>
     </section>
 
@@ -283,6 +318,26 @@
             <summary>How do I get a quote quickly?</summary>
             <p>Fastest is WhatsApp — send product, thickness/size, quantity and delivery city. You can also use the form below or email us.</p>
           </details>
+          <details>
+            <summary>What are your payment terms?</summary>
+            <p>New buyers pay in advance (UPI, NEFT / RTGS or bank transfer). Regular buyers can request credit terms, which are offered after approval.</p>
+          </details>
+          <details>
+            <summary>How long does delivery take?</summary>
+            <p>Delhi-NCR orders are usually dispatched within 1–2 working days. For other cities, transit takes about 3–7 days depending on the route. Cut-to-size orders may need an extra day.</p>
+          </details>
+          <details>
+            <summary>Can you print my logo on BOPP tape?</summary>
+            <p>Yes, custom-printed BOPP tape with your brand name or logo is available in bulk quantities. Share your artwork and we'll confirm the minimum quantity and lead time.</p>
+          </details>
+          <details>
+            <summary>Can you cut PVC sheets to my drawing or size?</summary>
+            <p>Yes. Send us your drawing or dimensions and we'll cut the sheets to size, so you save on wastage and fabrication time.</p>
+          </details>
+          <details>
+            <summary>Where are you located, and can I visit?</summary>
+            <p>We are at 20, Ansari Road, Daryaganj, New Delhi. You are welcome to visit during working hours (Mon–Sat, 9:30 am – 7:00 pm) — please call or WhatsApp us on +91 79826 44262 before coming.</p>
+          </details>
         </div>
       </div>
     </section>
@@ -296,19 +351,24 @@
           <p class="lead">Message us on WhatsApp with product, size and quantity. We usually reply the same business day.</p>
 
           <div class="contact__buttons">
-            <a class="btn btn--wa btn--lg" href="https://wa.me/919999999999?text=Hi%2C%20I%20need%20a%20quote%20for%20PVC%20sheets%20%2F%20packaging%20material." target="_blank" rel="noopener">
+            <a class="btn btn--wa btn--lg" href="https://wa.me/917982644262?text=Hi%2C%20I%20need%20a%20quote%20for%20PVC%20sheets%20%2F%20packaging%20material." target="_blank" rel="noopener">
               <svg class="icon" aria-hidden="true"><use href="#i-wa"/></svg> Chat on WhatsApp
             </a>
-            <a class="btn btn--ghost-light btn--lg" href="mailto:info@example.com?subject=Quote%20request">
-              <svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg> info@example.com
+            <a class="btn btn--ghost-light btn--lg" href="mailto:arnavjaincena@gmail.com?subject=Quote%20request">
+              <svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg> arnavjaincena@gmail.com
             </a>
           </div>
 
           <ul class="contact__list">
-            <li><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg><a href="tel:+919999999999">+91 99999 99999</a></li>
-            <li><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg><span>Your Shop / Godown Address, City, State – 000000</span></li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg><a href="tel:+917982644262">+91 79826 44262</a></li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg><a href="https://maps.google.com/?q=20+Ansari+Road+Daryaganj+New+Delhi" target="_blank" rel="noopener">20, Ansari Road, Daryaganj, New Delhi – 110002</a></li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg><a href="mailto:arnavjaincena@gmail.com">arnavjaincena@gmail.com</a></li>
             <li><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg><span>Mon–Sat, 9:30 am – 7:00 pm</span></li>
           </ul>
+
+          <div class="map">
+            <iframe title="Map: 20 Ansari Road, Daryaganj, New Delhi" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=20%20Ansari%20Road%20Daryaganj%20New%20Delhi&amp;output=embed"></iframe>
+          </div>
         </div>
 
         <form class="form" id="quoteForm" novalidate>
@@ -357,10 +417,12 @@
       <div class="footer__brand">
         <strong>Electrical Insulation India</strong>
         <p>Wholesale PVC sheets &amp; packaging material.</p>
-        <p class="muted">GSTIN: 00XXXXX0000X0XX (placeholder)</p>
+        <p>20, Ansari Road, Daryaganj, New Delhi – 110002</p>
+        <p><a href="tel:+917982644262">+91 79826 44262</a> · <a href="mailto:arnavjaincena@gmail.com">arnavjaincena@gmail.com</a></p>
       </div>
       <nav aria-label="Footer">
         <ul class="footer__links">
+          <li><a href="#showcase">Showcase</a></li>
           <li><a href="#features">Products</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#faq">FAQ</a></li>
@@ -372,7 +434,7 @@
   </footer>
 
   <!-- Floating WhatsApp button -->
-  <a class="fab" href="https://wa.me/919999999999?text=Hi%2C%20I%20need%20a%20quote%20for%20PVC%20sheets%20%2F%20packaging%20material." target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <a class="fab" href="https://wa.me/917982644262?text=Hi%2C%20I%20need%20a%20quote%20for%20PVC%20sheets%20%2F%20packaging%20material." target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
     <svg class="icon icon--lg" aria-hidden="true"><use href="#i-wa"/></svg>
   </a>
 
