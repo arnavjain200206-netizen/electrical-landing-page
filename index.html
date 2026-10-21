@@ -8,7 +8,19 @@
   <title>PVC Sheets &amp; Packaging Material Wholesaler in India | Electrical Insulation India</title>
   <meta name="description" content="Wholesale rigid PVC sheets for electrical insulation and industrial packaging material (stretch film, BOPP tape, bubble wrap, strapping). Bulk rates, custom cutting, GST invoice, pan-India dispatch. Get a quote on WhatsApp.">
   <meta name="keywords" content="PVC sheet wholesaler India, electrical insulation PVC sheet, rigid PVC sheet, packaging material wholesale, stretch film, BOPP tape, bubble wrap">
-  <meta name="theme-color" content="#0F2747">
+  <meta name="theme-color" content="#FFFFFF">
+  <meta name="color-scheme" content="light dark">
+  <script>
+    // Apply saved / system theme before first paint (prevents a flash of the wrong theme)
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem('eii_theme'); } catch (e) {}
+      if (t !== 'light' && t !== 'dark') t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+      var m = document.querySelector('meta[name="theme-color"]');
+      if (m) m.setAttribute('content', t === 'dark' ? '#0B1220' : '#FFFFFF');
+    })();
+  </script>
   <meta name="robots" content="index, follow">
   <!-- TODO: replace with your live URL after deploy -->
   <link rel="canonical" href="https://www.example.com/">
@@ -69,7 +81,8 @@
   <header class="nav" id="top">
     <div class="container nav__inner">
       <a class="nav__brand" href="#top" aria-label="Electrical Insulation India — home">
-        <img src="assets/logo.svg" alt="Electrical Insulation India" width="200" height="43">
+        <img class="logo--light" src="assets/logo.svg" alt="Electrical Insulation India" width="200" height="43">
+        <img class="logo--dark" src="assets/logo-dark.svg" alt="" width="200" height="43" aria-hidden="true">
       </a>
 
       <nav id="menu" class="nav__menu" aria-label="Main">
@@ -85,6 +98,11 @@
           <svg class="icon" aria-hidden="true"><use href="#i-wa"/></svg> WhatsApp
         </a>
       </nav>
+
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark theme" title="Switch theme">
+        <svg class="icon i-moon" aria-hidden="true"><use href="#i-moon"/></svg>
+        <svg class="icon i-sun" aria-hidden="true"><use href="#i-sun"/></svg>
+      </button>
 
       <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="menu" aria-label="Toggle menu">
         <span></span><span></span><span></span>
@@ -449,6 +467,8 @@
 
   <!-- ===================== SVG ICON SPRITE ===================== -->
   <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="i-moon" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7Z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"/></g></symbol>
     <symbol id="i-wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12.04 2a9.9 9.9 0 0 0-8.47 15.02L2 22l5.1-1.34A9.9 9.9 0 1 0 12.04 2Zm0 1.8a8.1 8.1 0 0 1 6.9 12.3 8.1 8.1 0 0 1-11.2 2.5l-.3-.18-3 .8.8-2.93-.2-.3A8.1 8.1 0 0 1 12.04 3.8Zm-3.2 3.9c-.2 0-.5.07-.75.35-.26.28-1 1-1 2.44s1.03 2.83 1.17 3.02c.15.2 2 3.2 4.95 4.36 2.45.96 2.95.77 3.48.72.53-.05 1.7-.7 1.95-1.37.24-.68.24-1.26.17-1.38-.07-.12-.27-.2-.56-.34-.3-.15-1.7-.84-1.97-.94-.26-.1-.46-.15-.65.15-.2.3-.75.94-.92 1.13-.17.2-.34.22-.63.07-.3-.15-1.24-.46-2.37-1.46-.87-.78-1.46-1.74-1.63-2.04-.17-.3-.02-.45.13-.6.13-.13.3-.34.44-.51.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.65-1.6-.9-2.18-.23-.56-.47-.48-.65-.49h-.55Z"/></symbol>
     <symbol id="i-mail" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M3 6h18v12H3zM3 7l9 6 9-6"/></symbol>
     <symbol id="i-phone" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></symbol>
