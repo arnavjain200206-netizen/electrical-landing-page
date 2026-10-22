@@ -87,13 +87,13 @@
 
   // ---------- Highlight the current section in the nav (home page) ----------
   var links = Array.prototype.slice.call(document.querySelectorAll('.nav__menu ul a[href^="#"]'));
-  var sections = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+  var allSections = Array.prototype.slice.call(document.querySelectorAll('main > section[id]'));
   function spy() {
-    var y = window.scrollY + 120, current = -1;
-    sections.forEach(function (sec, i) { if (sec && sec.offsetTop <= y) current = i; });
-    links.forEach(function (a, i) { if (i === current) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+    var y = window.scrollY + 120, current = '';
+    allSections.forEach(function (sec) { if (sec.offsetTop <= y) current = sec.id; });
+    links.forEach(function (a) { if (a.getAttribute('href') === '#' + current) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
   }
-  if (links.length) { window.addEventListener('scroll', spy, { passive: true }); spy(); }
+  if (links.length && allSections.length) { window.addEventListener('scroll', spy, { passive: true }); spy(); }
 
   // ---------- Scroll reveal ----------
   document.querySelectorAll('[data-stagger]').forEach(function (group) {
