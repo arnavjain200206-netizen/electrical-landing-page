@@ -1,0 +1,9 @@
+{
+  "name": "electrical-insulation-india-site",
+  "private": true,
+  "description": "Static site for Electrical Insulation India. No dependencies; the build script only uses Node.",
+  "scripts": {
+    "build": "node build/build.js"
+  },
+  "engines": { "node": ">=18" }
+}

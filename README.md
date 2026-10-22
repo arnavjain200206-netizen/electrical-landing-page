@@ -1,56 +1,92 @@
-# Electrical Insulation India — Landing Page
+# Electrical Insulation India: website
 
-Single-page landing site for a wholesale supplier of **PVC sheets (electrical insulation) and packaging material**.
-Goal: visitors contact the business on **WhatsApp or email**.
+Static website for a wholesale supplier of **PVC sheets (electrical insulation) and packaging material**, in **English and Hindi**.
+Goal: visitors contact the business on **WhatsApp, phone or email**.
 
-Pure HTML + CSS + a little vanilla JavaScript — no framework, no build step.
+HTML, CSS and a little vanilla JavaScript. No framework and no runtime dependencies. The pages are generated from one set of content files by a small Node script, and the generated pages are committed, so **hosting needs no build step**.
+
+## What is on the site
+
+| Page | Address (English / Hindi) |
+|---|---|
+| Home: hero, products, industries, free tools, how to order, about, guides, FAQ, contact | `/` and `/hi/` |
+| 8 product pages with specs, sizes, FAQs and a WhatsApp quote builder | `/products/<name>/` and `/hi/products/<name>/` |
+| Tools: PVC weight & cost calculator, cut-to-size fit checker, "Which thickness?" guide | `/tools/` and `/hi/tools/` |
+| Buying guides: PVC sheet thickness, stretch film micron | `/guides/...` and `/hi/guides/...` |
+
+Also: **enquiry list** (visitors collect products from any page and send one WhatsApp message), light / dark theme, page transitions, click tracking, `sitemap.xml`, `robots.txt`, `404.html`.
 
 ```
-index.html        page markup, SEO / Open Graph tags, JSON-LD
-style.css         all styles (design tokens at the top, light + dark theme)
-script.js         mobile menu, theme switch, nav highlight, quote form -> WhatsApp / email
-products.js       product catalogue data (specs, sizes, FAQs, WhatsApp form fields)
-product-view.js   renders the product detail pages (#/product/<slug>)
-assets/           favicon, og-image.png, hero-stack.svg (animated hero art), fonts/ (IBM Plex, self-hosted), products/*.svg (animated)
+build/            the generator and ALL the content
+  site.js         business details, site address, analytics IDs
+  i18n/en.js hi.js  every sentence on the site, in both languages
+  data/           product data (english + hindi), industry starter lists
+  layout.js pages/  page templates
+  build.js        run this:  node build/build.js
+style.css         all styles (tokens at the top, light + dark theme, Hindi type)
+script.js         menu, theme, nav, scroll effects, contact form
+basket.js         enquiry list
+quote-builder.js  WhatsApp message builder on product pages
+tools.js          calculators, fit checker, thickness guide
+analytics.js      click tracking (off until you add an ID)
+assets/           favicon, og-image.png, fonts (IBM Plex + Noto Sans Devanagari), animated product art
+index.html, hi/, products/, tools/, guides/, sitemap.xml, robots.txt, 404.html   <- generated, do not edit by hand
 ```
-
-**Motion:** circuit traces with flowing current and a spark that is stopped by the PVC stack (hero), rotating headline word, count-up numbers, scrolling ticker, scroll progress bar, scroll reveals, tilt + spotlight on product cards, magnetic buttons, animated product illustrations, rotating border on the quote form. Pointer effects only run on mouse / trackpad, and everything respects `prefers-reduced-motion` (animations off, content shown as-is). All motion is CSS + a small amount of vanilla JS in `script.js`; no libraries.
-
-**Sections:** Contact strip · Navbar · Hero · Products · How to order · About · FAQ · Contact (+ quote form) · Footer, plus a floating WhatsApp button and a light / dark theme switch.
 
 ---
 
-## 1. Before you go live — check these
+## 1. Editing the site
+
+All text lives in `build/`. **Never edit the generated pages**: change the source, then rebuild.
+
+```bash
+node build/build.js --url https://yourdomain.in/      # or: npm run build
+```
+
+* Change a sentence: edit `build/i18n/en.js` and the same key in `build/i18n/hi.js`. The build **stops with a list of problems** if a key is missing in either language, so the two can never drift apart.
+* Change a product (specs, sizes, FAQs): `build/data/products.en.js` and `products.hi.js`.
+* Change phone, email, address, hours: `build/site.js` (the nav strip, footer, contact and structured data all follow).
+* WhatsApp messages sent to you are always in **English** (product names and field names), whatever language the visitor used, so they are easy to read and search.
+
+## 2. Before you go live
 
 | What | Where |
 |---|---|
-| **Product photos.** The images in `assets/products/` are neutral illustrations. Replace each with a real photo of your stock (same file name, 4:3, ideally on a plain light background). Photos are static; the card tilt, spotlight and zoom still apply. | `assets/products/*.svg`. To use `.jpg` files instead, replace `.svg` with `.jpg` in `index.html` and `product-view.js`. |
-| Live site URL (`www.example.com`) | `index.html` — canonical, `og:url`, `og:image`, `twitter:image`, JSON-LD `url` |
-| WhatsApp number `917982644262`, email, phone | `index.html`, `script.js` (`CONFIG`), `products.js` (`SITE`) |
-| Address / hours | `index.html` (strip, About, Contact, Footer, FAQ, JSON-LD) |
-| Product claims (thickness range, test certificate, credit terms, delivery times) | `index.html` FAQ + `products.js` — make sure they match what you really offer |
-| GSTIN (optional, builds trust) | add to the footer in `index.html` |
+| **Live site address.** Currently `https://www.example.com/`. It feeds canonical links, the sitemap, hreflang and share previews. On GitHub Pages use the full address including the folder, e.g. `https://username.github.io/electrical-landing-page/`. | run the build with `--url ...` (or edit `build/site.js`) |
+| **Product photos.** The pictures in `assets/products/` are animated illustrations. Replace each with a real photo of your stock (same name, 4:3, plain light background). Photos are static; the card tilt and zoom still apply. To use `.jpg`, replace `.svg` with `.jpg` in `build/pages/*.js` and rebuild. | `assets/products/` |
+| **Claims.** Thickness range, test certificates, credit terms, delivery times. Make sure they match what you really offer. | `build/i18n/*.js`, `build/data/products.*.js` |
+| **Estimates.** The calculators say "indicative"; the thickness guide and guides are general advice, not an engineering standard. Review the guide text once. | `build/i18n/*.js` (`guides`, `tools`) |
+| **GSTIN, Udyam badge** (optional, builds trust) | add to the footer in `build/layout.js` |
 
-Customer reviews and "years in business / number of buyers" figures were removed on purpose. Add them back only when they are real (for example a `#testimonials` section with names and cities you have permission to publish).
+Customer reviews and "years in business / number of buyers" figures are not included on purpose. Add them only when real.
 
-Quick find-and-replace for contact details (edit the values first):
+## 3. Analytics: which button was clicked how many times
 
-```bash
-sed -i 's/917982644262/91YOURNUMBER/g; s/arnavjaincena@gmail.com/you@yourdomain.com/g' index.html script.js products.js
-sed -i 's#https://www.example.com/#https://yourdomain.com/#g' index.html
-```
+The site records these events: `whatsapp_click`, `call_click`, `email_click`, `map_click`, `review_click`, `add_to_enquiry`, `add_starter_list`, `enquiry_open`, `quote_form_submit`, `tool_use`, `language_switch`. Each carries `where` (hero, nav, float, contact, product_builder, enquiry_list, tool_weight, ...), `item` (product) and `language`.
 
-### Branding
-Colours are CSS variables at the top of `style.css` (`--paper`, `--navy`, `--amber`, …; dark theme overrides in `:root[data-theme="dark"]`). Fonts are self-hosted IBM Plex, so the page makes no third-party font requests.
+Nothing is sent until you add an ID:
 
-### Open Graph image
-`assets/og-image.png` (1200×630) is what WhatsApp / Facebook / LinkedIn show when your link is shared. Replace it with your own banner when you have one.
+1. Create a free **Google Analytics 4** property (analytics.google.com) and copy the Measurement ID (`G-XXXXXXXXXX`).
+2. Rebuild: `node build/build.js --url https://yourdomain.in/ --ga4 G-XXXXXXXXXX` (or set it in `build/site.js`).
+3. In GA4: *Reports > Engagement > Events* shows the counts. Open an event and add the `where` parameter as a custom dimension (*Admin > Custom definitions*) to see **which button** was used. Mark `whatsapp_click` and `call_click` as key events.
+4. Prefer a privacy-friendly tool? Use `--plausible yourdomain.in` instead.
+
+To test: open any page with `?debug_analytics` and watch the browser console.
+Every WhatsApp message also ends with `(Sent from the website: /page/)`, so you can see which page produced the enquiry even without analytics.
+Consider a short privacy note on the site once analytics is on.
+
+## 4. Google Business Profile and search
+
+* Create / claim the profile at business.google.com with the **same name, address and phone** as the site. This matters most for "PVC sheet wholesaler Delhi" searches.
+* Copy the profile's review link and rebuild with `--review https://g.page/r/XXXX/review` (and `--gbp <profile url>`). A "Review us on Google" link then appears in the footer and contact section, and the profile is added to the structured data.
+* After deploying, add the site to **Google Search Console**, submit `sitemap.xml`, and check the Hindi pages are indexed.
+* Each page has its own title, description, canonical, hreflang (English / Hindi), Open Graph image and structured data (business, breadcrumbs, FAQ, articles).
 
 ---
 
-## 2. Run locally
+## 5. Run locally
 
-Just open `index.html` in a browser, or serve the folder:
+Serve the folder (page links such as `tools/` need a web server, opening the file directly will not follow them):
 
 ```bash
 python3 -m http.server 8000
@@ -59,14 +95,14 @@ python3 -m http.server 8000
 
 ---
 
-## 3. Deploy (all free options; the site is static)
+## 6. Deploy (all free options; the site is static)
 
 ### Option A — GitHub Pages (simplest, since this is a GitHub repo)
 1. Merge your work into the `main` branch.
 2. GitHub repo → **Settings → Pages**.
 3. **Source:** *Deploy from a branch* → Branch: `main`, Folder: `/ (root)` → **Save**.
 4. After ~1 minute the site is live at `https://<username>.github.io/electrical-landing-page/`.
-5. Update the URLs in `index.html` (canonical, `og:*`) to that address.
+5. Rebuild with that address so canonical links, the sitemap and share previews are right: `node build/build.js --url https://<username>.github.io/electrical-landing-page/`, then commit the result.
 
 ### Option B — Netlify
 1. Sign in at [netlify.com](https://www.netlify.com) → **Add new site → Import an existing project** → pick this repo.
@@ -79,23 +115,27 @@ python3 -m http.server 8000
 3. Deploy.
 
 ### Option D — Any hosting / cPanel
-Upload `index.html`, `style.css`, `script.js`, `products.js`, `product-view.js` and the `assets/` folder into `public_html/` using File Manager or FTP.
+Upload everything except `build/`, `README.md` and `package.json` (index.html, hi/, products/, tools/, guides/, assets/, the .js and .css files, sitemap.xml, robots.txt, 404.html) into `public_html/` using File Manager or FTP.
 
 ### Custom domain
-Buy a domain (e.g. `.in` / `.com`), then add it in your host's **Domains** settings (GitHub Pages: Settings → Pages → *Custom domain*; Netlify/Vercel: Domains) and create the DNS records they show. HTTPS is enabled automatically. Afterwards, update the URLs in `index.html` to the final domain.
+Buy a domain (e.g. `.in` / `.com`), then add it in your host's **Domains** settings (GitHub Pages: Settings → Pages → *Custom domain*; Netlify/Vercel: Domains) and create the DNS records they show. HTTPS is enabled automatically. Afterwards rebuild with `--url https://yourdomain.in/` and commit the result.
 
 ---
 
-## 4. After deploy checklist
+## 7. After deploy checklist
 
 - [ ] Tap the WhatsApp buttons on a phone — chat opens with the pre-filled message.
 - [ ] Submit the quote form (WhatsApp and email buttons) and confirm the message arrives.
 - [ ] Paste the URL into WhatsApp / [opengraph.xyz](https://www.opengraph.xyz) and check the preview image & title.
 - [ ] Run Google [PageSpeed Insights](https://pagespeed.web.dev) / Lighthouse (mobile).
 - [ ] Add the site to [Google Search Console](https://search.google.com/search-console) and create a **Google Business Profile** with the same address/phone — this helps local B2B search a lot.
-- [ ] Optional: add `robots.txt` and `sitemap.xml` once the final domain is fixed.
+- [ ] Open `/sitemap.xml` and `/robots.txt` on the live site and check they show your real domain, not `example.com`.
+- [ ] Send yourself a test enquiry from the enquiry list, in English and in Hindi, and confirm both messages arrive in English.
+- [ ] Open the site in Hindi on a phone and check the headings and buttons read well.
 
 ## Notes
 - The quote form has no backend: it builds a message and opens WhatsApp (`wa.me`) or the visitor's email app. This keeps hosting free and gets leads straight to your phone.
-- Keyboard accessible, text contrast checked against WCAG AA in both themes, and works without JavaScript (links still work; the form, menu and product detail pages need JS).
-- Product detail pages use `#/product/<slug>` links on the same page. They work for visitors but search engines index only the home page; separate HTML pages per product would be the next step for SEO.
+- Keyboard accessible, text contrast checked against WCAG AA in both themes and both languages. Content is visible without JavaScript; the calculators, enquiry list, menu and form need JavaScript.
+- Animations respect the visitor's "reduce motion" setting. Pointer effects (tilt, spotlight, magnetic buttons) only run on mouse / trackpad.
+- Old links such as `index.html#/product/foam` and `#showcase` still work and are redirected to the new pages.
+- Page-to-page fade-slide uses the browser's View Transitions (Chrome, Edge, Safari 18+); other browsers simply load the page.

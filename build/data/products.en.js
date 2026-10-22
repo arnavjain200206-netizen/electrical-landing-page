@@ -1,14 +1,12 @@
-/* Electrical Insulation India — product catalogue
+/* Electrical Insulation India — product catalogue (English source data, read by build/build.js)
    Specs are indicative (compiled from Indian trade listings / manufacturer sheets);
    edit freely to match your actual stock. */
-window.SITE = { whatsapp: '917982644262', phoneDisplay: '+91 79826 44262', email: 'arnavjaincena@gmail.com' };
-
-(function () {
+module.exports = (function () {
   // approx weight of a 1220 x 2440 mm PVC sheet at ~1.35 g/cm3
   function pvcWeight(t) { return (1.22 * 2.44 * t * 1.35).toFixed(1) + ' kg'; }
   var pvcThick = [1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20];
 
-  window.PRODUCTS = {
+  var PRODUCTS = {
     'pvc-sheets': {
       name: 'Rigid PVC Sheet',
       image: 'pvc-sheets',
@@ -348,4 +346,5 @@ window.SITE = { whatsapp: '917982644262', phoneDisplay: '+91 79826 44262', email
       related: ['strapping', 'foam', 'stretch-film']
     }
   };
+  return PRODUCTS;
 })();
