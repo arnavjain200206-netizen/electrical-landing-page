@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://www.example.com/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/"/>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/hi/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/"/>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/tools/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/tools/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/tools/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/tools/"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/hi/tools/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/tools/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/tools/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/tools/"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/guides/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/guides/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/guides/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/guides/"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/hi/guides/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/guides/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/guides/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/guides/"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/guides/pvc-sheet-thickness-guide/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/guides/pvc-sheet-thickness-guide/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/guides/pvc-sheet-thickness-guide/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/guides/pvc-sheet-thickness-guide/"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/hi/guides/pvc-sheet-thickness-guide/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/guides/pvc-sheet-thickness-guide/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/guides/pvc-sheet-thickness-guide/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/guides/pvc-sheet-thickness-guide/"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/guides/stretch-film-micron-guide/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/guides/stretch-film-micron-guide/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/guides/stretch-film-micron-guide/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/guides/stretch-film-micron-guide/"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/hi/guides/stretch-film-micron-guide/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/guides/stretch-film-micron-guide/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/guides/stretch-film-micron-guide/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/guides/stretch-film-micron-guide/"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/products/pvc-sheets/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/pvc-sheets/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/pvc-sheets/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/products/pvc-sheets/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/hi/products/pvc-sheets/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/pvc-sheets/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/pvc-sheets/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/products/pvc-sheets/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/products/cut-to-size/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/cut-to-size/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/cut-to-size/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/products/cut-to-size/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/hi/products/cut-to-size/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/cut-to-size/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/cut-to-size/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/products/cut-to-size/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/products/stretch-film/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/stretch-film/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/stretch-film/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/products/stretch-film/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/hi/products/stretch-film/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/stretch-film/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/stretch-film/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/products/stretch-film/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/products/bopp-tape/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/bopp-tape/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/bopp-tape/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/products/bopp-tape/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/hi/products/bopp-tape/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/bopp-tape/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/bopp-tape/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/products/bopp-tape/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/products/bubble-wrap/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/bubble-wrap/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/bubble-wrap/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/products/bubble-wrap/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/hi/products/bubble-wrap/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/bubble-wrap/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/bubble-wrap/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/products/bubble-wrap/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/products/strapping/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/strapping/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/strapping/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/products/strapping/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/hi/products/strapping/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/strapping/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/strapping/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/products/strapping/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/products/foam/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/foam/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/foam/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/products/foam/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/hi/products/foam/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/foam/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/foam/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/products/foam/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/products/edge-guard/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/edge-guard/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/edge-guard/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/products/edge-guard/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/hi/products/edge-guard/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/edge-guard/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/edge-guard/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/products/edge-guard/"/>
+    <priority>0.8</priority>
+  </url>
+</urlset>
