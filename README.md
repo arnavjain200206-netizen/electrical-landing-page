@@ -86,7 +86,9 @@ Consider a short privacy note on the site once analytics is on.
 
 ## 5. Run locally
 
-Serve the folder (page links such as `tools/` need a web server, opening the file directly will not follow them):
+**Easiest:** download or clone the repo and double-click `index.html`. Every page link names its `index.html`, so the whole site (Hindi, products, tools, guides, enquiry list) works straight from the folder, with no server.
+
+Or serve it like a real host would:
 
 ```bash
 python3 -m http.server 8000
@@ -137,5 +139,6 @@ Buy a domain (e.g. `.in` / `.com`), then add it in your host's **Domains** setti
 - The quote form has no backend: it builds a message and opens WhatsApp (`wa.me`) or the visitor's email app. This keeps hosting free and gets leads straight to your phone.
 - Keyboard accessible, text contrast checked against WCAG AA in both themes and both languages. Content is visible without JavaScript; the calculators, enquiry list, menu and form need JavaScript.
 - Animations respect the visitor's "reduce motion" setting. Pointer effects (tilt, spotlight, magnetic buttons) only run on mouse / trackpad.
+- Internal links point at `.../index.html` (for example `tools/index.html`) so they also work from a downloaded folder. Search engines are told the clean address through each page's canonical link and the sitemap.
 - Old links such as `index.html#/product/foam` and `#showcase` still work and are redirected to the new pages.
 - Page-to-page fade-slide uses the browser's View Transitions (Chrome, Edge, Safari 18+); other browsers simply load the page.

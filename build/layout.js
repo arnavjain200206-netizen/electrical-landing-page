@@ -65,9 +65,8 @@ function head(ctx, o) {
   <meta name="twitter:image" content="${img}">
   <link rel="icon" type="image/svg+xml" href="${rel}assets/favicon.svg">
   <link rel="apple-touch-icon" href="${rel}assets/apple-touch-icon.png">
-${o.preload || ''}  <link rel="preload" href="${rel}assets/fonts/IBMPlexSansCondensed-700.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="${rel}assets/fonts/IBMPlexSans-var.woff2" as="font" type="font/woff2" crossorigin>
-${lang === 'hi' ? `  <link rel="preload" href="${rel}assets/fonts/NotoSansDevanagari-var.woff2" as="font" type="font/woff2" crossorigin>\n` : ''}  <link rel="stylesheet" href="${rel}style.css">
+${o.preload || ''}  <script>if(/^https?:/.test(location.protocol)){['IBMPlexSansCondensed-700','IBMPlexSans-var'${lang === 'hi' ? ",'NotoSansDevanagari-var'" : ''}].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='font';l.type='font/woff2';l.crossOrigin='';l.href='${rel}assets/fonts/'+f+'.woff2';document.head.appendChild(l)})}</script>
+  <link rel="stylesheet" href="${rel}style.css">
 ${ld}
 </head>`;
 }

@@ -10,7 +10,7 @@
 
   // old shared links such as index.html#/product/foam now live on their own page
   var legacy = /^#\/product\/([a-z0-9-]+)\/?$/.exec(location.hash);
-  if (legacy && E.page === 'home') { location.replace(E.base + (E.lang === 'hi' ? 'hi/' : '') + 'products/' + legacy[1] + '/'); return; }
+  if (legacy && E.page === 'home') { location.replace(E.base + (E.lang === 'hi' ? 'hi/' : '') + 'products/' + legacy[1] + '/index.html'); return; }
   if (location.hash === '#showcase' || location.hash === '#features') { location.replace('#products'); }
 
   var yearEl = document.getElementById('year');

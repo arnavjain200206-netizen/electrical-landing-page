@@ -66,7 +66,8 @@ function makeCtx(lang, pg) {
   const ctx = {
     lang, dict, t: makeT(dict, lang), rel, page: pg.page, path: pg.path,
     products: products[lang], productsEn: products.en, guides: guidesFor(lang), guidesEn: guidesFor('en'),
-    link: (p, l) => (rel || './') + ((l || lang) === 'hi' ? 'hi/' : '') + p,
+    // links name index.html explicitly so the site also works when opened straight from a folder (file://)
+    link: (p, l) => (rel || './') + ((l || lang) === 'hi' ? 'hi/' : '') + p + (p === '' || p.endsWith('/') ? 'index.html' : ''),
     abs: (p, l) => SITE.url + ((l || lang) === 'hi' ? 'hi/' : '') + p
   };
   return ctx;

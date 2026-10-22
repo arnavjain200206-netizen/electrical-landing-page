@@ -83,7 +83,7 @@ module.exports = function home(ctx) {
 
   const titleLd = [L.localBusinessLd(ctx), L.faqLd(faqItems)];
   const redirect = lang === 'en'
-    ? `\n  <script>try{if(localStorage.getItem('eii_lang')==='hi'&&!/[?&]lang=en/.test(location.search)&&location.pathname.slice(-3)!=='hi/')location.replace('hi/'+location.hash)}catch(e){}</script>` : '';
+    ? `\n  <script>try{if(localStorage.getItem('eii_lang')==='hi'&&!/[?&]lang=en/.test(location.search)&&location.pathname.slice(-3)!=='hi/')location.replace('hi/index.html'+location.hash)}catch(e){}</script>` : '';
 
   return `${L.head(ctx, { path: '', title: t.raw('home.title'), description: t.raw('home.description'), ogDescription: t.raw('home.ogDescription'), jsonld: titleLd, headExtra: redirect, preload: `  <link rel="preload" href="${rel}assets/hero-stack.svg" as="image" type="image/svg+xml">\n` })}
 <body data-page="home">

@@ -8,7 +8,7 @@
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#f6f4ef">
   <script>(function(){var t=null;try{t=localStorage.getItem('eii_theme')}catch(e){}if(t!=='light'&&t!=='dark')t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',t==='dark'?'#0f161f':'#f6f4ef')})();</script>
-  <script>try{if(localStorage.getItem('eii_lang')==='hi'&&!/[?&]lang=en/.test(location.search)&&location.pathname.slice(-3)!=='hi/')location.replace('hi/'+location.hash)}catch(e){}</script>
+  <script>try{if(localStorage.getItem('eii_lang')==='hi'&&!/[?&]lang=en/.test(location.search)&&location.pathname.slice(-3)!=='hi/')location.replace('hi/index.html'+location.hash)}catch(e){}</script>
   <meta name="robots" content="index, follow">
   <!-- TODO: the address below comes from build/site.js (run: node build/build.js --url https://yourdomain.in/) -->
   <link rel="canonical" href="https://www.example.com/">
@@ -32,8 +32,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <link rel="preload" href="assets/hero-stack.svg" as="image" type="image/svg+xml">
-  <link rel="preload" href="assets/fonts/IBMPlexSansCondensed-700.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/IBMPlexSans-var.woff2" as="font" type="font/woff2" crossorigin>
+  <script>if(/^https?:/.test(location.protocol)){['IBMPlexSansCondensed-700','IBMPlexSans-var'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='font';l.type='font/woff2';l.crossOrigin='';l.href='assets/fonts/'+f+'.woff2';document.head.appendChild(l)})}</script>
   <link rel="stylesheet" href="style.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","name":"Electrical Insulation India","description":"Wholesale rigid PVC sheets for electrical insulation and packaging material from Daryaganj, New Delhi. Cut-to-size, GST invoice, dispatch across India.","url":"https://www.example.com/","telephone":"+917982644262","email":"arnavjaincena@gmail.com","image":"https://www.example.com/assets/og-image.png","inLanguage":"en-IN","address":{"@type":"PostalAddress","streetAddress":"20, Ansari Road, Daryaganj","addressLocality":"New Delhi","addressRegion":"Delhi","postalCode":"110002","addressCountry":"IN"},"openingHoursSpecification":{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"opens":"09:30","closes":"19:00"},"areaServed":"IN"}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What thicknesses and sizes of PVC sheet do you supply?","acceptedAnswer":{"@type":"Answer","text":"Rigid grey PVC sheets are commonly available from 1 mm to 20 mm in a standard 1220 × 2440 mm size. Other thicknesses, colours and cut sizes can be arranged. Send us your requirement."}},{"@type":"Question","name":"Is PVC sheet suitable for electrical insulation?","acceptedAnswer":{"@type":"Answer","text":"Rigid PVC is an electrical insulator and is widely used for insulation panels, barriers and meter boxes. For safety-critical use, tell us your voltage, flame rating and standard (IS / IEC) and we will confirm the right grade and share the test certificate."}},{"@type":"Question","name":"What is the minimum order quantity?","acceptedAnswer":{"@type":"Answer","text":"We serve both small and bulk buyers. Wholesale rates apply from bulk quantities. Message us your requirement and we will share the best price."}},{"@type":"Question","name":"Do you deliver across India?","acceptedAnswer":{"@type":"Answer","text":"Yes. We dispatch by road transport across India. Freight is quoted along with the material, and you receive a GST invoice and LR copy."}},{"@type":"Question","name":"Can I get a sample before ordering?","acceptedAnswer":{"@type":"Answer","text":"Yes, samples of PVC sheet and packaging material can be arranged on request. Courier charges may apply."}},{"@type":"Question","name":"How do I get a quote quickly?","acceptedAnswer":{"@type":"Answer","text":"The fastest way is WhatsApp. Send the product, thickness or size, quantity and delivery city. You can also build an enquiry list on this site, use the form below or email us."}},{"@type":"Question","name":"What are your payment terms?","acceptedAnswer":{"@type":"Answer","text":"New buyers pay in advance (UPI, NEFT / RTGS or bank transfer). Regular buyers can request credit terms, which are offered after approval."}},{"@type":"Question","name":"How long does delivery take?","acceptedAnswer":{"@type":"Answer","text":"Delhi-NCR orders are usually dispatched within 1–2 working days. For other cities, transit takes about 3–7 days depending on the route. Cut-to-size orders may need an extra day."}},{"@type":"Question","name":"Can you print my logo on BOPP tape?","acceptedAnswer":{"@type":"Answer","text":"Yes, custom-printed BOPP tape with your brand name or logo is available in bulk quantities. Share your artwork and we will confirm the minimum quantity and lead time."}},{"@type":"Question","name":"Can you cut PVC sheets to my drawing or size?","acceptedAnswer":{"@type":"Answer","text":"Yes. Send us your drawing or dimensions and we will cut the sheets to size, so you save on wastage and fabrication time."}},{"@type":"Question","name":"Where are you located, and can I visit?","acceptedAnswer":{"@type":"Answer","text":"We are at 20, Ansari Road, Daryaganj, New Delhi. You are welcome to visit during working hours (Mon–Sat, 9:30 am – 7:00 pm). Please call or WhatsApp us on +91 79826 44262 before coming."}}]}</script>
@@ -51,7 +50,7 @@
 
   <header class="nav is-top" id="top">
     <div class="container nav__inner">
-      <a class="brand" href="./" aria-label="Electrical Insulation India — home">
+      <a class="brand" href="./index.html" aria-label="Electrical Insulation India — home">
         <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="6"/><path d="M23 6 9 23h9l-2 11 15-18h-9z"/></svg>
         <span class="brand__name">Electrical Insulation<small>India</small></span>
       </a>
@@ -60,18 +59,18 @@
         <ul>
           <li><a href="#products">Products</a></li>
           <li><a href="#industries">Industries</a></li>
-          <li><a href="./tools/">Tools</a></li>
-          <li><a href="./guides/">Guides</a></li>
+          <li><a href="./tools/index.html">Tools</a></li>
+          <li><a href="./guides/index.html">Guides</a></li>
           <li><a href="#faq">FAQ</a></li>
           <li><a href="#contact">Contact</a></li>
-          <li class="nav__lang-li"><a class="lang-switch lang-switch--menu" href="./hi/" hreflang="hi" lang="hi" data-lang="hi" aria-label="हिन्दी में देखें" title="हिन्दी में देखें"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg><span>हिन्दी</span></a></li>
+          <li class="nav__lang-li"><a class="lang-switch lang-switch--menu" href="./hi/index.html" hreflang="hi" lang="hi" data-lang="hi" aria-label="हिन्दी में देखें" title="हिन्दी में देखें"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg><span>हिन्दी</span></a></li>
         </ul>
         <a class="btn btn--wa btn--sm nav__cta" href="https://wa.me/917982644262?text=Hi%2C%20I%20need%20a%20quote%20for%20PVC%20sheets%20%2F%20packaging%20material." target="_blank" rel="noopener" data-track="whatsapp_click" data-track-where="nav">
           <svg class="icon" aria-hidden="true"><use href="#i-wa"/></svg> WhatsApp
         </a>
       </nav>
 
-      <a class="lang-switch lang-switch--bar" href="./hi/" hreflang="hi" lang="hi" data-lang="hi" aria-label="हिन्दी में देखें" title="हिन्दी में देखें"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg><span>हिन्दी</span></a>
+      <a class="lang-switch lang-switch--bar" href="./hi/index.html" hreflang="hi" lang="hi" data-lang="hi" aria-label="हिन्दी में देखें" title="हिन्दी में देखें"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg><span>हिन्दी</span></a>
 
       <button class="enq-btn" id="enqBtn" type="button" aria-haspopup="dialog" aria-controls="enq" aria-label="Open enquiry list" title="Enquiry list">
         <svg class="icon" aria-hidden="true"><use href="#i-list"/></svg><span class="enq-btn__count" id="enqCount" hidden>0</span>
@@ -143,7 +142,7 @@
 
         <div class="hero__art">
           <img class="hero__stack" src="assets/hero-stack.svg" alt="Stack of PVC insulation sheets stopping an electric spark" width="600" height="610" fetchpriority="high">
-          <a class="hero__chip" href="./products/pvc-sheets/">
+          <a class="hero__chip" href="./products/pvc-sheets/index.html">
             <span><strong>Rigid PVC sheet</strong><span class="mono">1–20 mm · 1220 × 2440 mm</span></span>
             <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>
           </a>
@@ -180,7 +179,7 @@
           <article class="pcard pcard--xl" data-tilt>
             <div class="pcard__img"><img src="assets/products/pvc-sheets.svg" alt="" width="600" height="450" loading="lazy"><span class="pcard__tag">Insulation</span></div>
             <div class="pcard__body">
-              <h3 class="pcard__title"><a href="./products/pvc-sheets/">Rigid PVC sheet</a></h3>
+              <h3 class="pcard__title"><a href="./products/pvc-sheets/index.html">Rigid PVC sheet</a></h3>
               <p>Solid grey sheet for insulation panels, barriers, meter boxes, linings and machine guards. Other colours and thicknesses on request.</p>
               <p class="pcard__spec mono">1–20 mm · 1220 × 2440 mm</p>
               <div class="pcard__row">
@@ -192,7 +191,7 @@
           <article class="pcard pcard--wide" data-tilt>
             <div class="pcard__img"><img src="assets/products/cut-to-size.svg" alt="" width="600" height="450" loading="lazy"><span class="pcard__tag">Insulation</span></div>
             <div class="pcard__body">
-              <h3 class="pcard__title"><a href="./products/cut-to-size/">Cut-to-size PVC panels</a></h3>
+              <h3 class="pcard__title"><a href="./products/cut-to-size/index.html">Cut-to-size PVC panels</a></h3>
               <p>Send a drawing, a sketch or a list of sizes. We cut the sheet and you get panels ready to drill and fit, with less wastage on your side.</p>
               <p class="pcard__spec mono">As per drawing · small &amp; bulk orders</p>
               <div class="pcard__row">
@@ -204,7 +203,7 @@
           <article class="pcard" data-tilt>
             <div class="pcard__img"><img src="assets/products/stretch-film.svg" alt="" width="600" height="450" loading="lazy"><span class="pcard__tag">Packaging</span></div>
             <div class="pcard__body">
-              <h3 class="pcard__title"><a href="./products/stretch-film/">Stretch film</a></h3>
+              <h3 class="pcard__title"><a href="./products/stretch-film/index.html">Stretch film</a></h3>
               <p>Hand and machine grade rolls for wrapping pallets and cartons.</p>
               <p class="pcard__spec mono">Clear &amp; black · 76 mm core</p>
               <div class="pcard__row">
@@ -216,7 +215,7 @@
           <article class="pcard" data-tilt>
             <div class="pcard__img"><img src="assets/products/bopp-tape.svg" alt="" width="600" height="450" loading="lazy"><span class="pcard__tag">Packaging</span></div>
             <div class="pcard__body">
-              <h3 class="pcard__title"><a href="./products/bopp-tape/">BOPP packing tape</a></h3>
+              <h3 class="pcard__title"><a href="./products/bopp-tape/index.html">BOPP packing tape</a></h3>
               <p>Carton sealing tape in clear and brown, or printed with your logo.</p>
               <p class="pcard__spec mono">24–72 mm · 50 &amp; 65 m rolls</p>
               <div class="pcard__row">
@@ -228,7 +227,7 @@
           <article class="pcard" data-tilt>
             <div class="pcard__img"><img src="assets/products/bubble-wrap.svg" alt="" width="600" height="450" loading="lazy"><span class="pcard__tag">Packaging</span></div>
             <div class="pcard__body">
-              <h3 class="pcard__title"><a href="./products/bubble-wrap/">Air bubble wrap</a></h3>
+              <h3 class="pcard__title"><a href="./products/bubble-wrap/index.html">Air bubble wrap</a></h3>
               <p>Cushioning rolls for fragile electricals, glass and appliances.</p>
               <p class="pcard__spec mono">1–1.5 m wide · 50 &amp; 100 m rolls</p>
               <div class="pcard__row">
@@ -240,7 +239,7 @@
           <article class="pcard" data-tilt>
             <div class="pcard__img"><img src="assets/products/foam.svg" alt="" width="600" height="450" loading="lazy"><span class="pcard__tag">Packaging</span></div>
             <div class="pcard__body">
-              <h3 class="pcard__title"><a href="./products/foam/">EPE foam sheets &amp; rolls</a></h3>
+              <h3 class="pcard__title"><a href="./products/foam/index.html">EPE foam sheets &amp; rolls</a></h3>
               <p>Expanded polyethylene foam for protective packaging and surface protection.</p>
               <p class="pcard__spec mono">1–50 mm · rolls, sheets, cut pieces</p>
               <div class="pcard__row">
@@ -252,7 +251,7 @@
           <article class="pcard" data-tilt>
             <div class="pcard__img"><img src="assets/products/strapping.svg" alt="" width="600" height="450" loading="lazy"><span class="pcard__tag">Packaging</span></div>
             <div class="pcard__body">
-              <h3 class="pcard__title"><a href="./products/strapping/">PP strapping &amp; clips</a></h3>
+              <h3 class="pcard__title"><a href="./products/strapping/index.html">PP strapping &amp; clips</a></h3>
               <p>Strap rolls, clips and sealers to close the pack securely.</p>
               <p class="pcard__spec mono">9–19 mm · machine &amp; semi-auto</p>
               <div class="pcard__row">
@@ -264,7 +263,7 @@
           <article class="pcard" data-tilt>
             <div class="pcard__img"><img src="assets/products/edge-guard.svg" alt="" width="600" height="450" loading="lazy"><span class="pcard__tag">Packaging</span></div>
             <div class="pcard__body">
-              <h3 class="pcard__title"><a href="./products/edge-guard/">Edge &amp; corner guards</a></h3>
+              <h3 class="pcard__title"><a href="./products/edge-guard/index.html">Edge &amp; corner guards</a></h3>
               <p>L-shaped guards that stop strap cut-in and protect corners of cartons and pallets.</p>
               <p class="pcard__spec mono">Length as required</p>
               <div class="pcard__row">
@@ -293,7 +292,7 @@
             <h3>Switchgear &amp; panel makers</h3>
             <p>Barriers, insulation plates and spacers cut to your drawing, delivered ready to assemble.</p>
             <p class="ind__label mono">Usually buys</p>
-            <ul class="ind__chips"><li><a href="./products/pvc-sheets/">Rigid PVC Sheet</a></li><li><a href="./products/cut-to-size/">Cut-to-Size PVC Panels</a></li><li><a href="./products/bubble-wrap/">Air Bubble Wrap</a></li><li><a href="./products/stretch-film/">Stretch Film</a></li></ul>
+            <ul class="ind__chips"><li><a href="./products/pvc-sheets/index.html">Rigid PVC Sheet</a></li><li><a href="./products/cut-to-size/index.html">Cut-to-Size PVC Panels</a></li><li><a href="./products/bubble-wrap/index.html">Air Bubble Wrap</a></li><li><a href="./products/stretch-film/index.html">Stretch Film</a></li></ul>
             <button class="btn btn--outline btn--sm ind__add" type="button" data-add-many="{&quot;items&quot;:[{&quot;slug&quot;:&quot;pvc-sheets&quot;,&quot;details&quot;:[[&quot;Thickness&quot;,&quot;5 mm&quot;],[&quot;Sheet size&quot;,&quot;1220 × 2440 mm (4 × 8 ft)&quot;]]},{&quot;slug&quot;:&quot;cut-to-size&quot;,&quot;details&quot;:[[&quot;Thickness&quot;,&quot;5 mm&quot;]]},{&quot;slug&quot;:&quot;bubble-wrap&quot;,&quot;details&quot;:[]},{&quot;slug&quot;:&quot;stretch-film&quot;,&quot;details&quot;:[[&quot;Grade&quot;,&quot;Machine grade&quot;]]}],&quot;id&quot;:&quot;switchgear&quot;}" data-added="Starter list added"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg> Add starter list to enquiry</button>
           </article>
           <article class="ind">
@@ -301,7 +300,7 @@
             <h3>Meter box makers &amp; electrical contractors</h3>
             <p>Sheet for meter boxes, spacer plates and cable-entry barriers, with protective wrap for site delivery.</p>
             <p class="ind__label mono">Usually buys</p>
-            <ul class="ind__chips"><li><a href="./products/pvc-sheets/">Rigid PVC Sheet</a></li><li><a href="./products/cut-to-size/">Cut-to-Size PVC Panels</a></li><li><a href="./products/bubble-wrap/">Air Bubble Wrap</a></li><li><a href="./products/bopp-tape/">BOPP Packing Tape</a></li></ul>
+            <ul class="ind__chips"><li><a href="./products/pvc-sheets/index.html">Rigid PVC Sheet</a></li><li><a href="./products/cut-to-size/index.html">Cut-to-Size PVC Panels</a></li><li><a href="./products/bubble-wrap/index.html">Air Bubble Wrap</a></li><li><a href="./products/bopp-tape/index.html">BOPP Packing Tape</a></li></ul>
             <button class="btn btn--outline btn--sm ind__add" type="button" data-add-many="{&quot;items&quot;:[{&quot;slug&quot;:&quot;pvc-sheets&quot;,&quot;details&quot;:[[&quot;Thickness&quot;,&quot;3 mm&quot;],[&quot;Sheet size&quot;,&quot;1220 × 2440 mm (4 × 8 ft)&quot;]]},{&quot;slug&quot;:&quot;cut-to-size&quot;,&quot;details&quot;:[[&quot;Thickness&quot;,&quot;3 mm&quot;]]},{&quot;slug&quot;:&quot;bubble-wrap&quot;,&quot;details&quot;:[]},{&quot;slug&quot;:&quot;bopp-tape&quot;,&quot;details&quot;:[[&quot;Width&quot;,&quot;48 mm (2 in)&quot;],[&quot;Colour&quot;,&quot;Clear&quot;]]}],&quot;id&quot;:&quot;meter&quot;}" data-added="Starter list added"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg> Add starter list to enquiry</button>
           </article>
           <article class="ind">
@@ -309,7 +308,7 @@
             <h3>Appliance &amp; equipment manufacturers</h3>
             <p>Insulating plates for assemblies, plus foam, bubble wrap and tape to ship finished units safely.</p>
             <p class="ind__label mono">Usually buys</p>
-            <ul class="ind__chips"><li><a href="./products/pvc-sheets/">Rigid PVC Sheet</a></li><li><a href="./products/foam/">EPE Foam Sheets &amp; Rolls</a></li><li><a href="./products/bubble-wrap/">Air Bubble Wrap</a></li><li><a href="./products/bopp-tape/">BOPP Packing Tape</a></li></ul>
+            <ul class="ind__chips"><li><a href="./products/pvc-sheets/index.html">Rigid PVC Sheet</a></li><li><a href="./products/foam/index.html">EPE Foam Sheets &amp; Rolls</a></li><li><a href="./products/bubble-wrap/index.html">Air Bubble Wrap</a></li><li><a href="./products/bopp-tape/index.html">BOPP Packing Tape</a></li></ul>
             <button class="btn btn--outline btn--sm ind__add" type="button" data-add-many="{&quot;items&quot;:[{&quot;slug&quot;:&quot;pvc-sheets&quot;,&quot;details&quot;:[[&quot;Thickness&quot;,&quot;2 mm&quot;]]},{&quot;slug&quot;:&quot;foam&quot;,&quot;details&quot;:[]},{&quot;slug&quot;:&quot;bubble-wrap&quot;,&quot;details&quot;:[]},{&quot;slug&quot;:&quot;bopp-tape&quot;,&quot;details&quot;:[[&quot;Colour&quot;,&quot;Printed (logo)&quot;]]}],&quot;id&quot;:&quot;appliance&quot;}" data-added="Starter list added"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg> Add starter list to enquiry</button>
           </article>
           <article class="ind">
@@ -317,7 +316,7 @@
             <h3>Traders, e-commerce &amp; shippers</h3>
             <p>Everything to pack and dispatch: tape, film, strapping and corner protection on one invoice.</p>
             <p class="ind__label mono">Usually buys</p>
-            <ul class="ind__chips"><li><a href="./products/bopp-tape/">BOPP Packing Tape</a></li><li><a href="./products/stretch-film/">Stretch Film</a></li><li><a href="./products/strapping/">PP Strapping &amp; Accessories</a></li><li><a href="./products/edge-guard/">Edge &amp; Corner Guards</a></li><li><a href="./products/bubble-wrap/">Air Bubble Wrap</a></li></ul>
+            <ul class="ind__chips"><li><a href="./products/bopp-tape/index.html">BOPP Packing Tape</a></li><li><a href="./products/stretch-film/index.html">Stretch Film</a></li><li><a href="./products/strapping/index.html">PP Strapping &amp; Accessories</a></li><li><a href="./products/edge-guard/index.html">Edge &amp; Corner Guards</a></li><li><a href="./products/bubble-wrap/index.html">Air Bubble Wrap</a></li></ul>
             <button class="btn btn--outline btn--sm ind__add" type="button" data-add-many="{&quot;items&quot;:[{&quot;slug&quot;:&quot;bopp-tape&quot;,&quot;details&quot;:[[&quot;Width&quot;,&quot;48 mm (2 in)&quot;],[&quot;Colour&quot;,&quot;Clear&quot;]]},{&quot;slug&quot;:&quot;stretch-film&quot;,&quot;details&quot;:[]},{&quot;slug&quot;:&quot;strapping&quot;,&quot;details&quot;:[]},{&quot;slug&quot;:&quot;edge-guard&quot;,&quot;details&quot;:[]},{&quot;slug&quot;:&quot;bubble-wrap&quot;,&quot;details&quot;:[]}],&quot;id&quot;:&quot;traders&quot;}" data-added="Starter list added"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg> Add starter list to enquiry</button>
           </article>
         </div>
@@ -333,19 +332,19 @@
           <p class="section__sub">Quick calculators for buyers. Use the result in your enquiry with one tap.</p>
         </header>
         <div class="tgrid" data-stagger>
-          <a class="tcard" href="./tools/#weight">
+          <a class="tcard" href="./tools/index.html#weight">
             <svg class="tcard__icon icon" aria-hidden="true"><use href="#i-scale"/></svg>
             <h3>PVC sheet weight &amp; cost</h3>
             <p>Thickness, size and quantity in; weight, tonnage and estimated cost (with GST) out.</p>
             <span class="tcard__more">Open tool <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></span>
           </a>
-          <a class="tcard" href="./tools/#fit">
+          <a class="tcard" href="./tools/index.html#fit">
             <svg class="tcard__icon icon" aria-hidden="true"><use href="#i-fit"/></svg>
             <h3>Cut-to-size fit checker</h3>
             <p>See how many panels fit on a 1220 × 2440 mm sheet, the cutting layout and the waste.</p>
             <span class="tcard__more">Open tool <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></span>
           </a>
-          <a class="tcard" href="./tools/#thickness">
+          <a class="tcard" href="./tools/index.html#thickness">
             <svg class="tcard__icon icon" aria-hidden="true"><use href="#i-ruler"/></svg>
             <h3>Which thickness?</h3>
             <p>Answer four short questions and get a sensible thickness range for your job.</p>
@@ -402,13 +401,13 @@
           <p class="section__sub">Plain-language help for choosing the right material.</p>
         </header>
         <div class="gcards" data-stagger>
-          <a class="gcard" href="./guides/pvc-sheet-thickness-guide/">
+          <a class="gcard" href="./guides/pvc-sheet-thickness-guide/index.html">
             <svg class="gcard__icon icon" aria-hidden="true"><use href="#i-book"/></svg>
             <h3>PVC sheet thickness guide</h3>
             <p>Quick reference by application, what decides the thickness, standard sheet weights and mistakes to avoid.</p>
             <span class="tcard__more">Read the guide <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></span>
           </a>
-          <a class="gcard" href="./guides/stretch-film-micron-guide/">
+          <a class="gcard" href="./guides/stretch-film-micron-guide/index.html">
             <svg class="gcard__icon icon" aria-hidden="true"><use href="#i-book"/></svg>
             <h3>Stretch film micron guide</h3>
             <p>Hand vs machine film, micron by load, how long a roll is and how to compare prices properly.</p>
@@ -556,8 +555,8 @@
       <nav aria-label="Footer">
         <ul class="footer__links">
           <li><a href="#products">Products</a></li>
-          <li><a href="./tools/">Tools</a></li>
-          <li><a href="./guides/">Guides</a></li>
+          <li><a href="./tools/index.html">Tools</a></li>
+          <li><a href="./guides/index.html">Guides</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#faq">FAQ</a></li>
           <li><a href="#contact">Contact</a></li>

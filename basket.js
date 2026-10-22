@@ -22,7 +22,7 @@
   function fmt(s, n) { return s.replace('{n}', n); }
   function nameOf(slug) { return (slug && E.names[slug]) || S.itemFallback; }
   function nameEn(slug) { return (slug && E.namesEn[slug]) || 'Custom item'; }
-  function homeUrl() { return E.base + (E.lang === 'hi' ? 'hi/' : ''); }
+  function homeUrl() { return E.base + (E.lang === 'hi' ? 'hi/' : '') + 'index.html'; }
 
   function clean(details) {
     return (details || []).filter(function (d) { return d && d[0] && String(d[1]).trim() !== ''; }).map(function (d) { return [String(d[0]), String(d[1]).trim()]; });
