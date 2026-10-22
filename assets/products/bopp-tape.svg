@@ -1,16 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" role="img" aria-label="BOPP packing tape rolls">
-<defs>
-<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7a4a12"/><stop offset="1" stop-color="#2a1a08"/></linearGradient>
-<radialGradient id="gl" cx=".5" cy=".45" r=".55"><stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
-<pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="#fff" stroke-opacity=".06"/></pattern>
-</defs>
-<rect width="600" height="450" fill="url(#bg)"/><rect width="600" height="450" fill="url(#grid)"/><circle cx="300" cy="210" r="220" fill="url(#gl)"/>
-<ellipse cx="300" cy="388" rx="190" ry="20" fill="#000" opacity=".28"/>
-<ellipse cx="210" cy="278" rx="86" ry="26" fill="#a8713a"/><rect x="124" y="250" width="172" height="28" fill="#a8713a"/>
-<ellipse cx="210" cy="250" rx="86" ry="26" fill="#d8a15f"/><ellipse cx="210" cy="250" rx="52" ry="15" fill="#e9eef6"/><ellipse cx="210" cy="250" rx="46" ry="12" fill="#2b3b57"/>
-<path d="M150 236q60 -22 120 0" stroke="#fff" stroke-opacity=".5" fill="none" stroke-width="3"/><ellipse cx="390" cy="228" rx="86" ry="26" fill="#c4d1e2"/><rect x="304" y="200" width="172" height="28" fill="#c4d1e2"/>
-<ellipse cx="390" cy="200" rx="86" ry="26" fill="#f2f6fb"/><ellipse cx="390" cy="200" rx="52" ry="15" fill="#e9eef6"/><ellipse cx="390" cy="200" rx="46" ry="12" fill="#2b3b57"/>
-<path d="M330 186q60 -22 120 0" stroke="#fff" stroke-opacity=".5" fill="none" stroke-width="3"/><ellipse cx="330" cy="338" rx="86" ry="26" fill="#b8803f"/><rect x="244" y="310" width="172" height="28" fill="#b8803f"/>
-<ellipse cx="330" cy="310" rx="86" ry="26" fill="#e6b676"/><ellipse cx="330" cy="310" rx="52" ry="15" fill="#e9eef6"/><ellipse cx="330" cy="310" rx="46" ry="12" fill="#2b3b57"/>
-<path d="M270 296q60 -22 120 0" stroke="#fff" stroke-opacity=".5" fill="none" stroke-width="3"/><rect x="400" y="290" width="150" height="14" rx="3" fill="#ffb703" transform="rotate(-12 475 297)"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" role="img" aria-label="Rolls of BOPP packing tape">
+<rect width="600" height="450" fill="#e8e5de"/>
+<ellipse cx="300" cy="372" rx="200" ry="22" fill="#1c2430" opacity=".14"/>
+<defs><linearGradient id="g2352" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".22"/><stop offset=".3" stop-color="#fff" stop-opacity=".12"/><stop offset=".62" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></linearGradient></defs>
+<path d="M133 255v44a82 22 0 0 0 164 0v-44z" fill="#ad8650"/>
+<path d="M133 255v44a82 22 0 0 0 164 0v-44z" fill="none"/>
+<path d="M133 255v44a82 22 0 0 0 164 0v-44z" fill="url(#g2352)" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
+<ellipse cx="215" cy="255" rx="82" ry="22" fill="#cba670" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
+<ellipse cx="215" cy="255" rx="44" ry="11" fill="#c7c2b7" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
+<defs><linearGradient id="g2220" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".22"/><stop offset=".3" stop-color="#fff" stop-opacity=".12"/><stop offset=".62" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></linearGradient></defs>
+<path d="M133 211v44a82 22 0 0 0 164 0v-44z" fill="#b8935c"/>
+<path d="M133 211v44a82 22 0 0 0 164 0v-44z" fill="none"/>
+<path d="M133 211v44a82 22 0 0 0 164 0v-44z" fill="url(#g2220)" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
+<ellipse cx="215" cy="211" rx="82" ry="22" fill="#d6b480" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
+<ellipse cx="215" cy="211" rx="44" ry="11" fill="#c7c2b7" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
+<defs><linearGradient id="g3657" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".22"/><stop offset=".3" stop-color="#fff" stop-opacity=".12"/><stop offset=".62" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></linearGradient></defs>
+<path d="M313 270v50a82 22 0 0 0 164 0v-50z" fill="#cfc8b4"/>
+<path d="M313 270v50a82 22 0 0 0 164 0v-50z" fill="none"/>
+<path d="M313 270v50a82 22 0 0 0 164 0v-50z" fill="url(#g3657)" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
+<ellipse cx="395" cy="270" rx="82" ry="22" fill="#e9e3d3" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
+<ellipse cx="395" cy="270" rx="44" ry="11" fill="#c7c2b7" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
+<defs><linearGradient id="g3507" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".22"/><stop offset=".3" stop-color="#fff" stop-opacity=".12"/><stop offset=".62" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></linearGradient></defs>
+<path d="M313 220v50a82 22 0 0 0 164 0v-50z" fill="#cfc8b4"/>
+<path d="M313 220v50a82 22 0 0 0 164 0v-50z" fill="none"/>
+<path d="M313 220v50a82 22 0 0 0 164 0v-50z" fill="url(#g3507)" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
+<ellipse cx="395" cy="220" rx="82" ry="22" fill="#e9e3d3" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
+<ellipse cx="395" cy="220" rx="44" ry="11" fill="#c7c2b7" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
+<path d="M430 232c0 0 70 8 110 30l-6 14c-30-14-70-22-104-24z" fill="#cba670" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
 </svg>

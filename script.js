@@ -9,8 +9,6 @@
   };
   // ========================
 
-  document.documentElement.classList.add('js');
-
   // Footer year
   var yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
@@ -26,7 +24,7 @@
       themeBtn.setAttribute('aria-label', t === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
       themeBtn.setAttribute('aria-pressed', String(t === 'dark'));
     }
-    if (themeMeta) themeMeta.setAttribute('content', t === 'dark' ? '#0B1220' : '#FFFFFF');
+    if (themeMeta) themeMeta.setAttribute('content', t === 'dark' ? '#0f161f' : '#f6f4ef');
   }
   function setTheme(t, save) {
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -52,6 +50,7 @@
 
   function setMenu(open) {
     toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     menu.classList.toggle('is-open', open);
   }
 
@@ -63,53 +62,30 @@
       if (e.target.closest('a')) setMenu(false);
     });
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') setMenu(false);
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') { setMenu(false); toggle.focus(); }
+    });
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.nav__inner')) setMenu(false);
     });
     window.matchMedia('(min-width: 900px)').addEventListener('change', function () { setMenu(false); });
   }
 
-  // ---------- Nav shadow on scroll ----------
-  var nav = document.getElementById('top');
-  function onScroll() { if (nav) nav.classList.toggle('is-scrolled', window.scrollY > 10); }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-
-  // ---------- Animated counters ----------
-  var counters = document.querySelectorAll('[data-count]');
-  function runCounter(el) {
-    var target = parseInt(el.dataset.count, 10), start = null;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    function step(t) {
-      if (start === null) start = t;
-      var p = Math.min((t - start) / 1400, 1);
-      el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
-      if (p < 1) requestAnimationFrame(step);
+  // ---------- Highlight the current section in the nav ----------
+  var links = Array.prototype.slice.call(document.querySelectorAll('.nav__menu ul a[href^="#"]'));
+  var sections = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+  function spy() {
+    var home = document.getElementById('main');
+    var y = window.scrollY + 120, current = -1;
+    if (home && !home.hidden) {
+      sections.forEach(function (sec, i) { if (sec && sec.offsetTop <= y) current = i; });
     }
-    el.textContent = '0';
-    requestAnimationFrame(step);
+    links.forEach(function (a, i) {
+      if (i === current) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+    });
   }
-  if ('IntersectionObserver' in window) {
-    var cio = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { if (en.isIntersecting) { runCounter(en.target); cio.unobserve(en.target); } });
-    }, { threshold: 0.6 });
-    counters.forEach(function (el) { cio.observe(el); });
-  }
-
-  // ---------- Scroll reveal ----------
-  var revealEls = document.querySelectorAll('.reveal');
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          io.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12 });
-    revealEls.forEach(function (el) { io.observe(el); });
-  } else {
-    revealEls.forEach(function (el) { el.classList.add('is-visible'); });
-  }
+  window.addEventListener('scroll', spy, { passive: true });
+  window.addEventListener('hashchange', spy);
+  spy();
 
   // ---------- Quote form -> WhatsApp / email ----------
   var form = document.getElementById('quoteForm');

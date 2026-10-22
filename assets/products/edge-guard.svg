@@ -1,12 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" role="img" aria-label="Corner and edge protector">
-<defs>
-<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b45309"/><stop offset="1" stop-color="#3b1d05"/></linearGradient>
-<radialGradient id="gl" cx=".5" cy=".45" r=".55"><stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
-<pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="#fff" stroke-opacity=".06"/></pattern>
-</defs>
-<rect width="600" height="450" fill="url(#bg)"/><rect width="600" height="450" fill="url(#grid)"/><circle cx="300" cy="210" r="220" fill="url(#gl)"/>
-<ellipse cx="300" cy="388" rx="190" ry="20" fill="#000" opacity=".28"/>
-<g transform="translate(300 215)"><polygon points="-130,70 -130,-60 -100,-60 -100,40 130,40 130,70" fill="#d97706"/><polygon points="-130,-60 -100,-60 -70,-90 -100,-90" fill="#f59e0b"/><polygon points="-130,70 130,70 160,40 -100,40" fill="#b45309"/>
-<polygon points="-100,40 130,40 160,10 -70,10" fill="#fbbf24"/><polygon points="-100,-60 -70,-90 -70,10 -100,40" fill="#f59e0b"/></g>
-<rect x="190" y="320" width="220" height="34" rx="8" fill="#0f2747" opacity=".9"/><text x="300" y="344" font-family="Arial" font-weight="700" font-size="17" fill="#ffb703" text-anchor="middle">EDGE / CORNER GUARD</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" role="img" aria-label="L-shaped edge and corner guard">
+<rect width="600" height="450" fill="#e8e5de"/>
+<ellipse cx="300" cy="352" rx="190" ry="22" fill="#1c2430" opacity=".14"/>
+<polygon points="219.2,90.3 446.5,221.6 446.5,316.1 219.2,184.8" fill="#a98b5f" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/><polygon points="458.3,214.8 446.5,221.6 446.5,316.1 458.3,309.3" fill="#8e7249" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/><polygon points="231,83.5 458.3,214.8 446.5,221.6 219.2,90.3" fill="#cdb085" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
+<polygon points="149.2,211.6 376.5,342.9 376.5,356.5 149.2,225.3" fill="#a98b5f" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/><polygon points="446.5,302.4 376.5,342.9 376.5,356.5 446.5,316.1" fill="#8e7249" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/><polygon points="219.2,171.2 446.5,302.4 376.5,342.9 149.2,211.6" fill="#cdb085" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
 </svg>

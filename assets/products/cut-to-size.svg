@@ -1,14 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" role="img" aria-label="Cut-to-size PVC insulation panels">
-<defs>
-<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#312e81"/><stop offset="1" stop-color="#0f0c3a"/></linearGradient>
-<radialGradient id="gl" cx=".5" cy=".45" r=".55"><stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
-<pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="#fff" stroke-opacity=".06"/></pattern>
-</defs>
-<rect width="600" height="450" fill="url(#bg)"/><rect width="600" height="450" fill="url(#grid)"/><circle cx="300" cy="210" r="220" fill="url(#gl)"/>
-<ellipse cx="300" cy="388" rx="190" ry="20" fill="#000" opacity=".28"/>
-<g transform="translate(130 90)"><rect width="220" height="250" rx="6" fill="#c5d1e1" stroke="#5b7090" stroke-width="3"/>
-<g fill="#17355f"><circle cx="30" cy="30" r="9"/><circle cx="190" cy="30" r="9"/><circle cx="30" cy="220" r="9"/><circle cx="190" cy="220" r="9"/></g>
-<rect x="60" y="60" width="100" height="70" rx="4" fill="#17355f"/><rect x="70" y="150" width="80" height="12" rx="3" fill="#17355f"/><rect x="70" y="175" width="80" height="12" rx="3" fill="#17355f"/></g>
-<g transform="translate(300 170) rotate(10)"><rect width="170" height="190" rx="6" fill="#aebfd6" stroke="#5b7090" stroke-width="3"/><circle cx="85" cy="95" r="42" fill="#17355f"/><circle cx="85" cy="95" r="26" fill="#aebfd6"/></g>
-<path d="M120 380h360" stroke="#ffb703" stroke-width="3" stroke-dasharray="10 8"/><text x="300" y="412" font-family="Arial" font-weight="700" font-size="18" fill="#ffb703" text-anchor="middle">CUT-TO-SIZE PVC PANELS</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" role="img" aria-label="Drawing of a PVC sheet cut into panels">
+<rect width="600" height="450" fill="#e8e5de"/>
+<g transform="translate(16 -4)">
+<rect x="120" y="80" width="360" height="260" rx="2" fill="#c4c9d0" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
+<rect x="140" y="100" width="150" height="110" fill="#dfe3e8" stroke="#17324f" stroke-width="1.6" stroke-dasharray="6 4"/>
+<rect x="300" y="100" width="160" height="70" fill="#dfe3e8" stroke="#17324f" stroke-width="1.6" stroke-dasharray="6 4"/>
+<rect x="300" y="185" width="70" height="60" fill="#dfe3e8" stroke="#17324f" stroke-width="1.6" stroke-dasharray="6 4"/>
+<rect x="385" y="185" width="75" height="60" fill="#dfe3e8" stroke="#17324f" stroke-width="1.6" stroke-dasharray="6 4"/>
+<rect x="140" y="225" width="110" height="95" fill="#dfe3e8" stroke="#17324f" stroke-width="1.6" stroke-dasharray="6 4"/>
+<rect x="265" y="260" width="195" height="60" fill="#dfe3e8" stroke="#17324f" stroke-width="1.6" stroke-dasharray="6 4"/>
+<circle cx="165" cy="125" r="7" fill="#e8e5de" stroke="#17324f" stroke-width="1.4"/><circle cx="265" cy="125" r="7" fill="#e8e5de" stroke="#17324f" stroke-width="1.4"/><circle cx="165" cy="195" r="7" fill="#e8e5de" stroke="#17324f" stroke-width="1.4"/><circle cx="265" cy="195" r="7" fill="#e8e5de" stroke="#17324f" stroke-width="1.4"/>
+<g stroke="#17324f" stroke-width="1.4" fill="none"><path d="M120 372h360M120 364v16M480 364v16M96 80v260M88 80h16M88 340h16"/></g>
+<path d="M120 372l9-4v8zM480 372l-9-4v8zM96 80l-4 9h8zM96 340l-4-9h8z" fill="#17324f"/>
+</g>
 </svg>

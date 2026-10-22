@@ -6,41 +6,40 @@ Goal: visitors contact the business on **WhatsApp or email**.
 Pure HTML + CSS + a little vanilla JavaScript — no framework, no build step.
 
 ```
-index.html     page markup, SEO / Open Graph tags, JSON-LD
-style.css      mobile-first styles (navy + safety-amber theme)
-script.js      mobile menu, scroll reveal, quote form -> WhatsApp / email
-assets/        logo, favicon, hero/about placeholder images, og-image.png
+index.html        page markup, SEO / Open Graph tags, JSON-LD
+style.css         all styles (design tokens at the top, light + dark theme)
+script.js         mobile menu, theme switch, nav highlight, quote form -> WhatsApp / email
+products.js       product catalogue data (specs, sizes, FAQs, WhatsApp form fields)
+product-view.js   renders the product detail pages (#/product/<slug>)
+assets/           favicon, og-image.png, fonts/ (IBM Plex, self-hosted), products/*.svg
 ```
 
-**Sections:** Navbar · Hero · Features (products) · About · Testimonials · FAQ · Contact (+ quote form) · Footer, plus a floating WhatsApp button.
+**Sections:** Contact strip · Navbar · Hero · Products · How to order · About · FAQ · Contact (+ quote form) · Footer, plus a floating WhatsApp button and a light / dark theme switch.
 
 ---
 
-## 1. Before you go live — replace the placeholders
+## 1. Before you go live — check these
 
-| What | Placeholder | Where |
-|---|---|---|
-| WhatsApp number | `919999999999` (country code + number, no `+`) | `index.html`, `script.js` |
-| Email | `info@example.com` | `index.html`, `script.js` |
-| Phone shown on page | `+91 99999 99999` | `index.html` |
-| Address / hours / GSTIN | "Your Shop / Godown Address…", "Mon–Sat 9:30–7", `GSTIN: 00XXXXX…` | `index.html` (Contact, Footer, JSON-LD) |
-| Live site URL | `https://www.example.com/` | `index.html` (canonical, `og:url`, `og:image`, `twitter:image`, JSON-LD) |
-| Stats (10+ years, 500+ buyers) | made-up sample numbers | `index.html` (Hero `.stats`) |
-| **Testimonials** | **sample text, "Customer Name"** | `index.html` (`#testimonials`) |
-| Images | SVG illustrations | `assets/hero.svg`, `assets/about.svg` → swap for real photos |
+| What | Where |
+|---|---|
+| **Product photos.** The images in `assets/products/` are neutral illustrations. Replace each with a real photo of your stock (same file name, 4:3, ideally on a plain light background). | `assets/products/*.svg`. To use `.jpg` files instead, replace `.svg` with `.jpg` in `index.html` and `product-view.js`. |
+| Live site URL (`www.example.com`) | `index.html` — canonical, `og:url`, `og:image`, `twitter:image`, JSON-LD `url` |
+| WhatsApp number `917982644262`, email, phone | `index.html`, `script.js` (`CONFIG`), `products.js` (`SITE`) |
+| Address / hours | `index.html` (strip, About, Contact, Footer, FAQ, JSON-LD) |
+| Product claims (thickness range, test certificate, credit terms, delivery times) | `index.html` FAQ + `products.js` — make sure they match what you really offer |
+| GSTIN (optional, builds trust) | add to the footer in `index.html` |
 
-Quick find-and-replace for contact details (run from the repo root, edit values first):
+Customer reviews and "years in business / number of buyers" figures were removed on purpose. Add them back only when they are real (for example a `#testimonials` section with names and cities you have permission to publish).
+
+Quick find-and-replace for contact details (edit the values first):
 
 ```bash
-sed -i 's/919999999999/91YOURNUMBER/g; s/info@example.com/you@yourdomain.com/g' index.html script.js
+sed -i 's/917982644262/91YOURNUMBER/g; s/arnavjaincena@gmail.com/you@yourdomain.com/g' index.html script.js products.js
 sed -i 's#https://www.example.com/#https://yourdomain.com/#g' index.html
 ```
 
-> ⚠️ Do not publish the sample testimonials, stats or "10+ years" claims unless they are true for your business.
-> Also check the product claims (thickness range, certificates, credit terms) match what you really offer.
-
 ### Branding
-Theme colours are CSS variables at the top of `style.css` (`--navy-800`, `--amber`, …). Change them to re-theme the whole page.
+Colours are CSS variables at the top of `style.css` (`--paper`, `--navy`, `--amber`, …; dark theme overrides in `:root[data-theme="dark"]`). Fonts are self-hosted IBM Plex, so the page makes no third-party font requests.
 
 ### Open Graph image
 `assets/og-image.png` (1200×630) is what WhatsApp / Facebook / LinkedIn show when your link is shared. Replace it with your own banner when you have one.
@@ -78,7 +77,7 @@ python3 -m http.server 8000
 3. Deploy.
 
 ### Option D — Any hosting / cPanel
-Upload `index.html`, `style.css`, `script.js` and the `assets/` folder into `public_html/` using File Manager or FTP.
+Upload `index.html`, `style.css`, `script.js`, `products.js`, `product-view.js` and the `assets/` folder into `public_html/` using File Manager or FTP.
 
 ### Custom domain
 Buy a domain (e.g. `.in` / `.com`), then add it in your host's **Domains** settings (GitHub Pages: Settings → Pages → *Custom domain*; Netlify/Vercel: Domains) and create the DNS records they show. HTTPS is enabled automatically. Afterwards, update the URLs in `index.html` to the final domain.
@@ -96,4 +95,5 @@ Buy a domain (e.g. `.in` / `.com`), then add it in your host's **Domains** setti
 
 ## Notes
 - The quote form has no backend: it builds a message and opens WhatsApp (`wa.me`) or the visitor's email app. This keeps hosting free and gets leads straight to your phone.
-- Fully keyboard accessible, respects `prefers-reduced-motion`, and works without JavaScript (links still work; only the form and menu need JS).
+- Keyboard accessible, text contrast checked against WCAG AA in both themes, and works without JavaScript (links still work; the form, menu and product detail pages need JS).
+- Product detail pages use `#/product/<slug>` links on the same page. They work for visitors but search engines index only the home page; separate HTML pages per product would be the next step for SEO.

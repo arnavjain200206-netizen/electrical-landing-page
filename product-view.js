@@ -45,7 +45,7 @@
     var p = PRODUCTS[slug];
     if (!p) return '';
     return '<a class="rel" href="#/product/' + slug + '"><img src="assets/products/' + p.image + '.svg" alt="" width="600" height="450" loading="lazy">' +
-      '<span><strong>' + esc(p.name) + '</strong><em>View details →</em></span></a>';
+      '<span><strong>' + esc(p.name) + '</strong><em>View details</em></span></a>';
   }
 
   function render(slug) {
@@ -53,18 +53,18 @@
     var quickMsg = 'Hi, I would like the price for ' + p.name + '. Please share details.';
     view.innerHTML =
       '<div class="container">' +
-        '<nav class="crumbs" aria-label="Breadcrumb"><a href="#top">Home</a><span>/</span><a href="#features">Products</a><span>/</span><span aria-current="page">' + esc(p.name) + '</span></nav>' +
+        '<nav class="crumbs" aria-label="Breadcrumb"><a href="#top">Home</a><span>/</span><a href="#products">Products</a><span>/</span><span aria-current="page">' + esc(p.name) + '</span></nav>' +
         '<section class="phero">' +
           '<div class="phero__media"><img src="assets/products/' + p.image + '.svg" alt="' + esc(p.name) + '" width="600" height="450" fetchpriority="high"></div>' +
           '<div class="phero__copy">' +
-            '<p class="eyebrow eyebrow--dark">Product details</p>' +
+            '<p class="kicker">Product details</p>' +
             '<h1 id="pvTitle" tabindex="-1">' + esc(p.name) + '</h1>' +
             '<p class="phero__tag">' + esc(p.tagline) + '</p>' +
             '<ul class="pchips">' + p.highlights.map(function (h) { return '<li>' + ICON('i-check') + esc(h) + '</li>'; }).join('') + '</ul>' +
             '<div class="pricebox"><strong>Price on request</strong><span>Rates change with size, quantity and city. Get the best bulk quotation on WhatsApp — usually the same business day.</span></div>' +
             '<div class="phero__actions">' +
               '<a class="btn btn--wa btn--lg" href="#quote" data-jump="quote">' + ICON('i-wa') + ' Build your quote</a>' +
-              '<a class="btn btn--ghost btn--lg" href="' + waLink(quickMsg) + '" target="_blank" rel="noopener">Quick enquiry</a>' +
+              '<a class="btn btn--outline btn--lg" href="' + waLink(quickMsg) + '" target="_blank" rel="noopener">Quick enquiry</a>' +
             '</div>' +
           '</div>' +
         '</section>' +
@@ -100,8 +100,8 @@
               '<textarea id="qbMsg" rows="9"></textarea>' +
               '<div class="qb__actions">' +
                 '<a class="btn btn--wa btn--lg" id="qbSend" href="#" target="_blank" rel="noopener">' + ICON('i-wa') + ' Send on WhatsApp</a>' +
-                '<button type="button" class="btn btn--ghost btn--sm" id="qbCopy">Copy</button>' +
-                '<button type="button" class="btn btn--ghost btn--sm" id="qbReset">Reset</button>' +
+                '<button type="button" class="btn btn--outline btn--sm" id="qbCopy">Copy</button>' +
+                '<button type="button" class="btn btn--outline btn--sm" id="qbReset">Reset</button>' +
               '</div>' +
               '<p class="qb__status" id="qbStatus" role="status"></p>' +
               '<p class="qb__contact">Prefer a call? <a href="tel:+' + SITE.whatsapp + '">' + esc(SITE.phoneDisplay) + '</a> · <a href="mailto:' + SITE.email + '">' + esc(SITE.email) + '</a></p>' +
@@ -110,7 +110,7 @@
         '</div>' +
 
         '<section class="pblock prelated"><h2>You may also need</h2><div class="relgrid">' + (p.related || []).map(relatedCard).join('') + '</div>' +
-          '<p><a class="btn btn--ghost" href="#showcase">← Back to all products</a></p></section>' +
+          '<p><a class="btn btn--outline" href="#products">Back to all products</a></p></section>' +
       '</div>';
 
     initBuilder(p);
@@ -177,6 +177,7 @@
     document.title = HOME_TITLE;
     if (metaDesc) metaDesc.setAttribute('content', HOME_DESC);
     var id = hash && hash.length > 1 ? decodeURIComponent(hash.slice(1)) : '';
+    if (id === 'showcase' || id === 'features') id = 'products';
     var target = id && document.getElementById(id);
     if (target) target.scrollIntoView(); else window.scrollTo(0, 0);
   }
@@ -192,7 +193,7 @@
       window.scrollTo(0, 0);
       var h = document.getElementById('pvTitle'); if (h) h.focus({ preventScroll: true });
     } else if (m) {
-      location.replace('#showcase');
+      location.replace('#products');
     } else {
       showHome(location.hash);
     }
