@@ -11,8 +11,10 @@ style.css         all styles (design tokens at the top, light + dark theme)
 script.js         mobile menu, theme switch, nav highlight, quote form -> WhatsApp / email
 products.js       product catalogue data (specs, sizes, FAQs, WhatsApp form fields)
 product-view.js   renders the product detail pages (#/product/<slug>)
-assets/           favicon, og-image.png, fonts/ (IBM Plex, self-hosted), products/*.svg
+assets/           favicon, og-image.png, hero-stack.svg (animated hero art), fonts/ (IBM Plex, self-hosted), products/*.svg (animated)
 ```
+
+**Motion:** circuit traces with flowing current and a spark that is stopped by the PVC stack (hero), rotating headline word, count-up numbers, scrolling ticker, scroll progress bar, scroll reveals, tilt + spotlight on product cards, magnetic buttons, animated product illustrations, rotating border on the quote form. Pointer effects only run on mouse / trackpad, and everything respects `prefers-reduced-motion` (animations off, content shown as-is). All motion is CSS + a small amount of vanilla JS in `script.js`; no libraries.
 
 **Sections:** Contact strip · Navbar · Hero · Products · How to order · About · FAQ · Contact (+ quote form) · Footer, plus a floating WhatsApp button and a light / dark theme switch.
 
@@ -22,7 +24,7 @@ assets/           favicon, og-image.png, fonts/ (IBM Plex, self-hosted), product
 
 | What | Where |
 |---|---|
-| **Product photos.** The images in `assets/products/` are neutral illustrations. Replace each with a real photo of your stock (same file name, 4:3, ideally on a plain light background). | `assets/products/*.svg`. To use `.jpg` files instead, replace `.svg` with `.jpg` in `index.html` and `product-view.js`. |
+| **Product photos.** The images in `assets/products/` are neutral illustrations. Replace each with a real photo of your stock (same file name, 4:3, ideally on a plain light background). Photos are static; the card tilt, spotlight and zoom still apply. | `assets/products/*.svg`. To use `.jpg` files instead, replace `.svg` with `.jpg` in `index.html` and `product-view.js`. |
 | Live site URL (`www.example.com`) | `index.html` — canonical, `og:url`, `og:image`, `twitter:image`, JSON-LD `url` |
 | WhatsApp number `917982644262`, email, phone | `index.html`, `script.js` (`CONFIG`), `products.js` (`SITE`) |
 | Address / hours | `index.html` (strip, About, Contact, Footer, FAQ, JSON-LD) |

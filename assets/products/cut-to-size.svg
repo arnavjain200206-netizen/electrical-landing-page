@@ -1,15 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" role="img" aria-label="Drawing of a PVC sheet cut into panels">
+<style>
+.bob{animation:bob 4.6s ease-in-out infinite}
+.bob2{animation:bob 4.6s ease-in-out -2.3s infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.sh{animation:sh 4.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.sh2{animation:sh 4.6s ease-in-out -2.3s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes sh{0%,100%{transform:scale(1);opacity:.15}50%{transform:scale(.9);opacity:.09}}
+.gloss{animation:gloss 4.2s ease-in-out infinite}
+@keyframes gloss{0%,35%{transform:translateX(0)}80%,100%{transform:translateX(330px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}.cut{stroke-dasharray:6 4;animation:march 1s linear infinite}@keyframes march{to{stroke-dashoffset:-10}}.laser{animation:laser 3.4s ease-in-out infinite alternate}@keyframes laser{from{transform:translateX(0)}to{transform:translateX(354px)}}.pn{animation:pn 3.4s ease-in-out infinite alternate}@keyframes pn{from{fill:#dfe3e8}to{fill:#f1f3f6}}</style>
+<defs><linearGradient id="lz" x1="0" x2="1"><stop offset="0" stop-color="#f0a90e" stop-opacity="0"/><stop offset="1" stop-color="#f0a90e" stop-opacity=".55"/></linearGradient></defs>
 <rect width="600" height="450" fill="#e8e5de"/>
 <g transform="translate(16 -4)">
 <rect x="120" y="80" width="360" height="260" rx="2" fill="#c4c9d0" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
-<rect x="140" y="100" width="150" height="110" fill="#dfe3e8" stroke="#17324f" stroke-width="1.6" stroke-dasharray="6 4"/>
-<rect x="300" y="100" width="160" height="70" fill="#dfe3e8" stroke="#17324f" stroke-width="1.6" stroke-dasharray="6 4"/>
-<rect x="300" y="185" width="70" height="60" fill="#dfe3e8" stroke="#17324f" stroke-width="1.6" stroke-dasharray="6 4"/>
-<rect x="385" y="185" width="75" height="60" fill="#dfe3e8" stroke="#17324f" stroke-width="1.6" stroke-dasharray="6 4"/>
-<rect x="140" y="225" width="110" height="95" fill="#dfe3e8" stroke="#17324f" stroke-width="1.6" stroke-dasharray="6 4"/>
-<rect x="265" y="260" width="195" height="60" fill="#dfe3e8" stroke="#17324f" stroke-width="1.6" stroke-dasharray="6 4"/>
+<rect class="pn cut" style="animation-delay:0s,0s" x="140" y="100" width="150" height="110" fill="#dfe3e8" stroke="#17324f" stroke-width="1.6"/>
+<rect class="pn cut" style="animation-delay:0s,-0.4s" x="300" y="100" width="160" height="70" fill="#dfe3e8" stroke="#17324f" stroke-width="1.6"/>
+<rect class="pn cut" style="animation-delay:0s,-0.8s" x="300" y="185" width="70" height="60" fill="#dfe3e8" stroke="#17324f" stroke-width="1.6"/>
+<rect class="pn cut" style="animation-delay:0s,-1.2000000000000002s" x="385" y="185" width="75" height="60" fill="#dfe3e8" stroke="#17324f" stroke-width="1.6"/>
+<rect class="pn cut" style="animation-delay:0s,-1.6s" x="140" y="225" width="110" height="95" fill="#dfe3e8" stroke="#17324f" stroke-width="1.6"/>
+<rect class="pn cut" style="animation-delay:0s,-2s" x="265" y="260" width="195" height="60" fill="#dfe3e8" stroke="#17324f" stroke-width="1.6"/>
 <circle cx="165" cy="125" r="7" fill="#e8e5de" stroke="#17324f" stroke-width="1.4"/><circle cx="265" cy="125" r="7" fill="#e8e5de" stroke="#17324f" stroke-width="1.4"/><circle cx="165" cy="195" r="7" fill="#e8e5de" stroke="#17324f" stroke-width="1.4"/><circle cx="265" cy="195" r="7" fill="#e8e5de" stroke="#17324f" stroke-width="1.4"/>
 <g stroke="#17324f" stroke-width="1.4" fill="none"><path d="M120 372h360M120 364v16M480 364v16M96 80v260M88 80h16M88 340h16"/></g>
 <path d="M120 372l9-4v8zM480 372l-9-4v8zM96 80l-4 9h8zM96 340l-4-9h8z" fill="#17324f"/>
+<g clip-path="inset(0)"><g class="laser"><rect x="118" y="76" width="28" height="268" fill="url(#lz)"/><rect x="144" y="76" width="2.5" height="268" fill="#f0a90e"/></g></g>
 </g>
 </svg>
