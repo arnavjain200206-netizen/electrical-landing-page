@@ -10,7 +10,7 @@
 
   // old shared links such as index.html#/product/foam now live on their own page
   var legacy = /^#\/product\/([a-z0-9-]+)\/?$/.exec(location.hash);
-  if (legacy && E.page === 'home') { location.replace(E.base + (E.lang === 'hi' ? 'hi/' : '') + 'products/' + legacy[1] + '/index.html'); return; }
+  if (legacy && E.page === 'home' && !E.single) { location.replace(E.base + (E.lang === 'hi' ? 'hi/' : '') + 'products/' + legacy[1] + '/index.html'); return; }
   if (location.hash === '#showcase' || location.hash === '#features') { location.replace('#products'); }
 
   var yearEl = document.getElementById('year');
@@ -68,13 +68,12 @@
 
   // ---------- Nav over the hero, scroll progress ----------
   var nav = document.getElementById('top');
-  var hero = document.getElementById('hero');
   var progress = document.getElementById('progress');
   var queued = false;
   function onScrollFx() {
     queued = false;
     var y = window.scrollY;
-    if (nav && hero) nav.classList.toggle('is-top', y < 24);
+    if (nav) nav.classList.toggle('is-top', !!document.getElementById('hero') && y < 24);
     if (progress) {
       var max = root.scrollHeight - window.innerHeight;
       progress.style.setProperty('--p', max > 0 ? Math.min(1, y / max).toFixed(4) : '0');
@@ -86,15 +85,19 @@
   onScrollFx();
 
   // ---------- Highlight the current section in the nav (home page) ----------
-  var links = Array.prototype.slice.call(document.querySelectorAll('.nav__menu ul a[href^="#"]'));
-  var allSections = Array.prototype.slice.call(document.querySelectorAll('main > section[id]'));
+  var links = Array.prototype.slice.call(document.querySelectorAll('.nav__menu ul a[href*="#"]'));
   function spy() {
     var y = window.scrollY + 120, current = '';
-    allSections.forEach(function (sec) { if (sec.offsetTop <= y) current = sec.id; });
-    links.forEach(function (a) { if (a.getAttribute('href') === '#' + current) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+    document.querySelectorAll('main section[id]').forEach(function (sec) { if (sec.offsetTop <= y && sec.closest('#hero, .pv') === null) current = sec.id; });
+    links.forEach(function (a) { var h = a.getAttribute('href'); if (current && h.slice(h.lastIndexOf('#')) === '#' + current && (h.indexOf('#') === 0 || h.indexOf('#/#') === 0)) a.setAttribute('aria-current', 'true'); else if (a.getAttribute('aria-current') === 'true') a.removeAttribute('aria-current'); });
   }
-  if (links.length && allSections.length) { window.addEventListener('scroll', spy, { passive: true }); spy(); }
+  if (links.length) { window.addEventListener('scroll', spy, { passive: true }); spy(); window.addEventListener('hashchange', function () { window.setTimeout(spy, 50); }); }
 
+  // =====================================================================
+  // Everything below belongs to the current view and runs again whenever a view is shown
+  // =====================================================================
+  var rotTimer = null;
+  function mount() {
   // ---------- Scroll reveal ----------
   document.querySelectorAll('[data-stagger]').forEach(function (group) {
     Array.prototype.forEach.call(group.children, function (child, i) {
@@ -136,10 +139,11 @@
 
   // ---------- Rotating word in the headline ----------
   var rot = document.getElementById('rot');
+  window.clearInterval(rotTimer);
   if (rot && !RM) {
     var words = rot.dataset.words.split('|'), word = rot.querySelector('.rot__w'), wi = 0;
     word.textContent = words[0];
-    window.setInterval(function () {
+    rotTimer = window.setInterval(function () {
       if (document.hidden) return;
       word.classList.add('is-out');
       window.setTimeout(function () {
@@ -155,6 +159,7 @@
 
   // ---------- Pointer effects (mouse / trackpad only) ----------
   if (FINE && !RM) {
+    var hero = document.getElementById('hero');
     var art = hero && hero.querySelector('.hero__art');
     if (hero && art) {
       hero.addEventListener('pointerenter', function () { hero.classList.add('is-hover'); });
@@ -218,4 +223,7 @@
       }
     });
   }
+  }
+  window.EIIView.on(mount);
+  window.EIIView.on(spy);
 })();

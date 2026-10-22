@@ -43,7 +43,7 @@ function head(ctx, o) {
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#f6f4ef">
   <script>${themeInit}</script>${o.headExtra || ''}
-  <meta name="robots" content="${o.noindex ? 'noindex, follow' : 'index, follow'}">
+  <meta name="robots" content="${o.noindex || ctx.single ? 'noindex, follow' : 'index, follow'}">
   <!-- TODO: the address below comes from build/site.js (run: node build/build.js --url https://yourdomain.in/) -->
   <link rel="canonical" href="${canonical}">
   <link rel="alternate" hreflang="en-IN" href="${alt('en')}">
@@ -97,7 +97,7 @@ function faqLd(items) {
 function header(ctx, o) {
   const { t, lang, rel, page } = ctx;
   const onHome = page === 'home';
-  const hh = (hash) => (onHome ? '#' + hash : ctx.link('') + '#' + hash);
+  const hh = (hash) => (onHome && !ctx.single ? '#' + hash : ctx.link('') + '#' + hash);
   const cur = (key) => (o.current === key ? ' aria-current="page"' : '');
   const other = lang === 'en' ? 'hi' : 'en';
   const switchHref = ctx.link(o.path, other) + (other === 'en' ? '' : '');
@@ -123,8 +123,8 @@ function header(ctx, o) {
         <ul>
           <li><a href="${hh('products')}"${o.current === 'home' ? '' : ''}>${t('ui.nav.products')}</a></li>
           <li><a href="${hh('industries')}">${t('ui.nav.industries')}</a></li>
-          <li><a href="${ctx.link('tools/')}"${cur('tools')}>${t('ui.nav.tools')}</a></li>
-          <li><a href="${ctx.link('guides/')}"${cur('guides')}>${t('ui.nav.guides')}</a></li>
+          <li><a href="${ctx.link('tools/')}" data-nav="tools"${cur('tools')}>${t('ui.nav.tools')}</a></li>
+          <li><a href="${ctx.link('guides/')}" data-nav="guides"${cur('guides')}>${t('ui.nav.guides')}</a></li>
           <li><a href="${hh('faq')}">${t('ui.nav.faq')}</a></li>
           <li><a href="${hh('contact')}">${t('ui.nav.contact')}</a></li>
           <li class="nav__lang-li">${langA('lang-switch lang-switch--menu')}</li>
@@ -155,7 +155,7 @@ function header(ctx, o) {
 function footer(ctx) {
   const { t } = ctx;
   const onHome = ctx.page === 'home';
-  const hh = (hash) => (onHome ? '#' + hash : ctx.link('') + '#' + hash);
+  const hh = (hash) => (onHome && !ctx.single ? '#' + hash : ctx.link('') + '#' + hash);
   const review = SITE.googleReviewUrl
     ? `\n        <li><a href="${esc(SITE.googleReviewUrl)}" target="_blank" rel="noopener" data-track="review_click" data-track-where="footer">${t('ui.footer.review')}</a></li>` : '';
   return `<footer class="footer">
@@ -203,7 +203,7 @@ function clientConfig(ctx, extra) {
   const names = {}, namesEn = {};
   Object.keys(ctx.products).forEach((s) => { names[s] = ctx.products[s].name; namesEn[s] = ctx.productsEn[s].name; });
   const cfg = {
-    lang: ctx.lang, base: ctx.rel || './', page: ctx.page, path: ctx.path,
+    lang: ctx.lang, base: ctx.rel || './', page: ctx.page, path: ctx.path, single: !!ctx.single,
     wa: SITE.whatsapp, email: SITE.email, ga4: SITE.analytics.ga4, plausible: SITE.analytics.plausibleDomain,
     names, namesEn, strings: { basket: ctx.t.raw('js.basket'), form: ctx.t.raw('js.form'), qb: ctx.t.raw('js.qb') }
   };
@@ -212,8 +212,14 @@ function clientConfig(ctx, extra) {
 }
 
 function scripts(ctx, list, extraStrings) {
-  const base = ['analytics.js', 'basket.js', 'script.js'].concat(list || []);
-  return clientConfig(ctx, extraStrings) + '\n  ' + base.map((s) => `<script src="${ctx.rel}${s}" defer></script>`).join('\n  ');
+  // the single-page build can show any page, so it always carries the product and tool scripts
+  let extra = extraStrings, pageScripts = list || [];
+  if (ctx.single) {
+    extra = { tools: Object.assign({}, ctx.dict.tools, { js: ctx.dict.js.tools, en: require('./i18n/en').tools.thickness }) };
+    pageScripts = ['quote-builder.js', 'tools.js'];
+  }
+  const all = ['view.js', 'analytics.js', 'basket.js', 'script.js'].concat(pageScripts, ['start.js']);
+  return clientConfig(ctx, extra) + '\n  ' + all.map((s) => `<script src="${ctx.rel}${s}" defer></script>`).join('\n  ');
 }
 
 module.exports = { head, header, footer, scripts, waUrl, localBusinessLd, breadcrumbLd, faqLd, ICONS, esc, jsonAttr };

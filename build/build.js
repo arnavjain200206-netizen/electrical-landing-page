@@ -59,15 +59,19 @@ const templates = {
   product: require('./pages/product')
 };
 
-function makeCtx(lang, pg) {
-  const depth = pg.path.split('/').filter(Boolean).length + (lang === 'hi' ? 1 : 0);
+function makeCtx(lang, pg, single) {
+  const depth = single ? 1 : pg.path.split('/').filter(Boolean).length + (lang === 'hi' ? 1 : 0);
   const rel = depth ? '../'.repeat(depth) : '';
   const dict = DICT[lang];
   const ctx = {
     lang, dict, t: makeT(dict, lang), rel, page: pg.page, path: pg.path,
     products: products[lang], productsEn: products.en, guides: guidesFor(lang), guidesEn: guidesFor('en'),
     // links name index.html explicitly so the site also works when opened straight from a folder (file://)
-    link: (p, l) => (rel || './') + ((l || lang) === 'hi' ? 'hi/' : '') + p + (p === '' || p.endsWith('/') ? 'index.html' : ''),
+    single: !!single,
+    link: single
+      // single-page build: pages are in-page views, e.g. products/foam/ -> #/products/foam, other language -> its own file
+      ? (p, l) => ((l || lang) === lang ? '' : (l === 'hi' ? 'hi.html' : 'index.html')) + '#/' + p.replace(/\/$/, '')
+      : (p, l) => (rel || './') + ((l || lang) === 'hi' ? 'hi/' : '') + p + (p === '' || p.endsWith('/') ? 'index.html' : ''),
     abs: (p, l) => SITE.url + ((l || lang) === 'hi' ? 'hi/' : '') + p
   };
   return ctx;
@@ -87,6 +91,24 @@ pages.forEach((pg) => LANGS.forEach((lang) => {
   const html = templates[pg.page](ctx, pg.slug);
   write((lang === 'hi' ? 'hi/' : '') + pg.path + 'index.html', html);
 }));
+
+// ---- single-page copy (single/index.html, single/hi.html): every page is a view inside one document ----
+// For checking the whole site in one place. Not indexed by search engines (noindex) and not in the sitemap.
+LANGS.forEach((lang) => {
+  const render = (pg) => templates[pg.page](makeCtx(lang, pg, true), pg.slug);
+  const mainRe = /<main id="main"[^>]*>([\s\S]*?)<\/main>/;
+  const views = {};
+  pages.filter((pg) => pg.page !== 'home').forEach((pg) => {
+    const doc = render(pg);
+    views[pg.path.replace(/\/$/, '')] = {
+      title: (doc.match(/<title>([^<]*)<\/title>/) || [])[1].replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&quot;/g, '"'),
+      page: pg.page, path: pg.path, html: '<div class="pv">' + doc.match(mainRe)[1] + '</div>'
+    };
+  });
+  let doc = render(pages[0]);
+  doc = doc.replace(mainRe, (m, inner) => '<main id="main"><div id="view">' + inner + '</div></main>\n  <script type="application/json" id="eii-views">' + JSON.stringify(views).replace(/</g, '\\u003c') + '</script>');
+  write('single/' + (lang === 'hi' ? 'hi.html' : 'index.html'), doc);
+});
 
 // sitemap (with language alternates) and robots
 const url = (p, l) => SITE.url + (l === 'hi' ? 'hi/' : '') + p;

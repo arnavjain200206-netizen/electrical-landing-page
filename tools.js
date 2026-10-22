@@ -24,7 +24,7 @@
   function parseSize(v) { var p = v.split('x'); return [parseInt(p[0], 10), parseInt(p[1], 10)]; }
 
   /* ============================ 1. Weight & cost ============================ */
-  (function () {
+  function initWeight() {
     var W = T.weight, out = $('wOut'), acts = $('wActions'), cur = null; if (!out) return;
     var ids = ['wThk', 'wSize', 'wLen', 'wWid', 'wQty', 'wRate', 'wGst', 'wDen'];
     function fail(msg) { out.innerHTML = err(msg); acts.hidden = true; cur = null; }
@@ -55,10 +55,10 @@
     $('wAdd').addEventListener('click', function () { if (cur) addToBasket({ slug: 'pvc-sheets', details: cur }, this); });
     ids.forEach(function (id) { $(id).addEventListener('input', function () { firstUse('weight'); run(); }); $(id).addEventListener('change', run); });
     run();
-  })();
+  }
 
   /* ============================ 2. Cut-to-size fit ============================ */
-  (function () {
+  function initFit() {
     var F = T.fit, out = $('fOut'), acts = $('fActions'), cur = null; if (!out) return;
     var ids = ['fSize', 'fSL', 'fSW', 'fPL', 'fPW', 'fKerf', 'fQty', 'fRot'];
 
@@ -149,10 +149,10 @@
     ids.forEach(function (id) { $(id).addEventListener('input', function () { firstUse('fit'); clearTimeout(timer); timer = setTimeout(run, 120); }); $(id).addEventListener('change', run); });
     run();
     window.EIITools = window.EIITools || {}; window.EIITools.solveFit = solve; // exposed for testing
-  })();
+  }
 
   /* ============================ 3. Which thickness ============================ */
-  (function () {
+  function initThickness() {
     var K = T.thickness, EN = T.en, form = $('thkForm'), out = $('thkOut'); if (!form) return;
     var STD = [1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20];
     var RANGE = { panel: [3, 6], spacer: [2, 5], meter: [3, 5], guard: [4, 8], tank: [5, 12], sign: [2, 5] };
@@ -208,5 +208,6 @@
     });
     back.addEventListener('click', function () { if (cur > 0) show(cur - 1); });
     show(0);
-  })();
+  }
+  window.EIIView.on(function () { initWeight(); initFit(); initThickness(); });
 })();

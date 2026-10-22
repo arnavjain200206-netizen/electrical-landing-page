@@ -2,6 +2,15 @@
 (function () {
   'use strict';
   var E = window.EII, S = E.strings.qb;
+  // "Build your quote" button scrolls to and focuses the form (registered once)
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('[data-jump]'); if (!a) return;
+    e.preventDefault();
+    var t = document.getElementById(a.getAttribute('data-jump'));
+    if (t) { t.scrollIntoView({ behavior: 'smooth', block: 'start' }); var f = t.querySelector('select, input'); if (f) setTimeout(function () { f.focus({ preventScroll: true }); }, 450); }
+  });
+
+  function mount() {
   var form = document.getElementById('quoteBuilder');
   if (!form) return;
   var slug = form.getAttribute('data-slug');
@@ -64,12 +73,7 @@
   });
   send.addEventListener('click', sync);
 
-  // "Build your quote" button scrolls to and focuses the form
-  document.addEventListener('click', function (e) {
-    var a = e.target.closest('[data-jump]'); if (!a) return;
-    e.preventDefault();
-    var t = document.getElementById(a.getAttribute('data-jump'));
-    if (t) { t.scrollIntoView({ behavior: 'smooth', block: 'start' }); var f = t.querySelector('select, input'); if (f) setTimeout(function () { f.focus({ preventScroll: true }); }, 450); }
-  });
   regenerate();
+  }
+  window.EIIView.on(mount);
 })();

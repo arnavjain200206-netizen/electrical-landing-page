@@ -82,7 +82,7 @@ module.exports = function home(ctx) {
     ? `\n            <div><dt>Google</dt><dd><a href="${esc(SITE.googleReviewUrl)}" target="_blank" rel="noopener" data-track="review_click" data-track-where="contact">${t('ui.footer.review')}</a></dd></div>` : '';
 
   const titleLd = [L.localBusinessLd(ctx), L.faqLd(faqItems)];
-  const redirect = lang === 'en'
+  const redirect = lang === 'en' && !ctx.single
     ? `\n  <script>try{if(localStorage.getItem('eii_lang')==='hi'&&!/[?&]lang=en/.test(location.search)&&location.pathname.slice(-3)!=='hi/')location.replace('hi/index.html'+location.hash)}catch(e){}</script>` : '';
 
   return `${L.head(ctx, { path: '', title: t.raw('home.title'), description: t.raw('home.description'), ogDescription: t.raw('home.ogDescription'), jsonld: titleLd, headExtra: redirect, preload: `  <link rel="preload" href="${rel}assets/hero-stack.svg" as="image" type="image/svg+xml">\n` })}

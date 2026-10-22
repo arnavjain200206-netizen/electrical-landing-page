@@ -5,6 +5,15 @@ Goal: visitors contact the business on **WhatsApp, phone or email**.
 
 HTML, CSS and a little vanilla JavaScript. No framework and no runtime dependencies. The pages are generated from one set of content files by a small Node script, and the generated pages are committed, so **hosting needs no build step**.
 
+## Two ways to look at it
+
+| | Open this | What it is |
+|---|---|---|
+| **Main site (multi-page)** | `index.html` (English), `hi/index.html` (Hindi) | Every product, tool and guide is its own page with its own address. This is the one to publish: it is what search engines index. |
+| **Single-page copy (for checking)** | `single/index.html` (English), `single/hi.html` (Hindi) | The same site inside **one page**: products, tools and guides open in place, the address bar only changes after the `#`. Easy to click through everything. It is marked *noindex* and is not in the sitemap, so it never competes with the main site. |
+
+Both are generated from the same content (`node build/build.js`), so they always match. Both work by double-clicking the file; no web server needed.
+
 ## What is on the site
 
 | Page | Address (English / Hindi) |
@@ -24,13 +33,14 @@ build/            the generator and ALL the content
   layout.js pages/  page templates
   build.js        run this:  node build/build.js
 style.css         all styles (tokens at the top, light + dark theme, Hindi type)
+view.js start.js  small helpers: re-run page scripts on each view; in-page router for the single-page copy
 script.js         menu, theme, nav, scroll effects, contact form
 basket.js         enquiry list
 quote-builder.js  WhatsApp message builder on product pages
 tools.js          calculators, fit checker, thickness guide
 analytics.js      click tracking (off until you add an ID)
 assets/           favicon, og-image.png, fonts (IBM Plex + Noto Sans Devanagari), animated product art
-index.html, hi/, products/, tools/, guides/, sitemap.xml, robots.txt, 404.html   <- generated, do not edit by hand
+index.html, hi/, products/, tools/, guides/, single/, sitemap.xml, robots.txt, 404.html   <- generated, do not edit by hand
 ```
 
 ---
@@ -117,7 +127,7 @@ python3 -m http.server 8000
 3. Deploy.
 
 ### Option D — Any hosting / cPanel
-Upload everything except `build/`, `README.md` and `package.json` (index.html, hi/, products/, tools/, guides/, assets/, the .js and .css files, sitemap.xml, robots.txt, 404.html) into `public_html/` using File Manager or FTP.
+Upload everything except `build/`, `README.md`, `package.json` and (optionally) `single/` (index.html, hi/, products/, tools/, guides/, assets/, the .js and .css files, sitemap.xml, robots.txt, 404.html) into `public_html/` using File Manager or FTP.
 
 ### Custom domain
 Buy a domain (e.g. `.in` / `.com`), then add it in your host's **Domains** settings (GitHub Pages: Settings → Pages → *Custom domain*; Netlify/Vercel: Domains) and create the DNS records they show. HTTPS is enabled automatically. Afterwards rebuild with `--url https://yourdomain.in/` and commit the result.
