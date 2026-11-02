@@ -39,7 +39,7 @@ module.exports = function product(ctx, slug) {
     <div class="container">
       <nav class="crumbs" aria-label="${t('product.crumbNav')}"><a href="${ctx.link('')}">${t('ui.common.home')}</a><span>/</span><a href="${ctx.link('')}#products">${t('ui.common.products')}</a><span>/</span><span aria-current="page">${esc(p.name)}</span></nav>
       <section class="phero">
-        <div class="phero__media"><img src="${rel}assets/products/${slug}.svg" alt="${esc(p.name)}" width="600" height="450" fetchpriority="high"></div>
+        <div class="phero__media" data-model="${slug}"><img src="${rel}assets/products/${slug}.svg" alt="${esc(p.name)}" width="600" height="450" fetchpriority="high"></div>
         <div class="phero__copy">
           <p class="kicker">${t('product.kicker')}</p>
           <h1 id="pvTitle">${esc(p.name)}</h1>

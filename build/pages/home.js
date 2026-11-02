@@ -21,7 +21,7 @@ module.exports = function home(ctx) {
     const cls = slug === 'pvc-sheets' ? ' pcard--xl' : slug === 'cut-to-size' ? ' pcard--wide' : '';
     const tag = i < 2 ? t('home.products.tagInsulation') : t('home.products.tagPackaging');
     return `          <article class="pcard${cls}" data-tilt>
-            <div class="pcard__img"><img src="${rel}assets/products/${slug}.svg" alt="" width="600" height="450" loading="lazy"><span class="pcard__tag">${tag}</span></div>
+            <div class="pcard__img" data-model="${slug}"><img src="${rel}assets/products/${slug}.svg" alt="" width="600" height="450" loading="lazy"><span class="pcard__tag">${tag}</span></div>
             <div class="pcard__body">
               <h3 class="pcard__title"><a href="${ctx.link('products/' + slug + '/')}">${t(c + '.title')}</a></h3>
               <p>${t(c + '.text')}</p>
@@ -143,7 +143,7 @@ module.exports = function home(ctx) {
         </div>
 
         <div class="hero__art">
-          <img class="hero__stack" src="${rel}assets/hero-stack.svg" alt="${t(hero + '.stackAlt')}" width="600" height="610" fetchpriority="high">
+          <div class="hero__model" data-model="pvc-stack"><img class="hero__stack" src="${rel}assets/hero-stack.svg" alt="${t(hero + '.stackAlt')}" width="600" height="610" fetchpriority="high"></div>
           <a class="hero__chip" href="${ctx.link('products/pvc-sheets/')}">
             <span><strong>${t(hero + '.chipTitle')}</strong><span class="mono">${t(hero + '.chipSpec')}</span></span>
             <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>

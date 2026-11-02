@@ -727,3 +727,16 @@ html.enq-open { overflow: hidden; }
   .enq__panel, .enq__backdrop, .toast { transition: none !important; }
   @view-transition { navigation: none; }
 }
+
+/* ---------- 3D product models ----------
+   The flat illustration is the fallback and stays in the page. When assets/models3d.js is ready, a canvas
+   is placed over it and the illustration fades out. Drag a model to turn it; vertical swipes still scroll. */
+.m3d { position: relative; }
+.m3d__c { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity .6s ease; cursor: grab; touch-action: pan-y; -webkit-tap-highlight-color: transparent; }
+.m3d img { transition: opacity .6s ease; }
+.m3d.is-3d .m3d__c { opacity: 1; }
+.m3d.is-3d > img { opacity: 0; }
+.m3d.is-grabbing .m3d__c { cursor: grabbing; }
+.pcard__tag { z-index: 2; }
+.hero__model { position: relative; }
+.hero__chip { z-index: 2; }

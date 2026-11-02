@@ -3,7 +3,7 @@
 Static website for a wholesale supplier of **PVC sheets (electrical insulation) and packaging material**, in **English and Hindi**.
 Goal: visitors contact the business on **WhatsApp, phone or email**.
 
-HTML, CSS and a little vanilla JavaScript. No framework and no runtime dependencies. The pages are generated from one set of content files by a small Node script, and the generated pages are committed, so **hosting needs no build step**.
+HTML, CSS and a little vanilla JavaScript. No framework and no runtime dependencies (the 3D models are one pre-built file, `assets/models3d.js`). The pages are generated from one set of content files by a small Node script, and the generated pages are committed, so **hosting needs no build step**.
 
 ## Two ways to look at it
 
@@ -33,13 +33,15 @@ build/            the generator and ALL the content
   layout.js pages/  page templates
   build.js        run this:  node build/build.js
 style.css         all styles (tokens at the top, light + dark theme, Hindi type)
+models3d/         source of the 3D product models (three.js); built into assets/models3d.js
+build/build-3d.js bundles models3d/ into assets/models3d.js (only when you change a model)
 view.js start.js  small helpers: re-run page scripts on each view; in-page router for the single-page copy
 script.js         menu, theme, nav, scroll effects, contact form
 basket.js         enquiry list
 quote-builder.js  WhatsApp message builder on product pages
 tools.js          calculators, fit checker, thickness guide
 analytics.js      click tracking (off until you add an ID)
-assets/           favicon, og-image.png, fonts (IBM Plex + Noto Sans Devanagari), animated product art
+assets/           favicon, og-image.png, fonts (IBM Plex + Noto Sans Devanagari), animated product art, models3d.js (the 3D models, built file)
 index.html, hi/, products/, tools/, guides/, single/, sitemap.xml, robots.txt, 404.html   <- generated, do not edit by hand
 ```
 
@@ -63,7 +65,7 @@ node build/build.js --url https://yourdomain.in/      # or: npm run build
 | What | Where |
 |---|---|
 | **Live site address.** Currently `https://www.example.com/`. It feeds canonical links, the sitemap, hreflang and share previews. On GitHub Pages use the full address including the folder, e.g. `https://username.github.io/electrical-landing-page/`. | run the build with `--url ...` (or edit `build/site.js`) |
-| **Product photos.** The pictures in `assets/products/` are animated illustrations. Replace each with a real photo of your stock (same name, 4:3, plain light background). Photos are static; the card tilt and zoom still apply. To use `.jpg`, replace `.svg` with `.jpg` in `build/pages/*.js` and rebuild. | `assets/products/` |
+| **Product photos.** The pictures in `assets/products/` are animated illustrations. These are the fallback shown before / without the 3D models. To show real photos instead, remove the `data-model=...` attributes in `build/pages/home.js` and `build/pages/product.js`, replace each file with a photo of your stock (same name, 4:3, plain light background), and rebuild. To use `.jpg`, replace `.svg` with `.jpg` in `build/pages/*.js`. | `assets/products/` |
 | **Claims.** Thickness range, test certificates, credit terms, delivery times. Make sure they match what you really offer. | `build/i18n/*.js`, `build/data/products.*.js` |
 | **Estimates.** The calculators say "indicative"; the thickness guide and guides are general advice, not an engineering standard. Review the guide text once. | `build/i18n/*.js` (`guides`, `tools`) |
 | **GSTIN, Udyam badge** (optional, builds trust) | add to the footer in `build/layout.js` |
@@ -148,6 +150,7 @@ Buy a domain (e.g. `.in` / `.com`), then add it in your host's **Domains** setti
 ## Notes
 - The quote form has no backend: it builds a message and opens WhatsApp (`wa.me`) or the visitor's email app. This keeps hosting free and gets leads straight to your phone.
 - Keyboard accessible, text contrast checked against WCAG AA in both themes and both languages. Content is visible without JavaScript; the calculators, enquiry list, menu and form need JavaScript.
+- **3D product models.** The product pictures (home page cards, hero stack, each product page) are real-time 3D models of PVC sheets, cut-to-size panels, stretch film, BOPP tape, bubble wrap, EPE foam, PP strapping and edge guards. They turn slowly, can be dragged to rotate, and each has its own movement (sheets lift, panels separate, film and tape tails wave, foam squashes; a spark is stopped by the PVC stack in the hero). They are built in code, so there are no model files. `assets/models3d.js` (about 520 KB, 130 KB compressed) loads only after the page has finished loading, and only if the browser supports WebGL and the visitor is not saving data. Until it is ready, and wherever it cannot run, the flat illustration in `assets/products/` is shown, so nothing is ever missing. With "reduce motion" on, the models stay still (they can still be dragged). To change a model: edit `models3d/models.js`, run `npm install` once, then `npm run build:3d`, and commit `assets/models3d.js`. three.js is MIT licensed.
 - Animations respect the visitor's "reduce motion" setting. Pointer effects (tilt, spotlight, magnetic buttons) only run on mouse / trackpad.
 - Internal links point at `.../index.html` (for example `tools/index.html`) so they also work from a downloaded folder. Search engines are told the clean address through each page's canonical link and the sitemap.
 - Old links such as `index.html#/product/foam` and `#showcase` still work and are redirected to the new pages.

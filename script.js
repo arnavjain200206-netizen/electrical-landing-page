@@ -93,11 +93,44 @@
   }
   if (links.length) { window.addEventListener('scroll', spy, { passive: true }); spy(); window.addEventListener('hashchange', function () { window.setTimeout(spy, 50); }); }
 
+  // ---------- 3D product models ----------
+  // The flat illustration is the fallback. After the page has loaded, and only if the browser has WebGL and
+  // the visitor is not saving data, assets/models3d.js is fetched and swaps the illustrations for 3D models.
+  var m3d = { state: 'idle', queue: [] };
+  function hasWebGL() {
+    try {
+      var c = document.createElement('canvas'), gl = c.getContext('webgl2') || c.getContext('webgl');
+      var lose = gl && gl.getExtension('WEBGL_lose_context'); if (lose) lose.loseContext();
+      return !!gl;
+    } catch (e) { return false; }
+  }
+  function load3d(cb) {
+    if (window.EII3D) { cb(window.EII3D); return; }
+    if (m3d.state === 'failed') return;
+    m3d.queue.push(cb);
+    if (m3d.state === 'loading') return;
+    var conn = navigator.connection;
+    if ((conn && conn.saveData) || !hasWebGL()) { m3d.state = 'failed'; return; }
+    m3d.state = 'loading';
+    function inject() {
+      var s = document.createElement('script');
+      s.src = E.base + 'assets/models3d.js';
+      s.onload = function () { m3d.state = 'ready'; m3d.queue.splice(0).forEach(function (f) { f(window.EII3D); }); };
+      s.onerror = function () { m3d.state = 'failed'; };
+      document.head.appendChild(s);
+    }
+    function start() { (window.requestIdleCallback || function (f) { window.setTimeout(f, 300); })(inject, { timeout: 2500 }); }
+    if (document.readyState === 'complete') start(); else window.addEventListener('load', start);
+  }
+
   // =====================================================================
   // Everything below belongs to the current view and runs again whenever a view is shown
   // =====================================================================
   var rotTimer = null;
   function mount() {
+  var models = document.querySelectorAll('[data-model]');
+  if (models.length) load3d(function (api) { api.mount(models); });
+
   // ---------- Scroll reveal ----------
   document.querySelectorAll('[data-stagger]').forEach(function (group) {
     Array.prototype.forEach.call(group.children, function (child, i) {
