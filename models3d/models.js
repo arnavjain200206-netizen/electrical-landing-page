@@ -62,6 +62,10 @@ function tail(rib, rOut, y, theta) {
   return a;
 }
 
+/* Sheet colours the product page can switch between, and how thick a sheet is drawn (exaggerated, like the hero drawing). */
+const PALETTE = { Grey: ['#7f8a96', '#99a3ae'], White: ['#cdd4da', '#e4e9ed'], Black: ['#262b32', '#39404a'] };
+const thicknessH = (mm) => .05 + mm * .0125;
+
 /* ---------------------------------------------------------------- PVC sheets */
 function pvcStack(n, hero) {
   const g = new T.Group(), W = 3.2, D = 1.7, H = .14, GAP = .006;
@@ -78,6 +82,7 @@ function pvcStack(n, hero) {
     g.add(m); sheets.push(m);
   }
   const topY = n * (H + GAP);
+  let height = topY;
 
   let spark = null;
   if (hero) {
@@ -110,6 +115,12 @@ function pvcStack(n, hero) {
 
   return {
     group: g,
+    // the product page's thickness slider and colour chips: { thickness: mm, color: 'Grey' | 'White' | 'Black' }
+    set(o) {
+      if (o.thickness) { const Hc = thicknessH(o.thickness); sheets.forEach((m, i) => { m.scale.y = Hc / H; m.userData.y = Hc / 2 + i * (Hc + GAP); }); height = n * (Hc + GAP); }
+      if (o.color && PALETTE[o.color]) { mat.color.set(PALETTE[o.color][0]); topMat.color.set(PALETTE[o.color][1]); }
+      return height;
+    },
     update(t) {
       for (let i = 0; i < n; i++) {
         const k = clamp((t - .1 - i * .1) / .8, 0, 1), drop = Math.pow(1 - k, 3) * 3.2;
@@ -147,16 +158,23 @@ function cutToSize() {
   });
   const saw = new T.Mesh(new T.BoxGeometry(.035, .012, 2.25), new T.MeshBasicMaterial({ color: 0xf2b300 }));
   saw.position.y = H + .03; g.add(saw);
+  let Hc = H;
   return {
     group: g,
+    set(o) {
+      if (o.thickness) { Hc = thicknessH(o.thickness); panels.forEach((p) => { p.scale.y = Hc / H; }); }
+      if (o.color && PALETTE[o.color]) mat.color.set(PALETTE[o.color][0]);
+      return Hc + .12;
+    },
     update(t) {
       panels.forEach((p) => {
         const s = Math.pow(Math.max(0, Math.sin(t * 1.1 + p.userData.i * .7)), 2);
-        p.position.y = H / 2 + s * .11;
+        p.position.y = Hc / 2 + s * .11;
         p.position.x = p.userData.x * (1 + s * .035);
         p.position.z = p.userData.z * (1 + s * .045);
       });
       saw.position.x = (((t * .45) % 1) - .5) * 3.5;
+      saw.position.y = Hc + .03;
     }
   };
 }

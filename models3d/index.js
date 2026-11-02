@@ -91,12 +91,17 @@ function create(el, name) {
   Object.assign(key.shadow.camera, { left: -3.6, right: 3.6, top: 3.6, bottom: -3.6, near: .5, far: 14 });
   key.shadow.bias = -.0006; key.shadow.normalBias = .02; key.shadow.radius = 5;
   scene.add(key);
-  scene.add(new T.HemisphereLight(0xdfeaff, 0x6b6558, .22));
+  const hemi = new T.HemisphereLight(0xdfeaff, 0x6b6558, .22);
+  scene.add(hemi);
+  const rim = new T.DirectionalLight(0x6fa8ff, 0);       // a cool edge light, only used on dark backgrounds
+  rim.position.set(-4, 3, -3);
+  scene.add(rim);
   const ground = new T.Mesh(new T.PlaneGeometry(18, 18), new T.ShadowMaterial({ opacity: spec.shadow || .3 }));
   ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true;
   scene.add(ground);
 
   const built = spec.build();
+  if (el.__eiiOpts && built.set) built.set(el.__eiiOpts);     // thickness / colour chosen before the model was ready
   const pivot = new T.Group();
   pivot.add(built.group);
   scene.add(pivot);
@@ -104,12 +109,19 @@ function create(el, name) {
   // widest reach from the turning axis, and height: enough to keep the model in frame at every angle
   const rho = Math.hypot(Math.max(-box.min.x, box.max.x), Math.max(-box.min.z, box.max.z)), top = box.max.y + .15;
   const v = {
-    el, canvas, ctx: canvas.getContext('2d'), scene, key, pivot, built, spec, cam: new T.PerspectiveCamera(30, 1, .1, 60),
+    el, canvas, ctx: canvas.getContext('2d'), scene, key, hemi, rim, ground, hover: el.getAttribute('data-motion') === 'hover', hot: false, clock: 2.6, darkFixed: !!el.closest('.hero'), pivot, built, spec, cam: new T.PerspectiveCamera(30, 1, .1, 60),
     rho, top, yaw: spec.yaw || .5, vel: 0, pitch: 0, pitchTarget: 0,
     visible: false, dirty: true, drag: false, t0: null, first: true, w: 0, h: 0
   };
   viewers.set(el, v);
+  look(v);
   io.observe(el); ro.observe(el);
+  if (v.hover) {                  // product cards move only while they are pointed at or focused
+    const host = el.closest('.pcard') || el;
+    const on = () => { v.hot = true; kick(); }, off = () => { v.hot = false; };
+    host.addEventListener('pointerenter', on); host.addEventListener('pointerleave', off);
+    host.addEventListener('focusin', on); host.addEventListener('focusout', off);
+  }
 
   // drag to turn the model; moving over it tilts the view a little
   let lastX = 0, lastT = 0;
@@ -126,6 +138,18 @@ function create(el, name) {
   canvas.addEventListener('pointerup', up);
   canvas.addEventListener('pointercancel', up);
   canvas.addEventListener('pointerleave', () => { v.pitchTarget = 0; if (RM) { v.dirty = true; kick(); } });
+}
+
+/* Light and dark pages need different light: a cooler key and an edge light on dark, softer on light. */
+function look(v) {
+  const dark = v.darkFixed || document.documentElement.getAttribute('data-theme') === 'dark';
+  v.exposure = dark ? .95 : .78;
+  v.key.color.set(dark ? 0xdbe8ff : 0xfff4e6); v.key.intensity = dark ? 2.1 : 1.9;
+  v.hemi.intensity = dark ? .3 : .22;
+  v.rim.intensity = dark ? .9 : 0;
+  v.scene.environmentIntensity = dark ? .6 : .5;
+  v.ground.material.opacity = (v.spec.shadow || .3) * (dark ? 1.35 : 1);
+  v.dirty = true;
 }
 
 function place(v) {
@@ -147,6 +171,7 @@ function draw(v) {
   v.w = w; v.h = h;
   if (w > GW || h > GH) { GW = Math.max(GW, w); GH = Math.max(GH, h); renderer.setPixelRatio(1); renderer.setSize(GW, GH, false); }
   place(v);
+  renderer.toneMappingExposure = v.exposure;
   renderer.setViewport(0, 0, w, h);
   renderer.setScissor(0, 0, w, h);
   renderer.render(v.scene, v.cam);
@@ -168,16 +193,17 @@ function frame(now) {
   viewers.forEach((v) => {
     if (!v.visible) return;
     if (v.t0 === null) v.t0 = t;
-    const moving = !RM || v.drag || Math.abs(v.vel) > .02 || Math.abs(v.pitch - v.pitchTarget) > .002;
+    const auto = !RM && (!v.hover || v.hot);
+    const moving = auto || v.drag || Math.abs(v.vel) > .02 || Math.abs(v.pitch - v.pitchTarget) > .002;
     if (!moving && !v.dirty) return;
-    if (!RM && !v.drag) v.yaw += (v.spec.spin || .3) * dt;
+    if (auto && !v.drag) { v.yaw += (v.spec.spin || .3) * dt; v.clock += dt; }
     v.yaw += v.vel * dt; v.vel *= Math.pow(.04, dt);
     v.pitch += (v.pitchTarget - v.pitch) * Math.min(1, dt * 6);
     v.pivot.rotation.y = v.yaw;
-    v.built.update(RM ? 2.6 : t - v.t0, dt);
+    v.built.update(RM ? 2.6 : v.hover ? v.clock : t - v.t0, dt);
     draw(v);
     v.dirty = false;
-    again = again || !RM || v.drag || Math.abs(v.vel) > .02 || Math.abs(v.pitch - v.pitchTarget) > .002;
+    again = again || auto || v.drag || Math.abs(v.vel) > .02 || Math.abs(v.pitch - v.pitchTarget) > .002;
   });
   adapt(now, performance.now() - w0);
   if (dead) return;
@@ -195,7 +221,16 @@ function dispose(v) {
   v.canvas.remove(); v.el.classList.remove('m3d', 'is-3d', 'is-grabbing');
 }
 
+// the light/dark switch changes the light
+new MutationObserver(() => { viewers.forEach(look); kick(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
 window.EII3D = {
+  // the product page's thickness slider and colour chips drive the model through this
+  setOptions(el, opts) {
+    el.__eiiOpts = Object.assign({}, el.__eiiOpts, opts);
+    const v = viewers.get(el);
+    if (v && v.built.set) { const top = v.built.set(opts); if (top) v.top = top + .15; v.dirty = true; kick(); }
+  },
   mount(els) {
     if (!boot()) return false;
     viewers.forEach((v, el) => { if (!el.isConnected) { dispose(v); viewers.delete(el); } });   // the single-page build swaps views

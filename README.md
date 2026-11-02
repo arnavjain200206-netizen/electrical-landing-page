@@ -48,6 +48,15 @@ assets/           favicon, og-image.png, fonts (IBM Plex + Noto Sans Devanagari)
 index.html, hi/, products/, tools/, guides/, single/, sitemap.xml, robots.txt, 404.html   <- generated, do not edit by hand
 ```
 
+## The home page and product pages
+
+* **Hero:** a fixed two-line heading, chips for who you supply, a big WhatsApp button and the phone number as a plain link. Directly under it is **one strip with the ordering facts** (standard sheet, GST invoice + LR copy, dispatch, samples). The facts come from `home.trust` in `build/i18n/`; the sheet size is hidden automatically if no PVC product is shown.
+* **Calm motion:** the rotating headline word, scrolling strip, card tilt, magnetic buttons and moving circuit lines are gone. What moves: the hero 3D stack (with the spark), and a product card's 3D model while you point at it (it holds still otherwise, which also saves battery).
+* **Phones:** product cards sit two across (short, with a small "+" button); on a product page a bar at the bottom holds the product's first question and the WhatsApp button and stays in step with the quote form; it slides away while the full form is on screen.
+* **PVC sheet and Cut-to-size pages:** a thickness slider and colour chips (grey, white, black) change the 3D model, show the weight per sheet (PVC) and fill in the quote form and WhatsApp message. Using the form directly moves the slider too.
+* **Forms:** a problem is shown right under the field it belongs to; after sending, a note says WhatsApp / the email app should open, with a link in case a popup blocker stopped it. The 404 page lists your products.
+* **3D follows the theme:** a cooler light and an edge light on dark backgrounds, softer on light.
+
 ## Choose what the website shows (control panel)
 
 You decide which products, sections, tools, guides and extras are on the website. Switch something off and the **whole site is rebuilt to match**: nothing is left behind and nothing points at a page that is gone.
@@ -56,19 +65,26 @@ You decide which products, sections, tools, guides and extras are on the website
 npm run admin        # opens the control panel in your browser (needs Node; nothing else to install)
 ```
 
-Tick or untick, check the **What will change** box, press **Save and rebuild website**. **Go back to previous settings** undoes your last save. The panel runs only on your computer (127.0.0.1); it is not part of the published site. To put the change live, publish the rebuilt files the way you normally do (the panel shows the git commands).
+Tick or untick, check the **What will change** box, press **Save and rebuild website**.
+
+* **Preview my changes** opens the website with your current ticks, saved or not, in a window (computer or phone size, any page, English or Hindi). Nothing is changed on disk until you save.
+* **Order:** drag a product card, or use its ▲ ▼ buttons, to choose which product comes first on the home page and in the contact form. (The big PVC card is used only while PVC is first and Cut-to-size second; otherwise all cards are the same size, so there is never a gap.)
+* **Go back to previous settings** undoes your last save. **Reset to standard settings** puts every switch and the order back.
+* **Publish now** saves the change in git and sends it to GitHub, like `git add -A`, `git commit`, `git push`. It shows the branch and the files and asks you to confirm first, and only works when everything is saved. If it cannot send (no internet or GitHub login), it says so and keeps the change safe in git. Not using git? Upload the changed files by hand.
+
+The panel runs only on your computer (127.0.0.1); it is not part of the published site.
 
 | You can switch off | What happens automatically |
 |---|---|
 | **A product** (8) | Its page (English and Hindi), home card, hero picture / chip, ticker word, related-product links on other pages, contact-form entry, starter lists and sitemap entry go. Tools, guides and FAQ answers that are only about it hide themselves (the panel tells you which, and why). Old enquiry lists in visitors' browsers drop it. If PVC is hidden, the hero shows the first product that is left. The catalogue layout adapts to any number of products (never a gap). At least one product must stay. |
 | **Sections** | Industries, Tools, How to order, About, Guides, FAQ, the map. Switching off Tools or Guides also removes their pages, menu and footer links. |
 | **Single industries, tools, guides, FAQ answers** | Each has its own switch. |
-| **Extras** | Hindi version (the whole `/hi/` site, language button and hreflang tags go), 3D models, floating WhatsApp button, scrolling product strip, light/dark switch. |
+| **Extras** | Hindi version (the whole `/hi/` site, language button and hreflang tags go), 3D models, floating WhatsApp button, scrolling product strip (off by default), light/dark switch. |
 | **Announcement bar** | A strip above the menu (for example "Closed on Diwali"), English and Hindi. |
 
 Also in the panel: **Home page text** (the heading, intro and Google title; change them when you hide a product so they stop mentioning it) and **Publishing details** (website address, Google Analytics ID, review link). These are saved in `site-config.json`, so a rebuild never loses them.
 
-Everything is stored in **`site-config.json`**. You can edit it by hand instead and run `node build/build.js`; a wrong value stops the build with a plain message. `node build/build.js --dry` shows what would change without writing anything. Which tool / guide / FAQ answer belongs to which product is listed in `build/catalog.js`.
+Everything is stored in **`site-config.json`** (including `order`, the list of products in the order you want them shown). You can edit it by hand instead and run `node build/build.js`; a wrong value stops the build with a plain message. `node build/build.js --dry` shows what would change without writing anything. Which tool / guide / FAQ answer belongs to which product is listed in `build/catalog.js`.
 
 Not in the panel (still in `build/site.js` and `build/i18n/`): phone number, email, address and opening hours, and all other wording.
 

@@ -74,6 +74,31 @@ pre { margin: 8px 0 0; padding: 10px 12px; overflow: auto; font: 13px/1.5 ui-mon
 .toast.show { transform: translate(-50%, 0); opacity: 1; }
 .toast.bad { background: var(--err); }
 .loading { padding: 60px 20px; text-align: center; color: var(--muted); }
+
+.item .mv { position: absolute; right: 10px; bottom: 8px; z-index: 3; display: flex; gap: 4px; }
+.item .mv button { width: 30px; height: 28px; padding: 0; font-size: .8rem; line-height: 1; color: var(--navy); background: #fff; border: 1.5px solid #a9b2bf; border-radius: 6px; cursor: pointer; }
+.item .mv button:hover:not([disabled]) { background: #eef2f8; border-color: var(--navy); }
+.item .mv button[disabled] { opacity: .35; cursor: default; }
+.item[draggable="true"] { cursor: grab; }
+.item.dragging { opacity: .45; }
+.item.over { outline: 3px dashed var(--focus); outline-offset: 2px; }
+.item:has(.mv) .grow { padding-right: 74px; }
+.item:has(.mv) { min-height: 96px; }
+.item .pos { position: absolute; left: 6px; top: 6px; z-index: 2; min-width: 20px; padding: 0 5px; font-size: .72rem; font-weight: 700; line-height: 18px; text-align: center; color: #fff; background: var(--navy); border-radius: 99px; }
+dialog#pv { width: min(1280px, 96vw); height: 92vh; padding: 0; border: 0; border-radius: 12px; overflow: hidden; background: #e9e6df; }
+dialog#pv::backdrop { background: rgba(10, 20, 34, .6); }
+dialog#pv[open] { display: flex; flex-direction: column; }
+.pv__bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px 14px; color: #fff; background: var(--navy); }
+.pv__bar select { min-height: 38px; padding: 0 8px; font: inherit; border-radius: 6px; border: 0; max-width: 46vw; }
+.pv__bar .seg { display: inline-flex; border: 1.5px solid #fff; border-radius: 8px; overflow: hidden; }
+.pv__bar .seg button { min-height: 36px; padding: 0 14px; font: inherit; font-weight: 600; color: #fff; background: transparent; border: 0; cursor: pointer; }
+.pv__bar .seg button[aria-pressed="true"] { color: var(--navy); background: #fff; }
+.pv__bar .note { flex: 1; font-size: .88rem; color: #b9c6d8; }
+.pv__bar .x { min-height: 36px; padding: 0 14px; font: inherit; font-weight: 600; color: #fff; background: transparent; border: 1.5px solid #fff; border-radius: 8px; cursor: pointer; }
+.pv__stage { flex: 1; display: flex; justify-content: center; align-items: stretch; padding: 12px; min-height: 0; }
+.pv__stage iframe { width: 100%; max-width: 100%; height: 100%; border: 0; border-radius: 8px; background: #fff; box-shadow: 0 6px 30px -12px rgba(0,0,0,.5); }
+.pv__stage.phone iframe { width: 390px; }
+.pubmeta { margin: 0 0 8px; font-size: .88rem; color: var(--muted); word-break: break-all; }
 </style>
 </head>
 <body>
@@ -87,6 +112,15 @@ pre { margin: 8px 0 0; padding: 10px 12px; overflow: auto; font: 13px/1.5 ui-mon
   <main id="main"><div class="loading">Loading your settings…</div></main>
   <aside class="side" id="side" aria-label="What will change"></aside>
 </div>
+<dialog id="pv" aria-label="Website preview">
+  <div class="pv__bar">
+    <label>Page <select id="pvPage"></select></label>
+    <span class="seg" role="group" aria-label="Screen size"><button type="button" id="pvDesk" aria-pressed="true">Computer</button><button type="button" id="pvPhone" aria-pressed="false">Phone</button></span>
+    <span class="note" id="pvNote">This is how the website will look with your current ticks (saved or not).</span>
+    <button type="button" class="x" id="pvClose">Close</button>
+  </div>
+  <div class="pv__stage" id="pvStage"><iframe id="pvFrame" title="Website preview"></iframe></div>
+</dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -94,6 +128,7 @@ pre { margin: 8px 0 0; padding: 10px 12px; overflow: auto; font: 13px/1.5 ui-mon
   'use strict';
   var H = { 'X-EII-Admin': '1', 'Content-Type': 'application/json' };
   var S = null, cfg = null, saved = '', plan = null, timer = null, planSeq = 0, saving = false, lastLog = '', toastT = null;
+  var G = null, publishing = false, pubLog = '', pvOpen = false, dragSlug = null, focusAfter = null;
 
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
@@ -112,21 +147,25 @@ pre { margin: 8px 0 0; padding: 10px 12px; overflow: auto; font: 13px/1.5 ui-mon
   function item(opts) {          // a switch card
     var on = opts.on, auto = opts.auto;
     var cls = 'item ' + (on ? (auto ? 'auto' : 'on') : 'off');
-    return '<label class="' + cls + '">' + (opts.img ? '<img src="/site/' + esc(opts.img) + '" alt="">' : '') +
+    return '<label class="' + cls + '"' + (opts.drag ? ' draggable="true" data-drag="' + opts.drag + '"' : '') + '>' + (opts.pos ? '<span class="pos" title="Position on the website">' + opts.pos + '</span>' : '') + (opts.img ? '<img src="/site/' + esc(opts.img) + '" alt="">' : '') +
       '<input type="checkbox" role="switch" ' + opts.attr + (on ? ' checked' : '') + '>' +
       '<span class="grow" style="flex:1;min-width:0"><b>' + esc(opts.title) + '</b>' + (opts.sub ? '<small>' + esc(opts.sub) + '</small>' : '') +
       (auto ? '<span class="badge auto">Hidden for now: ' + esc(auto) + '</span>' : (opts.badge ? '<span class="badge">' + esc(opts.badge) + '</span>' : '')) +
-      (opts.extra ? '<small>' + esc(opts.extra) + '</small>' : '') + '</span><span class="tg" aria-hidden="true"></span></label>';
+      (opts.extra ? '<small>' + esc(opts.extra) + '</small>' : '') + '</span><span class="tg" aria-hidden="true"></span>' + (opts.mv || '') + '</label>';
   }
 
   function render() {
     var C = S.catalog, E = eff(), h = '';
     var shown = E.productsOn.length;
     h += '<section class="card"><h2>Products <span style="font-weight:400;color:var(--muted)">(' + shown + ' of ' + C.products.length + ' shown)</span></h2>' +
+      '<p class="help"><b>Order:</b> drag a card, or use the ▲ ▼ buttons, to choose which product comes first on the home page and in the contact form.</p>' +
       '<p class="help">Switch a product off and it disappears from the whole website: its page, the home card, links, related products, the contact form list, the sitemap and the Hindi page. Tools, guides and FAQ answers that are only about that product hide themselves too.<br><i>Band karoge to product har jagah se hat jayega.</i></p><div class="grid">';
-    C.products.forEach(function (p) {
+    var bySlug = {}; C.products.forEach(function (p) { bySlug[p.slug] = p; });
+    cfg.order.forEach(function (slug, idx) {
+      var p = bySlug[slug]; if (!p) return;
       var dep = [].concat(p.dependents.tools, p.dependents.guides, p.dependents.faq.length ? [p.dependents.faq.length + ' FAQ answer' + (p.dependents.faq.length > 1 ? 's' : '')] : []);
-      h += item({ on: cfg.products[p.slug], title: p.name, sub: p.nameHi + ' · ' + (p.group === 'insulation' ? 'Insulation' : 'Packaging'), img: p.image, attr: 'data-path="products.' + p.slug + '"', extra: dep.length ? 'Also hides when off: ' + dep.join(', ') : '' });
+      h += item({ on: cfg.products[p.slug], title: p.name, sub: p.nameHi + ' · ' + (p.group === 'insulation' ? 'Insulation' : 'Packaging'), img: p.image, attr: 'data-path="products.' + p.slug + '"', extra: dep.length ? 'Also hides when off: ' + dep.join(', ') : '',
+        drag: slug, pos: idx + 1, mv: '<span class="mv"><button type="button" data-move="' + slug + '" data-dir="-1" aria-label="Show ' + esc(p.name) + ' earlier"' + (idx === 0 ? ' disabled' : '') + '>▲</button><button type="button" data-move="' + slug + '" data-dir="1" aria-label="Show ' + esc(p.name) + ' later"' + (idx === cfg.order.length - 1 ? ' disabled' : '') + '>▼</button></span>' });
     });
     h += '</div></section>';
 
@@ -197,13 +236,22 @@ pre { margin: 8px 0 0; padding: 10px 12px; overflow: auto; font: 13px/1.5 ui-mon
     if (E.warnings.length) h += '<div class="note warn"><b>Please check:</b><ul class="plain">' + E.warnings.map(function (w) { return '<li>' + esc(w) + '</li>'; }).join('') + '</ul></div>';
     var hasErr = plan && plan !== 'checking' && plan.errors && plan.errors.length;
     h += '<div class="actions"><button class="btn primary" id="save" ' + (saving || hasErr || plan === 'checking' ? 'disabled' : '') + '>' + (saving ? 'Saving and rebuilding…' : 'Save and rebuild website') + '</button>' +
-      '<a class="btn" href="/site/index.html" target="_blank" rel="noopener">Open website preview</a>' +
+      '<button class="btn" id="preview">Preview my changes</button>' +
+      '<a class="btn" href="/site/index.html" target="_blank" rel="noopener">Open the saved website</a>' +
       '<button class="btn" id="undo" ' + (S.hasBackup ? '' : 'disabled') + '>Go back to previous settings</button>' +
-      '<button class="btn" id="allon">Switch everything on</button></div></section>';
+      '<button class="btn" id="allon">Reset to standard settings</button></div></section>';
 
-    h += '<section class="card"><h2>Then put it live</h2><p class="help">Saving rebuilds the files on this computer. To update the real website, run these in the project folder:</p>' +
-      '<pre id="cmds">git add -A\ngit commit -m "Update website settings"\ngit push</pre><div class="actions"><button class="btn" id="copy">Copy commands</button></div>' +
-      '<p class="help" style="margin-top:10px">Not using git? Upload the changed files (index.html, hi/, products/, tools/, guides/, sitemap.xml, 404.html) the way you normally do.</p>';
+    h += '<section class="card"><h2>Put it on the real website</h2>';
+    if (!G) h += '<p class="help">Checking git…</p>';
+    else if (!G.isRepo) h += '<div class="note warn">' + esc(G.reason) + ' Upload the changed files by hand (index.html, hi/, products/, tools/, guides/, sitemap.xml, 404.html).</div>';
+    else {
+      h += '<p class="pubmeta">Branch: <b>' + esc(G.branch) + '</b><br>Sends to: ' + (G.remote ? esc(G.remote) : '<i>no GitHub address (origin) set</i>') + '<br>Changed files waiting: <b>' + G.changed.length + '</b></p>' +
+        '<div class="actions"><button class="btn primary" id="publish" ' + (G.remote && !dirty() && !publishing ? '' : 'disabled') + '>' + (publishing ? 'Publishing…' : 'Publish now') + '</button></div>' +
+        (dirty() ? '<p class="help" style="margin-top:8px">Save and rebuild first, then publish.</p>' : '') +
+        '<p class="help" style="margin-top:8px">This saves the changes in git and sends them to GitHub, the same as <i>git add -A</i>, <i>git commit</i>, <i>git push</i>. You will be asked to confirm.</p>';
+    }
+    h += '<details><summary>Rather do it yourself?</summary><pre id="cmds">git add -A\ngit commit -m "Update website settings"\ngit push</pre><div class="actions"><button class="btn" id="copy">Copy commands</button></div></details>';
+    if (pubLog) h += '<details><summary>Last publish report</summary><pre>' + esc(pubLog) + '</pre></details>';
     if (lastLog) h += '<details><summary>Last build report</summary><pre>' + esc(lastLog) + '</pre></details>';
     h += '</section>';
     document.getElementById('side').innerHTML = h;
@@ -226,6 +274,7 @@ pre { margin: 8px 0 0; padding: 10px 12px; overflow: auto; font: 13px/1.5 ui-mon
       if (seq !== planSeq) return; plan = r;
       var a = document.activeElement;      // do not rebuild the form under someone who is typing
       if (a && main.contains(a) && (a.tagName === 'TEXTAREA' || (a.tagName === 'INPUT' && a.type !== 'checkbox'))) { renderSide(); renderState(); } else render();
+      if (pvOpen) refreshPreview();
     }).catch(function () { plan = { errors: ['Could not reach the control panel. Is the window still open?'] }; renderSide(); });
   }
 
@@ -249,16 +298,42 @@ pre { margin: 8px 0 0; padding: 10px 12px; overflow: auto; font: 13px/1.5 ui-mon
     renderState(); clearTimeout(timer); plan = 'checking'; timer = setTimeout(runPlan, 500);
   });
   main.addEventListener('click', function (e) {
+    var mv = e.target.closest('[data-move]');
+    if (mv) { move(mv.dataset.move, parseInt(mv.dataset.dir, 10)); return; }
     var b = e.target.closest('[data-reset]'); if (!b) return;
     delete cfg.texts.en[b.dataset.reset]; delete cfg.texts.hi[b.dataset.reset]; render(); schedulePlan();
   });
+  function move(slug, dir) {
+    var i = cfg.order.indexOf(slug), j = i + dir;
+    if (i < 0 || j < 0 || j >= cfg.order.length) return;
+    cfg.order.splice(j, 0, cfg.order.splice(i, 1)[0]);
+    focusAfter = { slug: slug, dir: dir }; render(); schedulePlan();
+    var btn = main.querySelector('[data-move="' + slug + '"][data-dir="' + dir + '"]:not([disabled])') || main.querySelector('[data-move="' + slug + '"]:not([disabled])');
+    if (btn) btn.focus();
+  }
+  main.addEventListener('dragstart', function (e) {
+    var it = e.target.closest ? e.target.closest('[data-drag]') : null; if (!it) return;
+    dragSlug = it.dataset.drag; e.dataTransfer.setData('text/plain', dragSlug); e.dataTransfer.effectAllowed = 'move'; it.classList.add('dragging');
+  });
+  main.addEventListener('dragover', function (e) { var it = e.target.closest('[data-drag]'); if (it && dragSlug) { e.preventDefault(); it.classList.add('over'); } });
+  main.addEventListener('dragleave', function (e) { var it = e.target.closest('[data-drag]'); if (it) it.classList.remove('over'); });
+  main.addEventListener('drop', function (e) {
+    var it = e.target.closest('[data-drag]'); if (!it || !dragSlug) return; e.preventDefault();
+    var from = cfg.order.indexOf(dragSlug), to = cfg.order.indexOf(it.dataset.drag);
+    dragSlug = null;
+    if (from > -1 && to > -1 && from !== to) { cfg.order.splice(to, 0, cfg.order.splice(from, 1)[0]); render(); schedulePlan(); } else render();
+  });
+  main.addEventListener('dragend', function () { if (dragSlug) { dragSlug = null; render(); } });
 
   document.getElementById('side').addEventListener('click', function (e) {
     var id = e.target.closest('button, a') && e.target.closest('button, a').id;
     if (id === 'save') save();
+    else if (id === 'preview') openPreview();
+    else if (id === 'publish') publish();
     else if (id === 'undo') undo();
     else if (id === 'allon') {
       ['products', 'sections', 'industries', 'tools', 'guides', 'features'].forEach(function (g) { Object.keys(cfg[g]).forEach(function (k) { cfg[g][k] = true; }); });
+      cfg.features.ticker = false; cfg.order = S.catalog.products.map(function (p) { return p.slug; });
       cfg.faq.hidden = []; render(); schedulePlan();
     } else if (id === 'copy') {
       var txt = document.getElementById('cmds').textContent;
@@ -270,8 +345,58 @@ pre { margin: 8px 0 0; padding: 10px 12px; overflow: auto; font: 13px/1.5 ui-mon
     if (!r.ok) { toast((r.errors || ['Something went wrong.']).join(' '), true); lastLog = r.log || ''; return; }
     S = { config: r.config, errors: r.errors, effective: r.effective, catalog: r.catalog, hasBackup: r.hasBackup };
     cfg = clone(r.config); saved = JSON.stringify(cfg); lastLog = r.log || ''; plan = null;
-    render(); runPlan(); toast(msg);
+    render(); runPlan(); toast(msg); loadGit();
   }
+  // ---------- preview of the unsaved settings ----------
+  var pv = document.getElementById('pv'), pvFrame = document.getElementById('pvFrame'), pvPage = document.getElementById('pvPage'), pvStage = document.getElementById('pvStage'), pvNote = document.getElementById('pvNote');
+  function pageLabel(f) {
+    var hi = /^hi\//.test(f), g = f.replace(/^hi\//, '').replace(/\/?index\.html$/, ''), C = S.catalog, name = '';
+    if (g === '') name = 'Home'; else if (g === 'tools') name = 'Tools'; else if (g === 'guides') name = 'Guides';
+    else if (/^products\//.test(g)) { var p = C.products.filter(function (x) { return x.slug === g.slice(9); })[0]; name = p ? p.name : g; }
+    else if (/^guides\//.test(g)) { var q = C.guides.filter(function (x) { return x.slug === g.slice(7); })[0]; name = q ? q.title : g; }
+    else name = g;
+    return name + (hi ? ' (Hindi)' : '');
+  }
+  function fillPages() {
+    var list = plan && plan !== 'checking' && plan.plan && plan.plan.pageList ? plan.plan.pageList : ['index.html'];
+    var cur = pvPage.value || 'index.html';
+    pvPage.innerHTML = list.map(function (f) { return '<option value="' + esc(f) + '">' + esc(pageLabel(f)) + '</option>'; }).join('');
+    pvPage.value = list.indexOf(cur) > -1 ? cur : 'index.html';
+  }
+  function refreshPreview() {
+    if (!pvOpen) return;
+    pvNote.textContent = 'Building the preview…';
+    api('/api/preview', { config: cfg }).then(function (r) {
+      if (!pvOpen) return;
+      if (!r.ok) { pvNote.textContent = 'Preview not available: ' + (r.errors || []).join(' '); return; }
+      fillPages();
+      pvFrame.src = '/preview/' + pvPage.value + '?v=' + r.version;
+      pvNote.textContent = 'This is how the website will look with your current ticks (saved or not).';
+    }).catch(function () { pvNote.textContent = 'Could not build the preview.'; });
+  }
+  function openPreview() { pvOpen = true; if (!pv.open) pv.showModal(); refreshPreview(); }
+  document.getElementById('pvClose').addEventListener('click', function () { pv.close(); });
+  pv.addEventListener('close', function () { pvOpen = false; });
+  pvPage.addEventListener('change', function () { pvFrame.src = '/preview/' + pvPage.value + '?v=' + Date.now(); });
+  document.getElementById('pvDesk').addEventListener('click', function () { pvStage.className = 'pv__stage'; this.setAttribute('aria-pressed', 'true'); document.getElementById('pvPhone').setAttribute('aria-pressed', 'false'); });
+  document.getElementById('pvPhone').addEventListener('click', function () { pvStage.className = 'pv__stage phone'; this.setAttribute('aria-pressed', 'true'); document.getElementById('pvDesk').setAttribute('aria-pressed', 'false'); });
+
+  // ---------- publishing (git) ----------
+  function loadGit() { return api('/api/git').then(function (g) { G = g; renderSide(); }); }
+  function publish() {
+    if (!G || !G.isRepo) return;
+    var n = G.changed.length;
+    var list = G.changed.slice(0, 8).map(function (l) { return '  ' + l.trim(); }).join('\n') + (n > 8 ? '\n  … and ' + (n - 8) + ' more' : '');
+    if (!window.confirm('This will save ' + n + ' changed file' + (n === 1 ? '' : 's') + ' in git and send them to the branch "' + G.branch + '" on GitHub:\n\n' + list + '\n\nContinue?')) return;
+    publishing = true; renderSide();
+    api('/api/publish', { confirm: true, message: 'Update website settings' }).then(function (r) {
+      publishing = false; pubLog = r.log || '';
+      if (r.ok) { G = r.git; toast(r.upToDate ? 'Already up to date: nothing new to send.' : 'Published. The website updates in a minute or two.'); }
+      else toast((r.errors || ['Publishing failed.']).join(' '), true);
+      renderSide();
+    }).catch(function () { publishing = false; toast('Could not publish. Is the control panel window still open?', true); renderSide(); });
+  }
+
   function save() {
     saving = true; renderSide();
     api('/api/apply', { config: cfg }).then(function (r) { saving = false; applied(r, 'Saved. The website files were rebuilt.'); if (!r.ok) renderSide(); }).catch(function () { saving = false; toast('Could not save. Is the control panel window still open?', true); renderSide(); });
@@ -284,7 +409,7 @@ pre { margin: 8px 0 0; padding: 10px 12px; overflow: auto; font: 13px/1.5 ui-mon
   window.addEventListener('beforeunload', function (e) { if (S && dirty()) { e.preventDefault(); e.returnValue = ''; } });
 
   api('/api/state').then(function (r) {
-    S = r; cfg = clone(r.config); saved = JSON.stringify(cfg); render(); runPlan();
+    S = r; cfg = clone(r.config); saved = JSON.stringify(cfg); render(); runPlan(); loadGit();
     if (r.errors && r.errors.length) toast('site-config.json had problems, so the defaults are shown: ' + r.errors[0], true);
   }).catch(function () { document.getElementById('main').innerHTML = '<div class="loading">Could not load. Start the panel with <b>npm run admin</b> and keep that window open.</div>'; });
 })();

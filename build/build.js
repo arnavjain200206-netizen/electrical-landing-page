@@ -182,17 +182,19 @@ write('robots.txt', `User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: ${SI
 
 // 404 (GitHub Pages / Netlify serve this for unknown addresses). Absolute-from-root links via <base> are not
 // possible on sub-folder hosting, so it links relative to the site url.
-const first = cfg.productsOn[0];
 write('404.html', `<!DOCTYPE html><html lang="en-IN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Page not found | Electrical Insulation India</title>
 <style>body{margin:0;min-height:100vh;display:grid;place-items:center;font-family:system-ui,sans-serif;background:#f6f4ef;color:#18222d;text-align:center;padding:24px}h1{font-size:2rem;margin:0 0 8px}p{margin:0 0 20px;color:#566170}a{display:inline-block;margin:4px;padding:12px 20px;border-radius:6px;background:#12263f;color:#fff;text-decoration:none;font-weight:600}a.o{background:none;color:#12263f;border:1.5px solid #12263f}</style></head>
 <body><main><h1>Page not found${LANGS.includes('hi') ? ' / पेज नहीं मिला' : ''}</h1><p>The page you were looking for is not here.${LANGS.includes('hi') ? ' · आप जो पेज ढूंढ रहे थे वो यहां नहीं है।' : ''}</p>
-<a href="${SITE.url}">Home</a>${LANGS.includes('hi') ? `<a class="o" href="${SITE.url}hi/">होम (हिन्दी)</a>` : ''}<a class="o" href="${SITE.url}products/${first}/">${products.en[first].name}</a></main></body></html>
+<a href="${SITE.url}">Home</a>${LANGS.includes('hi') ? `<a class="o" href="${SITE.url}hi/">होम (हिन्दी)</a>` : ''}
+<p style="margin:26px 0 6px;font-weight:600">${LANGS.includes('hi') ? 'Products / प्रोडक्ट' : 'Products'}</p>
+${cfg.productsOn.map((s2) => `<a class="o" href="${SITE.url}products/${s2}/">${products.en[s2].name}</a>`).join('')}
+<p style="margin-top:26px">${LANGS.includes('hi') ? 'Need help? / मदद चाहिए? ' : 'Need help? '}<a class="o" href="https://wa.me/${SITE.whatsapp}">WhatsApp</a></p></main></body></html>
 `);
 
 if (DRY) {
   let before = []; try { before = JSON.parse(fs.readFileSync(MANIFEST, 'utf8')); } catch (e) { /* first build */ }
   const added = [...written].filter((f) => !before.includes(f)).sort(), gone = before.filter((f) => !written.has(f)).sort();
-  console.log('@@summary ' + JSON.stringify({ dry: true, files: count, pages: pages.length, langs: LANGS, shown: cfg.productsOn, auto: cfg.auto, warnings: cfg.warnings, added, removed: gone }));
+  console.log('@@summary ' + JSON.stringify({ dry: true, files: count, pages: pages.length, langs: LANGS, shown: cfg.productsOn, auto: cfg.auto, warnings: cfg.warnings, added, removed: gone, written: [...written].sort() }));
   process.exit(0);
 }
 

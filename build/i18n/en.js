@@ -70,7 +70,17 @@ module.exports = {
       lead: 'Rigid PVC sheet for electrical insulation, plus the stretch film, tape, bubble wrap and strapping you pack and ship with. Send us the product, size and quantity on WhatsApp and we will quote, usually the same business day.',
       ctaWa: 'Get a quote on WhatsApp', ctaCall: 'Call +91 79826 44262',
       stackAlt: 'Stack of PVC insulation sheets stopping an electric spark',
-      chipTitle: 'Rigid PVC sheet', chipSpec: '1–20 mm · 1220 × 2440 mm'
+      chipTitle: 'Rigid PVC sheet', chipSpec: '1–20 mm · 1220 × 2440 mm',
+      chipsLabel: 'Who we supply'
+    },
+    trust: {
+      label: 'Ordering at a glance',
+      items: [
+        { label: 'Standard sheet', value: '1220 × 2440 mm, 1–20 mm thick' },
+        { label: 'Billing', value: 'GST invoice + LR copy' },
+        { label: 'Dispatch', value: 'Delhi-NCR in 1–2 working days, across India by road' },
+        { label: 'Samples', value: 'On request (courier charges may apply)' }
+      ]
     },
     facts: {
       sheet: 'Standard sheet', thickness: 'Thickness', thicknessTo: 'to', dispatch: 'Delhi-NCR dispatch', dispatchValue: '1–2 working days',
@@ -180,6 +190,12 @@ module.exports = {
     titleSuffix: 'Sizes & Price | Electrical Insulation India',
     metaTail: 'Sizes, specifications and WhatsApp quotation. Wholesale supplier, Daryaganj, New Delhi.',
     kicker: 'Product details', crumbNav: 'Breadcrumb',
+    bar: 'Get quote on WhatsApp', barLabel: 'Quick quote',
+    cfg: {
+      title: 'See it in your size and colour', thickness: 'Thickness', colour: 'Colour',
+      weight: 'Weight per sheet', weightNote: '1220 × 2440 mm sheet at 1.35 g/cm³. Indicative.',
+      follows: 'The quote form on this page follows your choice.'
+    },
     priceTitle: 'Price on request',
     priceText: 'Rates change with size, quantity and city. Get the best bulk quotation on WhatsApp, usually the same business day.',
     buildQuote: 'Build your quote', quick: 'Quick enquiry',
@@ -349,7 +365,11 @@ module.exports = {
   },
 
   js: {
-    form: { name: 'Please enter your name.', phone: 'Please enter a valid 10-digit phone number.', product: 'Please select a product.' },
+    form: {
+      name: 'Please enter your name.', phone: 'Please enter a valid 10-digit phone number.', product: 'Please select a product.',
+      sent: 'Your message is ready and WhatsApp should open now.', sentFallback: 'Nothing opened? Open WhatsApp',
+      sentMail: 'Your email app should open now.', sentMailFallback: 'Nothing opened? Email us'
+    },
     basket: {
       title: 'Enquiry list', empty: 'Your list is empty.', emptyHint: 'Add products from the catalogue, tools or product pages, then send everything in one WhatsApp message.',
       browse: 'Browse products', remove: 'Remove', close: 'Close', clear: 'Clear list', clearConfirm: 'Remove all items from your enquiry list?',

@@ -11,6 +11,16 @@
     "strapping": true,
     "edge-guard": true
   },
+  "order": [
+    "pvc-sheets",
+    "cut-to-size",
+    "stretch-film",
+    "bopp-tape",
+    "bubble-wrap",
+    "foam",
+    "strapping",
+    "edge-guard"
+  ],
   "sections": {
     "industries": true,
     "tools": true,
@@ -42,7 +52,7 @@
     "hindi": true,
     "threeD": true,
     "floatingWhatsApp": true,
-    "ticker": true,
+    "ticker": false,
     "themeSwitch": true
   },
   "announcement": {

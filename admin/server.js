@@ -72,7 +72,7 @@ function state() {
 }
 
 function tidy(cfg) {            // what gets written to site-config.json
-  const out = { _help: HELP, version: 1, products: cfg.products, sections: cfg.sections, industries: cfg.industries, tools: cfg.tools, guides: cfg.guides, faq: { hidden: [...cfg.faq.hidden].sort((a, b) => a - b) }, features: cfg.features, announcement: cfg.announcement, texts: { en: {}, hi: {} }, siteUrl: cfg.siteUrl, analytics: cfg.analytics, googleReviewUrl: cfg.googleReviewUrl, googleBusinessUrl: cfg.googleBusinessUrl };
+  const out = { _help: HELP, version: 1, products: cfg.products, order: cfg.order, sections: cfg.sections, industries: cfg.industries, tools: cfg.tools, guides: cfg.guides, faq: { hidden: [...cfg.faq.hidden].sort((a, b) => a - b) }, features: cfg.features, announcement: cfg.announcement, texts: { en: {}, hi: {} }, siteUrl: cfg.siteUrl, analytics: cfg.analytics, googleReviewUrl: cfg.googleReviewUrl, googleBusinessUrl: cfg.googleBusinessUrl };
   ['en', 'hi'].forEach((l) => Object.keys(cfg.texts[l] || {}).forEach((k) => { if (String(cfg.texts[l][k]).trim() !== '') out.texts[l][k] = cfg.texts[l][k]; }));
   return JSON.stringify(out, null, 2) + '\n';
 }
@@ -92,7 +92,63 @@ function plan(body) {
   const b = runBuild(['--dry', '--config', tmp]);
   try { fs.unlinkSync(tmp); } catch (e) { /* ignore */ }
   if (!b.ok) return { errors: [b.log.split('\n').slice(0, 6).join(' ')] };
-  return { errors: [], effective: effectiveOf(cfg), plan: { files: b.summary.files, pages: b.summary.pages, added: b.summary.added, removed: b.summary.removed } };
+  const pages = (b.summary.written || []).filter((f) => /(^|\/)index\.html$/.test(f) && !f.startsWith('single/'));
+  return { errors: [], effective: effectiveOf(cfg), plan: { files: b.summary.files, pages: b.summary.pages, added: b.summary.added, removed: b.summary.removed, pageList: pages } };
+}
+
+// ---------- live preview: the settings as they are right now (saved or not), built into a temporary folder ----------
+const PREVIEW = path.join(os.tmpdir(), `eii-preview-${process.pid}`);
+let previewPrepared = false;
+function preparePreview() {
+  fs.mkdirSync(PREVIEW, { recursive: true });
+  if (!previewPrepared) { fs.cpSync(path.join(ROOT, 'assets'), path.join(PREVIEW, 'assets'), { recursive: true }); previewPrepared = true; }
+  fs.readdirSync(ROOT).filter((f) => /\.(js|css)$/.test(f)).forEach((f) => fs.copyFileSync(path.join(ROOT, f), path.join(PREVIEW, f)));
+}
+function preview(body, port) {
+  const { cfg, errors } = CFG.normalize(body, info);
+  if (errors.length) return { ok: false, errors };
+  preparePreview();
+  const tmp = path.join(os.tmpdir(), `eii-prev-${process.pid}.json`);
+  fs.writeFileSync(tmp, JSON.stringify(cfg));
+  const b = runBuild(['--out', PREVIEW, '--config', tmp, '--url', `http://localhost:${port}/preview/`]);
+  try { fs.unlinkSync(tmp); } catch (e) { /* ignore */ }
+  return b.ok ? { ok: true, version: Date.now() } : { ok: false, errors: [b.log.split('\n').slice(0, 4).join(' ')] };
+}
+process.on('exit', () => { try { fs.rmSync(PREVIEW, { recursive: true, force: true }); } catch (e) { /* ignore */ } });
+
+// ---------- publishing with git (only when the owner presses the button) ----------
+function git(args) {
+  const r = cp.spawnSync('git', args, { cwd: ROOT, encoding: 'utf8', timeout: 120000, env: Object.assign({}, process.env, { GIT_TERMINAL_PROMPT: '0' }) });
+  return { ok: r.status === 0, out: ((r.stdout || '') + (r.stderr || '')).trim(), status: r.status, missing: r.error && r.error.code === 'ENOENT' };
+}
+function gitState() {
+  const inside = git(['rev-parse', '--is-inside-work-tree']);
+  if (inside.missing) return { isRepo: false, reason: 'Git is not installed on this computer.' };
+  if (!inside.ok || inside.out !== 'true') return { isRepo: false, reason: 'This folder is not a git project.' };
+  const branch = git(['rev-parse', '--abbrev-ref', 'HEAD']).out;
+  const remote = git(['remote', 'get-url', 'origin']);
+  const changed = git(['status', '--porcelain']).out.split('\n').filter(Boolean);
+  return { isRepo: true, branch, remote: remote.ok ? remote.out.replace(/\/\/[^@/]*@/, '//') : '', changed };
+}
+function publish(message) {
+  const st = gitState();
+  if (!st.isRepo) return { status: 400, body: { ok: false, errors: [st.reason] } };
+  if (!st.remote) return { status: 400, body: { ok: false, errors: ['This project has no GitHub address ("origin") to publish to.'] } };
+  const msg = String(message || 'Update website').replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, 120) || 'Update website';
+  const log = [];
+  const run = (label, args) => { const r = git(args); log.push(`$ git ${args.join(' ')}\n${r.out}`.trim()); return r; };
+  run('add', ['add', '-A']);
+  const nothing = git(['diff', '--cached', '--quiet']).ok;
+  let committed = false;
+  if (!nothing) {
+    const c = run('commit', ['commit', '-m', msg]);
+    if (!c.ok) return { status: 500, body: { ok: false, errors: ['Could not save the change in git. If it says "Please tell me who you are", run: git config user.email "you@example.com" and git config user.name "Your Name"'], log: log.join('\n\n') } };
+    committed = true;
+  }
+  let p = run('push', ['push']);
+  if (!p.ok && /no upstream|set-upstream/i.test(p.out)) p = run('push', ['push', '-u', 'origin', st.branch]);
+  if (!p.ok) return { status: 500, body: { ok: false, errors: [committed ? 'The change was saved in git but could not be sent. Check your internet and GitHub login, then press Publish again.' : 'Could not send to GitHub. Check your internet and GitHub login.'], log: log.join('\n\n') } };
+  return { status: 200, body: { ok: true, committed, upToDate: !committed && /Everything up-to-date/i.test(p.out), log: log.join('\n\n'), git: gitState() } };
 }
 
 function apply(body) {
@@ -139,6 +195,7 @@ function serve(port) {
     if (p.startsWith('/api/')) {
       if (req.headers['x-eii-admin'] !== '1') return send(res, 403, { error: 'Missing header.' });
       if (req.method === 'GET' && p === '/api/state') return send(res, 200, state());
+      if (req.method === 'GET' && p === '/api/git') return send(res, 200, gitState());
       if (req.method !== 'POST') return send(res, 405, { error: 'POST only.' });
       let data = '';
       req.on('data', (c) => { data += c; if (data.length > 300000) req.destroy(); });
@@ -146,6 +203,8 @@ function serve(port) {
         try {
           const body = data ? JSON.parse(data) : {};
           if (p === '/api/plan') return send(res, 200, plan(body.config));
+          if (p === '/api/preview') return send(res, 200, preview(body.config, port));
+          if (p === '/api/publish') { if (body.confirm !== true) return send(res, 400, { ok: false, errors: ['Please confirm first.'] }); const r = publish(body.message); return send(res, r.status, r.body); }
           if (p === '/api/apply') { const r = apply(body.config); return send(res, r.status, r.body); }
           if (p === '/api/undo') { const r = undo(); return send(res, r.status, r.body); }
           return send(res, 404, { error: 'Unknown request.' });
@@ -157,7 +216,11 @@ function serve(port) {
     if (req.method !== 'GET') return send(res, 405, 'Method not allowed', 'text/plain');
     let file;
     if (p === '/' || p === '/index.html') file = path.join(__dirname, 'index.html');
-    else if (p.startsWith('/site/')) {            // preview of the built website
+    else if (p.startsWith('/preview/')) {           // the unsaved draft
+      const rel = p.slice(9) || 'index.html';
+      file = path.join(PREVIEW, rel.endsWith('/') ? rel + 'index.html' : rel);
+      if (!file.startsWith(PREVIEW + path.sep) || path.basename(file).startsWith('.')) return send(res, 404, 'Not found', 'text/plain');
+    } else if (p.startsWith('/site/')) {            // preview of the built website
       const rel = p.slice(6) || 'index.html';
       file = path.join(ROOT, rel.endsWith('/') ? rel + 'index.html' : rel);
       if (!file.startsWith(ROOT + path.sep) || HIDE.test(path.relative(ROOT, file).split(path.sep).join('/')) || path.basename(file).startsWith('.')) return send(res, 404, 'Not found', 'text/plain');

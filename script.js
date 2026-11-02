@@ -100,8 +100,13 @@
   function hasWebGL() {
     try {
       var c = document.createElement('canvas'), gl = c.getContext('webgl2') || c.getContext('webgl');
-      var lose = gl && gl.getExtension('WEBGL_lose_context'); if (lose) lose.loseContext();
-      return !!gl;
+      if (!gl) return false;
+      // a software renderer (no graphics card) would make the page slow: keep the illustrations and skip the download
+      var info = gl.getExtension('WEBGL_debug_renderer_info');
+      var gpu = info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : '';
+      var lose = gl.getExtension('WEBGL_lose_context'); if (lose) lose.loseContext();
+      if (!window.EII3D_FORCE && /swiftshader|llvmpipe|softpipe|software|basic render/i.test(gpu)) return false;
+      return true;
     } catch (e) { return false; }
   }
   function load3d(cb) {
@@ -128,7 +133,6 @@
   // =====================================================================
   // Everything below belongs to the current view and runs again whenever a view is shown
   // =====================================================================
-  var rotTimer = null;
   function mount() {
   var models = document.querySelectorAll('[data-model]');
   if (models.length) load3d(function (api) { api.mount(models); });
@@ -150,112 +154,52 @@
     revealEls.forEach(function (el) { el.classList.add('is-in'); });
   }
 
-  // ---------- Count-up numbers (final value is already in the markup) ----------
-  var counters = document.querySelectorAll('[data-count]');
-  function countUp(el) {
-    var target = parseInt(el.dataset.count, 10), t0 = null;
-    function step(t) {
-      if (t0 === null) t0 = t;
-      var p = Math.min((t - t0) / 1500, 1);
-      el.textContent = Math.round(target * (1 - Math.pow(1 - p, 4)));
-      if (p < 1) window.requestAnimationFrame(step); else el.textContent = target;
-    }
-    el.textContent = '0';
-    window.requestAnimationFrame(step);
-  }
-  if (!RM && 'IntersectionObserver' in window) {
-    var cio = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (en.isIntersecting) { cio.unobserve(en.target); window.setTimeout(function () { countUp(en.target); }, 900); }
-      });
-    }, { threshold: 0.6 });
-    counters.forEach(function (el) { cio.observe(el); });
-  }
-
-  // ---------- Rotating word in the headline ----------
-  var rot = document.getElementById('rot');
-  window.clearInterval(rotTimer);
-  if (rot && !RM) {
-    var words = rot.dataset.words.split('|'), word = rot.querySelector('.rot__w'), wi = 0;
-    word.textContent = words[0];
-    rotTimer = window.setInterval(function () {
-      if (document.hidden) return;
-      word.classList.add('is-out');
-      window.setTimeout(function () {
-        wi = (wi + 1) % words.length;
-        word.textContent = words[wi];
-        word.classList.remove('is-out');
-        word.classList.add('is-pre');
-        void word.offsetWidth;
-        word.classList.remove('is-pre');
-      }, 450);
-    }, 2600);
-  }
-
-  // ---------- Pointer effects (mouse / trackpad only) ----------
-  if (FINE && !RM) {
-    var hero = document.getElementById('hero');
-    var art = hero && hero.querySelector('.hero__art');
-    if (hero && art) {
-      hero.addEventListener('pointerenter', function () { hero.classList.add('is-hover'); });
-      hero.addEventListener('pointermove', function (e) {
-        var r = hero.getBoundingClientRect();
-        hero.style.setProperty('--sx', (e.clientX - r.left) + 'px');
-        hero.style.setProperty('--sy', (e.clientY - r.top) + 'px');
-        art.style.setProperty('--px', (((e.clientX - r.left) / r.width - 0.5) * -18).toFixed(1) + 'px');
-        art.style.setProperty('--py', (((e.clientY - r.top) / r.height - 0.5) * -12).toFixed(1) + 'px');
-      });
-      hero.addEventListener('pointerleave', function () {
-        hero.classList.remove('is-hover');
-        art.style.setProperty('--px', '0px'); art.style.setProperty('--py', '0px');
-      });
-    }
-    document.querySelectorAll('[data-tilt]').forEach(function (card) {
-      var k = card.classList.contains('pcard--xl') ? 3 : 7;
-      card.addEventListener('pointermove', function (e) {
-        var r = card.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
-        card.style.setProperty('--mx', (x * 100).toFixed(1) + '%');
-        card.style.setProperty('--my', (y * 100).toFixed(1) + '%');
-        card.style.setProperty('--ry', ((x - 0.5) * k).toFixed(2) + 'deg');
-        card.style.setProperty('--rx', ((0.5 - y) * k).toFixed(2) + 'deg');
-      });
-      card.addEventListener('pointerleave', function () { card.style.setProperty('--rx', '0deg'); card.style.setProperty('--ry', '0deg'); });
-    });
-    document.querySelectorAll('.magnetic').forEach(function (btn) {
-      btn.addEventListener('pointermove', function (e) {
-        var r = btn.getBoundingClientRect();
-        btn.style.transform = 'translate(' + ((e.clientX - r.left - r.width / 2) * 0.16).toFixed(1) + 'px,' + ((e.clientY - r.top - r.height / 2) * 0.28).toFixed(1) + 'px)';
-      });
-      btn.addEventListener('pointerleave', function () { btn.style.transform = ''; });
-    });
-  }
-
   // ---------- Contact form -> WhatsApp / email ----------
   var form = document.getElementById('quoteForm');
   var errorEl = document.getElementById('formError');
   var FS = (E.strings && E.strings.form) || {};
-  function showError(msg, field) {
+  function clearErrors() {
+    form.querySelectorAll('.is-invalid').forEach(function (el) { el.classList.remove('is-invalid'); el.removeAttribute('aria-invalid'); el.removeAttribute('aria-describedby'); });
+    form.querySelectorAll('.field__err').forEach(function (el) { el.remove(); });
+    errorEl.hidden = true;
+  }
+  function showError(msg, field) {          // the message sits right under the field, and in the summary line for screen readers
+    clearErrors();
+    var note = document.createElement('span');
+    note.className = 'field__err'; note.id = 'err-' + field.name; note.textContent = msg;
+    field.insertAdjacentElement('afterend', note);
+    field.classList.add('is-invalid'); field.setAttribute('aria-invalid', 'true'); field.setAttribute('aria-describedby', note.id);
     errorEl.textContent = msg; errorEl.hidden = false;
-    form.querySelectorAll('.is-invalid').forEach(function (el) { el.classList.remove('is-invalid'); });
-    if (field) { field.classList.add('is-invalid'); field.focus(); }
+    field.focus();
+  }
+  function showSent(kind, href) {           // popup blockers and missing mail apps happen: always give a link as well
+    var box = document.getElementById('formSent');
+    if (!box) { box = document.createElement('p'); box.id = 'formSent'; box.className = 'form__sent'; box.setAttribute('role', 'status'); form.appendChild(box); }
+    var mail = kind === 'mail';
+    box.innerHTML = '';
+    box.appendChild(document.createTextNode((mail ? FS.sentMail : FS.sent) + ' '));
+    var a = document.createElement('a'); a.href = href; a.textContent = mail ? FS.sentMailFallback : FS.sentFallback;
+    if (!mail) { a.target = '_blank'; a.rel = 'noopener'; }
+    box.appendChild(a);
   }
   if (form) {
+    form.addEventListener('input', function (e) { if (e.target.classList && e.target.classList.contains('is-invalid')) clearErrors(); });
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var name = form.elements.name, phone = form.elements.phone, product = form.elements.product, details = form.elements.details;
       if (!name.value.trim()) return showError(FS.name, name);
       if (phone.value.replace(/\D/g, '').length < 10) return showError(FS.phone, phone);
       if (!product.value) return showError(FS.product, product);
-      errorEl.hidden = true;
-      form.querySelectorAll('.is-invalid').forEach(function (el) { el.classList.remove('is-invalid'); });
+      clearErrors();
       var text = ['Hi, I would like a quote.', '', 'Name: ' + name.value.trim(), 'Phone: ' + phone.value.trim(), 'Product: ' + product.value, 'Details: ' + (details.value.trim() || '-'), '(Sent from the website: contact form)'].join('\n');
       var channel = e.submitter && e.submitter.dataset.channel;
       if (window.track) window.track('quote_form_submit', { item: channel === 'mail' ? 'email' : 'whatsapp', where: 'contact_form' });
-      if (channel === 'mail') {
-        window.location.href = 'mailto:' + E.email + '?subject=' + encodeURIComponent('Quote request - ' + product.value) + '&body=' + encodeURIComponent(text);
-      } else {
-        window.open('https://wa.me/' + E.wa + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
-      }
+      var href = channel === 'mail'
+        ? 'mailto:' + E.email + '?subject=' + encodeURIComponent('Quote request - ' + product.value) + '&body=' + encodeURIComponent(text)
+        : 'https://wa.me/' + E.wa + '?text=' + encodeURIComponent(text);
+      showSent(channel === 'mail' ? 'mail' : 'wa', href);
+      if (channel === 'mail') window.location.href = href;
+      else window.open(href, '_blank', 'noopener');
     });
   }
   }

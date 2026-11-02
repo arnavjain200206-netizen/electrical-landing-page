@@ -10,12 +10,13 @@ function defaults(info) {
   return {
     version: 1,
     products: bool(info.products, true),
+    order: C.productOrder.filter((s) => info.products.includes(s)),
     sections: bool(C.sections, true),
     industries: bool(C.industries, true),
     tools: bool(Object.keys(C.tools), true),
     guides: bool(info.guides, true),
     faq: { hidden: [] },
-    features: bool(C.features, true),
+    features: Object.assign(bool(C.features, true), { ticker: false }),   // the scrolling strip is off unless asked for
     announcement: { enabled: false, en: '', hi: '' },
     texts: { en: {}, hi: {} },
     siteUrl: '', analytics: { ga4: '', plausible: '' }, googleReviewUrl: '', googleBusinessUrl: ''
@@ -42,6 +43,20 @@ function normalize(raw, info) {
     });
   };
   flagGroup('products', info.products, 'product');
+  if (raw.order !== undefined) {
+    const o = raw.order;
+    if (!Array.isArray(o)) errors.push('"order" must be a list of product names, e.g. ["pvc-sheets", "foam"].');
+    else {
+      const seen = [];
+      o.forEach((s) => {
+        if (!info.products.includes(s)) errors.push(`"order" has "${s}", which is not a known product. Known: ${info.products.join(', ')}.`);
+        else if (seen.includes(s)) errors.push(`"order" lists "${s}" twice.`);
+        else seen.push(s);
+      });
+      // products left out of the list follow in their usual order
+      cfg.order = seen.concat(C.productOrder.filter((s) => info.products.includes(s) && !seen.includes(s)));
+    }
+  }
   flagGroup('sections', C.sections, 'section');
   flagGroup('industries', C.industries, 'industry');
   flagGroup('tools', Object.keys(C.tools), 'tool');
@@ -82,7 +97,7 @@ function normalize(raw, info) {
       if (raw.analytics.plausible !== undefined) { if (typeof raw.analytics.plausible !== 'string' || !/^([a-z0-9.-]+)?$/i.test(raw.analytics.plausible.trim())) errors.push('"analytics.plausible" must be a domain like yourdomain.in (or be empty).'); else cfg.analytics.plausible = raw.analytics.plausible.trim(); }
     }
   }
-  Object.keys(raw).forEach((k) => { if (!k.startsWith('_') && !['version', 'products', 'sections', 'industries', 'tools', 'guides', 'faq', 'features', 'announcement', 'texts', 'siteUrl', 'analytics', 'googleReviewUrl', 'googleBusinessUrl'].includes(k)) errors.push(`Unknown setting "${k}".`); });
+  Object.keys(raw).forEach((k) => { if (!k.startsWith('_') && !['version', 'products', 'order', 'sections', 'industries', 'tools', 'guides', 'faq', 'features', 'announcement', 'texts', 'siteUrl', 'analytics', 'googleReviewUrl', 'googleBusinessUrl'].includes(k)) errors.push(`Unknown setting "${k}".`); });
 
   if (!info.products.some((s) => cfg.products[s])) errors.push('At least one product must stay shown.');
   return { cfg, errors };
@@ -91,7 +106,7 @@ function normalize(raw, info) {
 /* What the site will really show, with the reason for everything that is hidden. */
 function resolve(cfg, info) {
   const auto = [];                                   // things hidden because something they need is hidden
-  const on = C.productOrder.filter((s) => info.products.includes(s) && cfg.products[s]);
+  const on = cfg.order.filter((s) => info.products.includes(s) && cfg.products[s]);
   const has = (s) => on.includes(s);
   const anyOf = (list) => list.some(has);
   const needs = (list) => list.map((s) => info.names ? info.names[s] || s : s).join(' or ');

@@ -8,9 +8,12 @@ const GROUP = { 'pvc-sheets': 'Insulation', 'cut-to-size': 'Insulation' };
 
 /* Which cards get the big layouts. Only when they fill the 4-column grid exactly, so hiding products never leaves a hole. */
 function bentoLayout(on) {
-  const has = (s) => on.includes(s), n = on.length;
-  if (has('pvc-sheets') && has('cut-to-size') && n >= 4) return { xl: 'pvc-sheets', wide: 'cut-to-size', n };
-  if (has('pvc-sheets') && n >= 5) return { xl: 'pvc-sheets', wide: null, n };
+  const n = on.length;
+  // the big card must be first and the wide one second, otherwise grid auto-placement would leave holes
+  if (on[0] === 'pvc-sheets') {
+    if (on[1] === 'cut-to-size' && n >= 4) return { xl: 'pvc-sheets', wide: 'cut-to-size', n };
+    if (n >= 5) return { xl: 'pvc-sheets', wide: null, n };
+  }
   return { xl: null, wide: null, n };
 }
 const ICON = { switchgear: 'i-switch', meter: 'i-meter', appliance: 'i-appliance', traders: 'i-truck' };
@@ -20,10 +23,10 @@ module.exports = function home(ctx) {
   const { t, lang, rel, cfg } = ctx;
   const ORDER = cfg.productsOn;
   const layout = bentoLayout(ORDER);
-  const dm = (slug) => (cfg.features.threeD ? ` data-model="${slug}"` : '');
+  const dm = (slug, motion) => (cfg.features.threeD ? ` data-model="${slug}"${motion ? ` data-motion="${motion}"` : ''}` : '');
   const wa = L.waUrl(t.raw('ui.waGreeting'));
   const hero = 'home.hero';
-  const words = t.raw(`${hero}.words`).join('|');
+  const heroWords = t.raw(`${hero}.words`);
   const forWord = t.raw(`${hero}.forWord`);
   const stop = lang === 'en' ? '.' : '';
   const productName = (s) => ctx.products[s].name;
@@ -32,8 +35,8 @@ module.exports = function home(ctx) {
     const c = `home.products.cards.${slug}`;
     const cls = slug === layout.xl ? ' pcard--xl' : slug === layout.wide ? ' pcard--wide' : '';
     const tag = GROUP[slug] ? t('home.products.tagInsulation') : t('home.products.tagPackaging');
-    return `          <article class="pcard${cls}" data-tilt>
-            <div class="pcard__img"${dm(slug)}><img src="${rel}assets/products/${slug}.svg" alt="" width="600" height="450" loading="lazy"><span class="pcard__tag">${tag}</span></div>
+    return `          <article class="pcard${cls}">
+            <div class="pcard__img"${dm(slug, 'hover')}><img src="${rel}assets/products/${slug}.svg" alt="" width="600" height="450" loading="lazy"><span class="pcard__tag">${tag}</span></div>
             <div class="pcard__body">
               <h3 class="pcard__title"><a href="${ctx.link('products/' + slug + '/')}">${t(c + '.title')}</a></h3>
               <p>${t(c + '.text')}</p>
@@ -105,13 +108,12 @@ module.exports = function home(ctx) {
             <span><strong>${chipTitle}</strong><span class="mono">${chipSpec}</span></span>
             <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>
           </a>`;
-  const factItems = [
-    cfg.insulation ? `<div><dt>${t('home.facts.sheet')}</dt><dd><span data-count="1220">1220</span> × <span data-count="2440">2440</span> mm</dd></div>` : '',
-    cfg.insulation ? `<div><dt>${t('home.facts.thickness')}</dt><dd>1 ${t('home.facts.thicknessTo')} <span data-count="20">20</span> mm</dd></div>` : '',
-    `<div><dt>${t('home.facts.dispatch')}</dt><dd>${t('home.facts.dispatchValue')}</dd></div>`,
-    `<div><dt>${t('home.facts.billing')}</dt><dd>${t('home.facts.billingValue')}</dd></div>`
-  ].filter(Boolean);
-  const tickerItems = t.raw('home.ticker').filter((x, i) => cfg.has(ORDER_ALL[i]));
+  // one place for the ordering facts. The sheet size only matters while a PVC product is shown.
+  const TRUST_ICON = ['i-fit', 'i-doc', 'i-truck', 'i-box'];
+  const trustItems = t.raw('home.trust.items').map((it, i) => ({ it, i })).filter(({ i }) => i !== 0 || cfg.insulation)
+    .map(({ it, i }) => `<li><svg class="icon" aria-hidden="true"><use href="#${TRUST_ICON[i]}"/></svg><span><strong>${esc(it.label)}</strong><span>${esc(it.value)}</span></span></li>`);
+  const heroSr = [t.raw(hero + '.line1'), t.raw(hero + '.line2'), forWord, t.raw(hero + '.audience')].filter(Boolean).join(' ') + stop;
+  const tickerItems = ORDER.map((s) => t.raw('home.ticker')[ORDER_ALL.indexOf(s)]);
   const titleLd = [L.localBusinessLd(ctx), L.faqLd(faqItems)];
   const redirect = lang === 'en' && !ctx.single && ctx.langs.includes('hi')
     ? `\n  <script>try{if(localStorage.getItem('eii_lang')==='hi'&&!/[?&]lang=en/.test(location.search)&&location.pathname.slice(-3)!=='hi/')location.replace('hi/index.html'+location.hash)}catch(e){}</script>` : '';
@@ -134,40 +136,27 @@ module.exports = function home(ctx) {
             <path pathLength="500" d="M300 -10V90H420L470 140H640"/>
             <path pathLength="500" d="M1100 650V560H980L940 520H820"/>
           </g>
-          <g class="circuit__flow">
-            <path pathLength="500" style="--t:7s;--o:0s" d="M-10 520H180L240 460H520L560 420H760"/>
-            <path pathLength="500" style="--t:8s;--o:-2s" d="M1450 140H1260L1200 200H1000L960 240H860"/>
-            <path pathLength="500" style="--t:6.5s;--o:-4s" d="M-10 120H140L200 180H360V300H460"/>
-            <path pathLength="500" style="--t:9s;--o:-1s" d="M1450 560H1240L1180 500H1040V380H940"/>
-            <path pathLength="500" style="--t:7.5s;--o:-5s" d="M300 -10V90H420L470 140H640"/>
-            <path pathLength="500" style="--t:8.5s;--o:-3s" d="M1100 650V560H980L940 520H820"/>
-          </g>
-        </g>
-        <g class="circuit__nodes">
-          <circle cx="760" cy="420" r="5"/><circle cx="860" cy="240" r="5"/><circle cx="460" cy="300" r="5"/>
-          <circle cx="940" cy="380" r="5"/><circle cx="640" cy="140" r="5"/><circle cx="820" cy="520" r="5"/>
         </g>
       </svg>
-      <div class="hero__spot" aria-hidden="true"></div>
 
       <div class="container hero__grid">
         <div class="hero__copy">
           <p class="kicker hero__in" style="--d:.05s">${t(hero + '.kicker')}</p>
           <h1>
-            <span class="sr-only">${t(hero + '.srH1')}</span>
+            <span class="sr-only">${esc(heroSr)}</span>
             <span aria-hidden="true">
               <span class="ln"><span style="--d:.15s">${t(hero + '.line1')}</span></span>
               <span class="ln"><span style="--d:.27s">${t(hero + '.line2')}</span></span>
-              <span class="ln"><span style="--d:.39s">${forWord ? esc(forWord) + ' ' : ''}<span class="rot" id="rot" data-words="${esc(words)}"><span class="rot__w">${t(hero + '.audience')}</span></span>${stop}</span></span>
             </span>
           </h1>
+          <ul class="hero__chips hero__in" style="--d:.4s" aria-label="${t(hero + '.chipsLabel')}">${heroWords.map((w) => `<li>${esc(w)}</li>`).join('')}</ul>
           <p class="lead hero__in" style="--d:.55s">${t(hero + '.lead')}</p>
 
           <div class="hero__actions hero__in" style="--d:.68s">
-            <a class="btn btn--wa btn--lg magnetic" href="${wa}" target="_blank" rel="noopener" data-track="whatsapp_click" data-track-where="hero">
+            <a class="btn btn--wa btn--lg" href="${wa}" target="_blank" rel="noopener" data-track="whatsapp_click" data-track-where="hero">
               <svg class="icon" aria-hidden="true"><use href="#i-wa"/></svg> ${t(hero + '.ctaWa')}
             </a>
-            <a class="btn btn--outline btn--lg magnetic" href="tel:${SITE.phoneTel}" data-track="call_click" data-track-where="hero">
+            <a class="hero__call" href="tel:${SITE.phoneTel}" data-track="call_click" data-track-where="hero">
               <svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg> ${t(hero + '.ctaCall')}
             </a>
           </div>
@@ -178,10 +167,14 @@ ${heroArt}
         </div>
       </div>
 
+    </section>
+
+    <!-- Ordering facts, in one place -->
+    <section class="trust" aria-label="${t('home.trust.label')}">
       <div class="container">
-        <dl class="facts hero__in" style="--d:.85s" data-n="${factItems.length}">
-          ${factItems.join('\n          ')}
-        </dl>
+        <ul class="trust__list" data-n="${trustItems.length}">
+          ${trustItems.join('\n          ')}
+        </ul>
       </div>
     </section>
 

@@ -21,6 +21,27 @@ module.exports = function product(ctx, slug) {
     return `<label for="${id}">${label}${ctl}</label>`;
   }).join('\n              ');
 
+  const isCfg = ['pvc-sheets', 'cut-to-size'].includes(slug);
+  const thk = ((pe.fields.find((f) => f.id === 'Thickness') || {}).options || []).filter((o) => /^\d+ mm$/.test(o)).map((o) => parseInt(o, 10));
+  const colours = ((pe.fields.find((f) => f.id === 'Colour') || { options: [] }).options || []).filter((o) => ['Grey', 'White', 'Black'].includes(o));
+  const startI = Math.max(0, thk.indexOf(5));
+  const cfgBox = isCfg && thk.length && colours.length ? `
+        <div class="cfg" id="cfg" data-std="${esc(JSON.stringify(thk))}" data-weight="${slug === 'pvc-sheets' ? 1 : 0}" data-start="${startI}">
+          <h2 class="cfg__title">${t('product.cfg.title')}</h2>
+          <div class="cfg__row">
+            <label for="cfgT">${t('product.cfg.thickness')}</label><output class="cfg__val" id="cfgTv" for="cfgT">${thk[startI]} mm</output>
+          </div>
+          <input class="cfg__range" id="cfgT" type="range" min="0" max="${thk.length - 1}" step="1" value="${startI}" aria-valuetext="${thk[startI]} mm">
+          <fieldset class="cfg__colours"><legend>${t('product.cfg.colour')}</legend>${colours.map((c, i) => `<label class="cfg__chip cfg__chip--${c.toLowerCase()}"><input type="radio" name="cfgColour" value="${esc(c)}"${i === 0 ? ' checked' : ''}><span>${esc(dict('options', c))}</span></label>`).join('')}</fieldset>
+          ${slug === 'pvc-sheets' ? `<p class="cfg__out">${t('product.cfg.weight')}: <strong id="cfgKg">${(1.22 * 2.44 * thk[startI] * 1.35).toFixed(1)} kg</strong> <small>${t('product.cfg.weightNote')}</small></p>` : ''}
+          <p class="cfg__hint">${t('product.cfg.follows')}</p>
+        </div>` : '';
+  // sticky bar for phones: the first field of the quote form + the WhatsApp button
+  const f0 = pe.fields[0];
+  const barCtl = f0.type === 'select'
+    ? `<select id="qbarField" aria-label="${esc(dict('fieldLabels', f0.id))}"><option value="">${esc(dict('fieldLabels', f0.id))}…</option>${f0.options.map((o) => `<option value="${esc(o)}">${esc(dict('options', o))}</option>`).join('')}</select>`
+    : `<input id="qbarField" type="text" aria-label="${esc(dict('fieldLabels', f0.id))}" placeholder="${esc(dict('fieldLabels', f0.id))}">`;
+  const qbar = `<aside class="qbar" id="qbar" aria-label="${t('product.barLabel')}"><div class="qbar__in">${barCtl}<a class="btn btn--wa" id="qbarSend" href="${L.waUrl(quickMsg)}" target="_blank" rel="noopener" data-track="whatsapp_click" data-track-where="product_bar" data-track-item="${slug}"><svg class="icon" aria-hidden="true"><use href="#i-wa"/></svg> ${t('product.bar')}</a></div></aside>`;
   const faqs = p.faqs.map((f) => `<details><summary>${esc(f[0])}</summary><p>${esc(f[1])}</p></details>`).join('');
   const related = (pe.related || []).map((s) => `<a class="rel" href="${ctx.link('products/' + s + '/')}"><img src="${rel}assets/products/${s}.svg" alt="" width="600" height="450" loading="lazy"><span><strong>${esc(ctx.products[s].name)}</strong><em>${t('product.viewDetails')}</em></span></a>`).join('');
 
@@ -39,7 +60,9 @@ module.exports = function product(ctx, slug) {
     <div class="container">
       <nav class="crumbs" aria-label="${t('product.crumbNav')}"><a href="${ctx.link('')}">${t('ui.common.home')}</a><span>/</span><a href="${ctx.link('')}#products">${t('ui.common.products')}</a><span>/</span><span aria-current="page">${esc(p.name)}</span></nav>
       <section class="phero">
-        <div class="phero__media"${ctx.cfg.features.threeD ? ` data-model="${slug}"` : ''}><img src="${rel}assets/products/${slug}.svg" alt="${esc(p.name)}" width="600" height="450" fetchpriority="high"></div>
+        <div class="phero__left">
+        <div class="phero__media"${ctx.cfg.features.threeD ? ` data-model="${slug}"` : ''}><img src="${rel}assets/products/${slug}.svg" alt="${esc(p.name)}" width="600" height="450" fetchpriority="high"></div>${cfgBox}
+        </div>
         <div class="phero__copy">
           <p class="kicker">${t('product.kicker')}</p>
           <h1 id="pvTitle">${esc(p.name)}</h1>
@@ -94,6 +117,8 @@ module.exports = function product(ctx, slug) {
         <p><a class="btn btn--outline" href="${ctx.link('')}#products">${t('product.back')}</a></p></section>
     </div>
   </main>
+
+  ${qbar}
 
   ${L.footer(ctx)}
 
