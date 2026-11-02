@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" role="img" aria-label="Roll and sheet of EPE foam">
+<style>
+.bob{animation:bob 4.6s ease-in-out infinite}
+.bob2{animation:bob 4.6s ease-in-out -2.3s infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.sh{animation:sh 4.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.sh2{animation:sh 4.6s ease-in-out -2.3s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes sh{0%,100%{transform:scale(1);opacity:.15}50%{transform:scale(.9);opacity:.09}}
+.gloss{animation:gloss 4.2s ease-in-out infinite}
+@keyframes gloss{0%,35%{transform:translateX(0)}80%,100%{transform:translateX(330px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}.ring{stroke-dasharray:6 6;animation:flow 2.4s linear infinite}@keyframes flow{to{stroke-dashoffset:-24}}</style>
+<defs><linearGradient id="fh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".16"/></linearGradient><clipPath id="fc"><path d="M120 81H400a28 84 0 0 1 0 168H120z"/></clipPath></defs>
+<rect width="600" height="450" fill="#e8e5de"/>
+<ellipse class="sh" cx="300" cy="372" rx="225" ry="22" fill="#1c2430" opacity=".14"/>
+<g class="bob2"><polygon points="216.9,294 364.1,379 364.1,395 216.9,310" fill="#dcd9cf" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/><polygon points="447.2,331 364.1,379 364.1,395 447.2,347" fill="#c9c5b9" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/><polygon points="300,246 447.2,331 364.1,379 216.9,294" fill="#f6f5f0" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
+</g><g class="bob"><path d="M120 81H400a28 84 0 0 1 0 168H120z" fill="#f1efe8" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/><path d="M120 81H400a28 84 0 0 1 0 168H120z" fill="url(#fh)"/>
+<g clip-path="url(#fc)"><rect class="gloss" x="40" y="70" width="46" height="190" fill="#fff" opacity=".6" transform="skewX(-14)" style="transform-box:fill-box"/></g>
+<ellipse cx="120" cy="165" rx="28" ry="84" fill="#e4e1d7" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
+<g fill="none" stroke="#9a968a" stroke-opacity=".7" stroke-width="1.3"><ellipse class="ring" cx="120" cy="165" rx="20.16" ry="60.48"/><ellipse class="ring" cx="120" cy="165" rx="12.32" ry="36.96"/></g><ellipse cx="120" cy="165" rx="4.48" ry="13.44" fill="#a9a498"/></g>
+</svg>

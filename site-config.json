@@ -1,0 +1,74 @@
+{
+  "_help": "Switches for the website. true = shown, false = hidden. Easiest way to change them: run  npm run admin  (a control panel opens in your browser). You can also edit this file and run  node build/build.js  - the whole site is rebuilt to match. Things that depend on a hidden product (its page, tools, guides, FAQ answers, links) hide themselves.",
+  "version": 1,
+  "products": {
+    "pvc-sheets": true,
+    "cut-to-size": true,
+    "stretch-film": true,
+    "bopp-tape": true,
+    "bubble-wrap": true,
+    "foam": true,
+    "strapping": true,
+    "edge-guard": true
+  },
+  "order": [
+    "pvc-sheets",
+    "cut-to-size",
+    "stretch-film",
+    "bopp-tape",
+    "bubble-wrap",
+    "foam",
+    "strapping",
+    "edge-guard"
+  ],
+  "sections": {
+    "industries": true,
+    "tools": true,
+    "process": true,
+    "about": true,
+    "guides": true,
+    "faq": true,
+    "contactMap": true
+  },
+  "industries": {
+    "switchgear": true,
+    "meter": true,
+    "appliance": true,
+    "traders": true
+  },
+  "tools": {
+    "weight": true,
+    "fit": true,
+    "thickness": true
+  },
+  "guides": {
+    "pvc-sheet-thickness-guide": true,
+    "stretch-film-micron-guide": true
+  },
+  "faq": {
+    "hidden": []
+  },
+  "features": {
+    "hindi": true,
+    "threeD": true,
+    "floatingWhatsApp": true,
+    "ticker": false,
+    "themeSwitch": true
+  },
+  "announcement": {
+    "enabled": false,
+    "en": "",
+    "hi": ""
+  },
+  "texts": {
+    "en": {},
+    "hi": {}
+  },
+  "siteUrl": "",
+  "analytics": {
+    "ga4": "",
+    "plausible": ""
+  },
+  "googleReviewUrl": "",
+  "googleBusinessUrl": ""
+}

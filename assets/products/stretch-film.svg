@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" role="img" aria-label="Rolls of clear and black stretch film">
+<style>
+.bob{animation:bob 4.6s ease-in-out infinite}
+.bob2{animation:bob 4.6s ease-in-out -2.3s infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.sh{animation:sh 4.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.sh2{animation:sh 4.6s ease-in-out -2.3s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes sh{0%,100%{transform:scale(1);opacity:.15}50%{transform:scale(.9);opacity:.09}}
+.gloss{animation:gloss 4.2s ease-in-out infinite}
+@keyframes gloss{0%,35%{transform:translateX(0)}80%,100%{transform:translateX(330px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}</style>
+<defs></defs>
+<rect width="600" height="450" fill="#e8e5de"/>
+<ellipse class="sh" cx="250" cy="372" rx="150" ry="20" fill="#1c2430" opacity=".14"/>
+<ellipse class="sh2" cx="440" cy="352" rx="85" ry="13" fill="#1c2430" opacity=".14"/>
+<g class="bob2"><defs><linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".22"/><stop offset=".3" stop-color="#fff" stop-opacity=".12"/><stop offset=".62" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></linearGradient><clipPath id="g1c"><path d="M360 190v150a80 18 0 0 0 160 0v-150z"/></clipPath></defs>
+<path d="M360 190v150a80 18 0 0 0 160 0v-150z" fill="#262d38"/>
+<g clip-path="url(#g1c)"><rect class="gloss" x="290" y="150" width="46" height="270" fill="#fff" opacity=".5" transform="skewX(-14)" style="transform-box:fill-box"/></g>
+<path d="M360 190v150a80 18 0 0 0 160 0v-150z" fill="url(#g1)" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
+<ellipse cx="440" cy="190" rx="80" ry="18" fill="#3a4350" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
+<ellipse cx="440" cy="190" rx="28" ry="7" fill="#b08a55" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/><ellipse cx="440" cy="190" rx="18" ry="4.5" fill="#4a3b27"/></g>
+<g class="bob"><defs><linearGradient id="g2" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".22"/><stop offset=".3" stop-color="#fff" stop-opacity=".12"/><stop offset=".62" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></linearGradient><clipPath id="g2c"><path d="M132 150v200a118 28 0 0 0 236 0v-200z"/></clipPath></defs>
+<path d="M132 150v200a118 28 0 0 0 236 0v-200z" fill="#cfd9e4"/>
+<g clip-path="url(#g2c)"><rect class="gloss" x="62" y="110" width="46" height="320" fill="#fff" opacity=".5" transform="skewX(-14)" style="transform-box:fill-box"/></g>
+<path d="M132 150v200a118 28 0 0 0 236 0v-200z" fill="url(#g2)" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
+<ellipse cx="250" cy="150" rx="118" ry="28" fill="#f1f5f9" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/>
+<g fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2"><path d="M132 205c40 24 196 24 236 0M132 255c40 24 196 24 236 0M132 305c40 24 196 24 236 0"/></g>
+<ellipse cx="250" cy="150" rx="40" ry="10" fill="#b08a55" stroke="#2b3542" stroke-opacity=".32" stroke-width="1.3" stroke-linejoin="round"/><ellipse cx="250" cy="150" rx="28" ry="6.5" fill="#4a3b27"/></g>
+</svg>

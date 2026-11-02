@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Website control panel</title>
+<style>
+:root { --bg: #f3f1ec; --card: #fff; --ink: #14202e; --muted: #5a6573; --line: #d9d5ca; --navy: #12263f; --amber: #f0a90e; --ok: #0e7a3c; --err: #b3261e; --warn-bg: #fff4d6; --warn: #7a5200; --off: #8a93a0; --focus: #0b57d0; }
+* { box-sizing: border-box; }
+body { margin: 0; font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; color: var(--ink); background: var(--bg); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.top { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 12px 20px; color: #fff; background: var(--navy); }
+.top h1 { margin: 0; font-size: 1.15rem; font-weight: 700; }
+.top .sub { color: #b9c6d8; font-size: .9rem; }
+.top .sp { flex: 1; }
+.state { padding: 3px 10px; border-radius: 99px; font-size: .85rem; font-weight: 600; background: #2c415c; }
+.state.dirty { background: var(--amber); color: #1a1405; }
+.wrap { display: grid; gap: 20px; max-width: 1240px; margin: 0 auto; padding: 20px; }
+@media (min-width: 980px) { .wrap { grid-template-columns: minmax(0, 1fr) 360px; align-items: start; } .side { position: sticky; top: 74px; } }
+.card { margin-bottom: 18px; padding: 20px 22px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; }
+.card h2 { margin: 0 0 4px; font-size: 1.2rem; }
+.card > .help { margin: 0 0 14px; color: var(--muted); font-size: .94rem; }
+.grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.item { position: relative; display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 8px; cursor: pointer; background: #fff; transition: border-color .15s, background-color .15s; }
+.item:hover { border-color: #9aa5b4; }
+.item.on { border-color: var(--ok); background: #f4fbf6; }
+.item.off { background: #f4f4f4; }
+.item.auto { border-style: dashed; border-color: var(--warn); background: var(--warn-bg); }
+.item img { flex: none; width: 74px; height: 56px; object-fit: contain; background: #e8e5de; border-radius: 4px; }
+.item.off img, .item.auto img { filter: grayscale(1); opacity: .5; }
+.item b { display: block; line-height: 1.25; }
+.item small { display: block; color: var(--muted); font-size: .84rem; line-height: 1.35; margin-top: 2px; }
+.item .badge { display: inline-block; margin-top: 5px; padding: 1px 8px; border-radius: 99px; font-size: .78rem; font-weight: 600; background: #e6ecf5; color: #27405f; }
+.item .badge.auto { background: #ffe39b; color: var(--warn); }
+.item input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.tg { flex: none; position: relative; width: 44px; height: 26px; margin-top: 2px; border-radius: 13px; background: var(--off); transition: background-color .15s; }
+.tg::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform .15s; }
+.item.on .tg { background: var(--ok); }
+.item.on .tg::after { transform: translateX(18px); }
+.item:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 2px; }
+.list { display: grid; gap: 8px; }
+.list .item { padding: 10px 14px; }
+.list .item .grow { flex: 1; min-width: 0; }
+.row { display: grid; gap: 14px; grid-template-columns: 1fr; }
+@media (min-width: 700px) { .row.two { grid-template-columns: 1fr 1fr; } }
+label.f { display: block; font-weight: 600; font-size: .92rem; }
+label.f span.hint { display: block; font-weight: 400; color: var(--muted); font-size: .84rem; }
+input[type=text], input[type=url], textarea { width: 100%; margin-top: 4px; padding: 9px 11px; font: inherit; color: var(--ink); background: #fff; border: 1.5px solid #a9b2bf; border-radius: 6px; }
+textarea { min-height: 68px; resize: vertical; }
+.textrow { padding: 12px 0; border-top: 1px solid var(--line); }
+.textrow:first-of-type { border-top: 0; }
+.textrow h3 { margin: 0 0 6px; font-size: .98rem; }
+.mini { margin-left: 8px; padding: 2px 9px; font-size: .8rem; color: var(--navy); background: #fff; border: 1px solid #a9b2bf; border-radius: 99px; cursor: pointer; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 8px 18px; font: inherit; font-weight: 650; color: var(--navy); background: #fff; border: 2px solid var(--navy); border-radius: 8px; cursor: pointer; text-decoration: none; }
+.btn:hover { background: #eef2f8; }
+.btn.primary { color: #fff; background: var(--ok); border-color: var(--ok); }
+.btn.primary:hover { background: #0a6430; }
+.btn[disabled] { opacity: .5; cursor: not-allowed; }
+.side .card { margin-bottom: 14px; }
+.side h2 { font-size: 1.05rem; }
+.stat { display: flex; justify-content: space-between; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: .95rem; }
+.stat b { font-variant-numeric: tabular-nums; }
+.note { margin: 10px 0 0; padding: 9px 12px; border-radius: 6px; font-size: .9rem; }
+.note.err { color: var(--err); background: #fdecea; border: 1px solid #f2b8b5; }
+.note.warn { color: var(--warn); background: var(--warn-bg); border: 1px solid #f0d38a; }
+.note.ok { color: var(--ok); background: #e7f6ec; border: 1px solid #a8d8b8; }
+ul.plain { margin: 6px 0 0; padding-left: 18px; font-size: .9rem; }
+details { margin-top: 10px; font-size: .9rem; }
+details summary { cursor: pointer; font-weight: 600; }
+pre { margin: 8px 0 0; padding: 10px 12px; overflow: auto; font: 13px/1.5 ui-monospace, Menlo, Consolas, monospace; color: #e8eef6; background: #14202e; border-radius: 6px; white-space: pre-wrap; }
+.actions { display: grid; gap: 8px; margin-top: 12px; }
+.toast { position: fixed; left: 50%; bottom: 22px; z-index: 50; max-width: calc(100% - 32px); padding: 12px 18px; color: #fff; background: var(--navy); border-radius: 8px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: .25s; }
+.toast.show { transform: translate(-50%, 0); opacity: 1; }
+.toast.bad { background: var(--err); }
+.loading { padding: 60px 20px; text-align: center; color: var(--muted); }
+
+.item .mv { position: absolute; right: 10px; bottom: 8px; z-index: 3; display: flex; gap: 4px; }
+.item .mv button { width: 30px; height: 28px; padding: 0; font-size: .8rem; line-height: 1; color: var(--navy); background: #fff; border: 1.5px solid #a9b2bf; border-radius: 6px; cursor: pointer; }
+.item .mv button:hover:not([disabled]) { background: #eef2f8; border-color: var(--navy); }
+.item .mv button[disabled] { opacity: .35; cursor: default; }
+.item[draggable="true"] { cursor: grab; }
+.item.dragging { opacity: .45; }
+.item.over { outline: 3px dashed var(--focus); outline-offset: 2px; }
+.item:has(.mv) .grow { padding-right: 74px; }
+.item:has(.mv) { min-height: 96px; }
+.item .pos { position: absolute; left: 6px; top: 6px; z-index: 2; min-width: 20px; padding: 0 5px; font-size: .72rem; font-weight: 700; line-height: 18px; text-align: center; color: #fff; background: var(--navy); border-radius: 99px; }
+dialog#pv { width: min(1280px, 96vw); height: 92vh; padding: 0; border: 0; border-radius: 12px; overflow: hidden; background: #e9e6df; }
+dialog#pv::backdrop { background: rgba(10, 20, 34, .6); }
+dialog#pv[open] { display: flex; flex-direction: column; }
+.pv__bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px 14px; color: #fff; background: var(--navy); }
+.pv__bar select { min-height: 38px; padding: 0 8px; font: inherit; border-radius: 6px; border: 0; max-width: 46vw; }
+.pv__bar .seg { display: inline-flex; border: 1.5px solid #fff; border-radius: 8px; overflow: hidden; }
+.pv__bar .seg button { min-height: 36px; padding: 0 14px; font: inherit; font-weight: 600; color: #fff; background: transparent; border: 0; cursor: pointer; }
+.pv__bar .seg button[aria-pressed="true"] { color: var(--navy); background: #fff; }
+.pv__bar .note { flex: 1; font-size: .88rem; color: #b9c6d8; }
+.pv__bar .x { min-height: 36px; padding: 0 14px; font: inherit; font-weight: 600; color: #fff; background: transparent; border: 1.5px solid #fff; border-radius: 8px; cursor: pointer; }
+.pv__stage { flex: 1; display: flex; justify-content: center; align-items: stretch; padding: 12px; min-height: 0; }
+.pv__stage iframe { width: 100%; max-width: 100%; height: 100%; border: 0; border-radius: 8px; background: #fff; box-shadow: 0 6px 30px -12px rgba(0,0,0,.5); }
+.pv__stage.phone iframe { width: 390px; }
+.pubmeta { margin: 0 0 8px; font-size: .88rem; color: var(--muted); word-break: break-all; }
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Website control panel</h1>
+  <span class="sub">Electrical Insulation India · tick what should be on the website</span>
+  <span class="sp"></span>
+  <span class="state" id="state" role="status">Loading…</span>
+</header>
+<div class="wrap">
+  <main id="main"><div class="loading">Loading your settings…</div></main>
+  <aside class="side" id="side" aria-label="What will change"></aside>
+</div>
+<dialog id="pv" aria-label="Website preview">
+  <div class="pv__bar">
+    <label>Page <select id="pvPage"></select></label>
+    <span class="seg" role="group" aria-label="Screen size"><button type="button" id="pvDesk" aria-pressed="true">Computer</button><button type="button" id="pvPhone" aria-pressed="false">Phone</button></span>
+    <span class="note" id="pvNote">This is how the website will look with your current ticks (saved or not).</span>
+    <button type="button" class="x" id="pvClose">Close</button>
+  </div>
+  <div class="pv__stage" id="pvStage"><iframe id="pvFrame" title="Website preview"></iframe></div>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+  var H = { 'X-EII-Admin': '1', 'Content-Type': 'application/json' };
+  var S = null, cfg = null, saved = '', plan = null, timer = null, planSeq = 0, saving = false, lastLog = '', toastT = null;
+  var G = null, publishing = false, pubLog = '', pvOpen = false, dragSlug = null, focusAfter = null;
+
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+  function api(path, body) {
+    var opt = body === undefined ? { headers: H } : { method: 'POST', headers: H, body: JSON.stringify(body) };
+    return fetch(path, opt).then(function (r) { return r.json().then(function (j) { j._status = r.status; return j; }); });
+  }
+  function toast(msg, bad) { var t = document.getElementById('toast'); t.textContent = msg; t.className = 'toast show' + (bad ? ' bad' : ''); clearTimeout(toastT); toastT = setTimeout(function () { t.className = 'toast'; }, 5200); }
+  function dirty() { return JSON.stringify(cfg) !== saved; }
+
+  // ---------- reading the effective state (what is really shown) ----------
+  function eff() { return (plan && plan.effective) || S.effective; }
+  function autoReason(kind, id) { var a = eff().auto.filter(function (x) { return x.kind === kind && x.id === String(id); })[0]; return a ? a.reason : ''; }
+
+  // ---------- rendering ----------
+  function item(opts) {          // a switch card
+    var on = opts.on, auto = opts.auto;
+    var cls = 'item ' + (on ? (auto ? 'auto' : 'on') : 'off');
+    return '<label class="' + cls + '"' + (opts.drag ? ' draggable="true" data-drag="' + opts.drag + '"' : '') + '>' + (opts.pos ? '<span class="pos" title="Position on the website">' + opts.pos + '</span>' : '') + (opts.img ? '<img src="/site/' + esc(opts.img) + '" alt="">' : '') +
+      '<input type="checkbox" role="switch" ' + opts.attr + (on ? ' checked' : '') + '>' +
+      '<span class="grow" style="flex:1;min-width:0"><b>' + esc(opts.title) + '</b>' + (opts.sub ? '<small>' + esc(opts.sub) + '</small>' : '') +
+      (auto ? '<span class="badge auto">Hidden for now: ' + esc(auto) + '</span>' : (opts.badge ? '<span class="badge">' + esc(opts.badge) + '</span>' : '')) +
+      (opts.extra ? '<small>' + esc(opts.extra) + '</small>' : '') + '</span><span class="tg" aria-hidden="true"></span>' + (opts.mv || '') + '</label>';
+  }
+
+  function render() {
+    var C = S.catalog, E = eff(), h = '';
+    var shown = E.productsOn.length;
+    h += '<section class="card"><h2>Products <span style="font-weight:400;color:var(--muted)">(' + shown + ' of ' + C.products.length + ' shown)</span></h2>' +
+      '<p class="help"><b>Order:</b> drag a card, or use the ▲ ▼ buttons, to choose which product comes first on the home page and in the contact form.</p>' +
+      '<p class="help">Switch a product off and it disappears from the whole website: its page, the home card, links, related products, the contact form list, the sitemap and the Hindi page. Tools, guides and FAQ answers that are only about that product hide themselves too.<br><i>Band karoge to product har jagah se hat jayega.</i></p><div class="grid">';
+    var bySlug = {}; C.products.forEach(function (p) { bySlug[p.slug] = p; });
+    cfg.order.forEach(function (slug, idx) {
+      var p = bySlug[slug]; if (!p) return;
+      var dep = [].concat(p.dependents.tools, p.dependents.guides, p.dependents.faq.length ? [p.dependents.faq.length + ' FAQ answer' + (p.dependents.faq.length > 1 ? 's' : '')] : []);
+      h += item({ on: cfg.products[p.slug], title: p.name, sub: p.nameHi + ' · ' + (p.group === 'insulation' ? 'Insulation' : 'Packaging'), img: p.image, attr: 'data-path="products.' + p.slug + '"', extra: dep.length ? 'Also hides when off: ' + dep.join(', ') : '',
+        drag: slug, pos: idx + 1, mv: '<span class="mv"><button type="button" data-move="' + slug + '" data-dir="-1" aria-label="Show ' + esc(p.name) + ' earlier"' + (idx === 0 ? ' disabled' : '') + '>▲</button><button type="button" data-move="' + slug + '" data-dir="1" aria-label="Show ' + esc(p.name) + ' later"' + (idx === cfg.order.length - 1 ? ' disabled' : '') + '>▼</button></span>' });
+    });
+    h += '</div></section>';
+
+    h += '<section class="card"><h2>Home page sections</h2><p class="help">Parts of the home page. The product list and the contact form always stay.</p><div class="grid">';
+    C.sections.forEach(function (s) { h += item({ on: cfg.sections[s.id], title: s.label, sub: s.help, auto: cfg.sections[s.id] ? autoReason('section', s.id) : '', attr: 'data-path="sections.' + s.id + '"' }); });
+    h += '</div></section>';
+
+    h += '<section class="card"><h2>Industries</h2><p class="help">The four "who we supply" cards. A card hides itself if none of its products are shown.</p><div class="grid">';
+    C.industries.forEach(function (i) { h += item({ on: cfg.industries[i.id], title: i.title, auto: cfg.industries[i.id] && cfg.sections.industries ? autoReason('industry', i.id) : '', attr: 'data-path="industries.' + i.id + '"' }); });
+    h += '</div></section>';
+
+    h += '<section class="card"><h2>Tools</h2><p class="help">Calculators on the Tools page. Each one needs its product to be shown.</p><div class="grid">';
+    C.tools.forEach(function (t) { h += item({ on: cfg.tools[t.id], title: t.title, sub: 'Needs: ' + t.requires.join(' or '), auto: cfg.tools[t.id] ? autoReason('tool', t.id) : '', attr: 'data-path="tools.' + t.id + '"' }); });
+    h += '</div></section>';
+
+    h += '<section class="card"><h2>Buying guides</h2><div class="grid">';
+    C.guides.forEach(function (g) { h += item({ on: cfg.guides[g.slug], title: g.title, sub: 'Needs: ' + g.requires.join(' or '), auto: cfg.guides[g.slug] ? autoReason('guide', g.slug) : '', attr: 'data-path="guides.' + g.slug + '"' }); });
+    h += '</div></section>';
+
+    h += '<section class="card"><h2>FAQ answers on the home page</h2><p class="help">Switch off a question you do not want to show. Answers about a hidden product hide themselves.</p><div class="list">';
+    C.faq.forEach(function (f) { var hid = cfg.faq.hidden.indexOf(f.index) > -1; h += item({ on: !hid, title: f.q, auto: !hid ? autoReason('faq', f.index) : '', sub: f.requires.length ? 'About: ' + f.requires.join(' or ') : '', attr: 'data-faq="' + f.index + '"' }); });
+    h += '</div></section>';
+
+    h += '<section class="card"><h2>Extras</h2><div class="grid">';
+    C.features.forEach(function (f) { h += item({ on: cfg.features[f.id], title: f.label, sub: f.help, attr: 'data-path="features.' + f.id + '"' }); });
+    h += '</div></section>';
+
+    h += '<section class="card"><h2>Announcement bar</h2><p class="help">A yellow strip above the menu on every page, for example "Closed on Diwali". Leave the Hindi box empty to show the English text on the Hindi pages.</p>' +
+      '<div class="grid" style="margin-bottom:12px">' + item({ on: cfg.announcement.enabled, title: 'Show the announcement', attr: 'data-path="announcement.enabled"' }) + '</div>' +
+      '<div class="row two"><label class="f">English text<textarea data-path="announcement.en" maxlength="240">' + esc(cfg.announcement.en) + '</textarea></label>' +
+      '<label class="f">हिन्दी text<textarea data-path="announcement.hi" maxlength="240">' + esc(cfg.announcement.hi) + '</textarea></label></div></section>';
+
+    h += '<section class="card"><h2>Home page text</h2><p class="help">Change the words at the top of the home page. Useful when you hide a product and the heading should no longer mention it. Empty = original text.</p>';
+    C.texts.forEach(function (t) {
+      h += '<div class="textrow"><h3>' + esc(t.label) + '<button type="button" class="mini" data-reset="' + esc(t.key) + '">Use original</button></h3><div class="row two">' +
+        '<label class="f">English<textarea data-text="en" data-key="' + esc(t.key) + '" placeholder="' + esc(t.en) + '">' + esc(cfg.texts.en[t.key] || '') + '</textarea></label>' +
+        '<label class="f">हिन्दी<textarea data-text="hi" data-key="' + esc(t.key) + '" placeholder="' + esc(t.hi) + '">' + esc(cfg.texts.hi[t.key] || '') + '</textarea></label></div></div>';
+    });
+    h += '</section>';
+
+    h += '<section class="card"><h2>Publishing details</h2><p class="help">Saved here so a rebuild never forgets them. Needed before the site goes live.</p><div class="row two">' +
+      '<label class="f">Website address<span class="hint">The real address, e.g. https://www.yourname.in/ (with folder name on GitHub Pages)</span><input type="url" data-path="siteUrl" value="' + esc(cfg.siteUrl) + '" placeholder="https://www.example.com/"></label>' +
+      '<label class="f">Google Analytics ID<span class="hint">Looks like G-ABC123XYZ. Empty = no tracking.</span><input type="text" data-path="analytics.ga4" value="' + esc(cfg.analytics.ga4) + '" placeholder="G-XXXXXXXXXX"></label>' +
+      '<label class="f">Google review link<span class="hint">Adds "Review us on Google" to the footer</span><input type="url" data-path="googleReviewUrl" value="' + esc(cfg.googleReviewUrl) + '" placeholder="https://g.page/r/…/review"></label>' +
+      '<label class="f">Google Business Profile link<input type="url" data-path="googleBusinessUrl" value="' + esc(cfg.googleBusinessUrl) + '" placeholder="https://maps.google.com/…"></label></div></section>';
+
+    document.getElementById('main').innerHTML = h;
+    renderSide(); renderState();
+  }
+
+  function renderState() { var s = document.getElementById('state'); var d = dirty(); s.textContent = d ? 'Unsaved changes' : 'All saved'; s.className = 'state' + (d ? ' dirty' : ''); }
+
+  function renderSide() {
+    var E = eff(), h = '';
+    h += '<section class="card"><h2>What will change</h2>';
+    if (plan === 'checking') h += '<p class="help">Checking…</p>';
+    if (plan && plan !== 'checking' && plan.errors && plan.errors.length) h += '<div class="note err"><b>Fix this first:</b><ul class="plain">' + plan.errors.map(function (e) { return '<li>' + esc(e) + '</li>'; }).join('') + '</ul></div>';
+    var P = plan && plan !== 'checking' && !(plan.errors && plan.errors.length) ? plan.plan : null;
+    h += '<div class="stat"><span>Products shown</span><b>' + E.productsOn.length + ' / ' + S.catalog.products.length + '</b></div>' +
+      '<div class="stat"><span>Languages</span><b>' + (E.langs.length > 1 ? 'English + Hindi' : 'English only') + '</b></div>';
+    if (P) {
+      h += '<div class="stat"><span>Files in the site</span><b>' + P.files + '</b></div>' +
+        '<div class="stat"><span>Pages removed</span><b>' + P.removed.length + '</b></div>' +
+        '<div class="stat"><span>New files</span><b>' + P.added.length + '</b></div>';
+      if (P.removed.length) h += '<details><summary>See removed files</summary><ul class="plain">' + P.removed.map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('') + '</ul></details>';
+    }
+    if (E.auto.length) h += '<div class="note warn"><b>Hidden automatically</b> (they need something you hid):<ul class="plain">' + E.auto.map(function (a) { return '<li>' + esc(a.kind) + ' <b>' + esc(label(a)) + '</b>: ' + esc(a.reason) + '</li>'; }).join('') + '</ul></div>';
+    if (E.warnings.length) h += '<div class="note warn"><b>Please check:</b><ul class="plain">' + E.warnings.map(function (w) { return '<li>' + esc(w) + '</li>'; }).join('') + '</ul></div>';
+    var hasErr = plan && plan !== 'checking' && plan.errors && plan.errors.length;
+    h += '<div class="actions"><button class="btn primary" id="save" ' + (saving || hasErr || plan === 'checking' ? 'disabled' : '') + '>' + (saving ? 'Saving and rebuilding…' : 'Save and rebuild website') + '</button>' +
+      '<button class="btn" id="preview">Preview my changes</button>' +
+      '<a class="btn" href="/site/index.html" target="_blank" rel="noopener">Open the saved website</a>' +
+      '<button class="btn" id="undo" ' + (S.hasBackup ? '' : 'disabled') + '>Go back to previous settings</button>' +
+      '<button class="btn" id="allon">Reset to standard settings</button></div></section>';
+
+    h += '<section class="card"><h2>Put it on the real website</h2>';
+    if (!G) h += '<p class="help">Checking git…</p>';
+    else if (!G.isRepo) h += '<div class="note warn">' + esc(G.reason) + ' Upload the changed files by hand (index.html, hi/, products/, tools/, guides/, sitemap.xml, 404.html).</div>';
+    else {
+      h += '<p class="pubmeta">Branch: <b>' + esc(G.branch) + '</b><br>Sends to: ' + (G.remote ? esc(G.remote) : '<i>no GitHub address (origin) set</i>') + '<br>Changed files waiting: <b>' + G.changed.length + '</b></p>' +
+        '<div class="actions"><button class="btn primary" id="publish" ' + (G.remote && !dirty() && !publishing ? '' : 'disabled') + '>' + (publishing ? 'Publishing…' : 'Publish now') + '</button></div>' +
+        (dirty() ? '<p class="help" style="margin-top:8px">Save and rebuild first, then publish.</p>' : '') +
+        '<p class="help" style="margin-top:8px">This saves the changes in git and sends them to GitHub, the same as <i>git add -A</i>, <i>git commit</i>, <i>git push</i>. You will be asked to confirm.</p>';
+    }
+    h += '<details><summary>Rather do it yourself?</summary><pre id="cmds">git add -A\ngit commit -m "Update website settings"\ngit push</pre><div class="actions"><button class="btn" id="copy">Copy commands</button></div></details>';
+    if (pubLog) h += '<details><summary>Last publish report</summary><pre>' + esc(pubLog) + '</pre></details>';
+    if (lastLog) h += '<details><summary>Last build report</summary><pre>' + esc(lastLog) + '</pre></details>';
+    h += '</section>';
+    document.getElementById('side').innerHTML = h;
+  }
+
+  function label(a) {
+    var C = S.catalog;
+    if (a.kind === 'tool') return (C.tools.filter(function (t) { return t.id === a.id; })[0] || {}).title || a.id;
+    if (a.kind === 'guide') return (C.guides.filter(function (g) { return g.slug === a.id; })[0] || {}).title || a.id;
+    if (a.kind === 'faq') return '#' + (+a.id + 1) + ' ' + ((C.faq[+a.id] || {}).q || '');
+    if (a.kind === 'industry') return (C.industries.filter(function (i) { return i.id === a.id; })[0] || {}).title || a.id;
+    return a.id;
+  }
+
+  // ---------- keeping the "what will change" panel up to date ----------
+  function schedulePlan() { plan = 'checking'; renderSide(); renderState(); clearTimeout(timer); timer = setTimeout(runPlan, 300); }
+  function runPlan() {
+    var seq = ++planSeq;
+    api('/api/plan', { config: cfg }).then(function (r) {
+      if (seq !== planSeq) return; plan = r;
+      var a = document.activeElement;      // do not rebuild the form under someone who is typing
+      if (a && main.contains(a) && (a.tagName === 'TEXTAREA' || (a.tagName === 'INPUT' && a.type !== 'checkbox'))) { renderSide(); renderState(); } else render();
+      if (pvOpen) refreshPreview();
+    }).catch(function () { plan = { errors: ['Could not reach the control panel. Is the window still open?'] }; renderSide(); });
+  }
+
+  // ---------- edits ----------
+  function setPath(path, v) { var p = path.split('.'), o = cfg; for (var i = 0; i < p.length - 1; i++) o = o[p[i]]; o[p[p.length - 1]] = v; }
+  var main = document.getElementById('main');
+  main.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t.dataset.faq !== undefined) {
+      var n = +t.dataset.faq, i = cfg.faq.hidden.indexOf(n);
+      if (t.checked && i > -1) cfg.faq.hidden.splice(i, 1); else if (!t.checked && i < 0) cfg.faq.hidden.push(n);
+    } else if (t.dataset.path && t.type === 'checkbox') setPath(t.dataset.path, t.checked);
+    else return;
+    schedulePlan(); render();
+  });
+  main.addEventListener('input', function (e) {
+    var t = e.target;
+    if (t.dataset.text) { cfg.texts[t.dataset.text][t.dataset.key] = t.value; }
+    else if (t.dataset.path && t.type !== 'checkbox') setPath(t.dataset.path, t.value);
+    else return;
+    renderState(); clearTimeout(timer); plan = 'checking'; timer = setTimeout(runPlan, 500);
+  });
+  main.addEventListener('click', function (e) {
+    var mv = e.target.closest('[data-move]');
+    if (mv) { move(mv.dataset.move, parseInt(mv.dataset.dir, 10)); return; }
+    var b = e.target.closest('[data-reset]'); if (!b) return;
+    delete cfg.texts.en[b.dataset.reset]; delete cfg.texts.hi[b.dataset.reset]; render(); schedulePlan();
+  });
+  function move(slug, dir) {
+    var i = cfg.order.indexOf(slug), j = i + dir;
+    if (i < 0 || j < 0 || j >= cfg.order.length) return;
+    cfg.order.splice(j, 0, cfg.order.splice(i, 1)[0]);
+    focusAfter = { slug: slug, dir: dir }; render(); schedulePlan();
+    var btn = main.querySelector('[data-move="' + slug + '"][data-dir="' + dir + '"]:not([disabled])') || main.querySelector('[data-move="' + slug + '"]:not([disabled])');
+    if (btn) btn.focus();
+  }
+  main.addEventListener('dragstart', function (e) {
+    var it = e.target.closest ? e.target.closest('[data-drag]') : null; if (!it) return;
+    dragSlug = it.dataset.drag; e.dataTransfer.setData('text/plain', dragSlug); e.dataTransfer.effectAllowed = 'move'; it.classList.add('dragging');
+  });
+  main.addEventListener('dragover', function (e) { var it = e.target.closest('[data-drag]'); if (it && dragSlug) { e.preventDefault(); it.classList.add('over'); } });
+  main.addEventListener('dragleave', function (e) { var it = e.target.closest('[data-drag]'); if (it) it.classList.remove('over'); });
+  main.addEventListener('drop', function (e) {
+    var it = e.target.closest('[data-drag]'); if (!it || !dragSlug) return; e.preventDefault();
+    var from = cfg.order.indexOf(dragSlug), to = cfg.order.indexOf(it.dataset.drag);
+    dragSlug = null;
+    if (from > -1 && to > -1 && from !== to) { cfg.order.splice(to, 0, cfg.order.splice(from, 1)[0]); render(); schedulePlan(); } else render();
+  });
+  main.addEventListener('dragend', function () { if (dragSlug) { dragSlug = null; render(); } });
+
+  document.getElementById('side').addEventListener('click', function (e) {
+    var id = e.target.closest('button, a') && e.target.closest('button, a').id;
+    if (id === 'save') save();
+    else if (id === 'preview') openPreview();
+    else if (id === 'publish') publish();
+    else if (id === 'undo') undo();
+    else if (id === 'allon') {
+      ['products', 'sections', 'industries', 'tools', 'guides', 'features'].forEach(function (g) { Object.keys(cfg[g]).forEach(function (k) { cfg[g][k] = true; }); });
+      cfg.features.ticker = false; cfg.order = S.catalog.products.map(function (p) { return p.slug; });
+      cfg.faq.hidden = []; render(); schedulePlan();
+    } else if (id === 'copy') {
+      var txt = document.getElementById('cmds').textContent;
+      (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function () { toast('Commands copied.'); }, function () { toast('Select the commands and copy them by hand.', true); });
+    }
+  });
+
+  function applied(r, msg) {
+    if (!r.ok) { toast((r.errors || ['Something went wrong.']).join(' '), true); lastLog = r.log || ''; return; }
+    S = { config: r.config, errors: r.errors, effective: r.effective, catalog: r.catalog, hasBackup: r.hasBackup };
+    cfg = clone(r.config); saved = JSON.stringify(cfg); lastLog = r.log || ''; plan = null;
+    render(); runPlan(); toast(msg); loadGit();
+  }
+  // ---------- preview of the unsaved settings ----------
+  var pv = document.getElementById('pv'), pvFrame = document.getElementById('pvFrame'), pvPage = document.getElementById('pvPage'), pvStage = document.getElementById('pvStage'), pvNote = document.getElementById('pvNote');
+  function pageLabel(f) {
+    var hi = /^hi\//.test(f), g = f.replace(/^hi\//, '').replace(/\/?index\.html$/, ''), C = S.catalog, name = '';
+    if (g === '') name = 'Home'; else if (g === 'tools') name = 'Tools'; else if (g === 'guides') name = 'Guides';
+    else if (/^products\//.test(g)) { var p = C.products.filter(function (x) { return x.slug === g.slice(9); })[0]; name = p ? p.name : g; }
+    else if (/^guides\//.test(g)) { var q = C.guides.filter(function (x) { return x.slug === g.slice(7); })[0]; name = q ? q.title : g; }
+    else name = g;
+    return name + (hi ? ' (Hindi)' : '');
+  }
+  function fillPages() {
+    var list = plan && plan !== 'checking' && plan.plan && plan.plan.pageList ? plan.plan.pageList : ['index.html'];
+    var cur = pvPage.value || 'index.html';
+    pvPage.innerHTML = list.map(function (f) { return '<option value="' + esc(f) + '">' + esc(pageLabel(f)) + '</option>'; }).join('');
+    pvPage.value = list.indexOf(cur) > -1 ? cur : 'index.html';
+  }
+  function refreshPreview() {
+    if (!pvOpen) return;
+    pvNote.textContent = 'Building the preview…';
+    api('/api/preview', { config: cfg }).then(function (r) {
+      if (!pvOpen) return;
+      if (!r.ok) { pvNote.textContent = 'Preview not available: ' + (r.errors || []).join(' '); return; }
+      fillPages();
+      pvFrame.src = '/preview/' + pvPage.value + '?v=' + r.version;
+      pvNote.textContent = 'This is how the website will look with your current ticks (saved or not).';
+    }).catch(function () { pvNote.textContent = 'Could not build the preview.'; });
+  }
+  function openPreview() { pvOpen = true; if (!pv.open) pv.showModal(); refreshPreview(); }
+  document.getElementById('pvClose').addEventListener('click', function () { pv.close(); });
+  pv.addEventListener('close', function () { pvOpen = false; });
+  pvPage.addEventListener('change', function () { pvFrame.src = '/preview/' + pvPage.value + '?v=' + Date.now(); });
+  document.getElementById('pvDesk').addEventListener('click', function () { pvStage.className = 'pv__stage'; this.setAttribute('aria-pressed', 'true'); document.getElementById('pvPhone').setAttribute('aria-pressed', 'false'); });
+  document.getElementById('pvPhone').addEventListener('click', function () { pvStage.className = 'pv__stage phone'; this.setAttribute('aria-pressed', 'true'); document.getElementById('pvDesk').setAttribute('aria-pressed', 'false'); });
+
+  // ---------- publishing (git) ----------
+  function loadGit() { return api('/api/git').then(function (g) { G = g; renderSide(); }); }
+  function publish() {
+    if (!G || !G.isRepo) return;
+    var n = G.changed.length;
+    var list = G.changed.slice(0, 8).map(function (l) { return '  ' + l.trim(); }).join('\n') + (n > 8 ? '\n  … and ' + (n - 8) + ' more' : '');
+    if (!window.confirm('This will save ' + n + ' changed file' + (n === 1 ? '' : 's') + ' in git and send them to the branch "' + G.branch + '" on GitHub:\n\n' + list + '\n\nContinue?')) return;
+    publishing = true; renderSide();
+    api('/api/publish', { confirm: true, message: 'Update website settings' }).then(function (r) {
+      publishing = false; pubLog = r.log || '';
+      if (r.ok) { G = r.git; toast(r.upToDate ? 'Already up to date: nothing new to send.' : 'Published. The website updates in a minute or two.'); }
+      else toast((r.errors || ['Publishing failed.']).join(' '), true);
+      renderSide();
+    }).catch(function () { publishing = false; toast('Could not publish. Is the control panel window still open?', true); renderSide(); });
+  }
+
+  function save() {
+    saving = true; renderSide();
+    api('/api/apply', { config: cfg }).then(function (r) { saving = false; applied(r, 'Saved. The website files were rebuilt.'); if (!r.ok) renderSide(); }).catch(function () { saving = false; toast('Could not save. Is the control panel window still open?', true); renderSide(); });
+  }
+  function undo() {
+    if (!window.confirm('Go back to the settings before your last save?')) return;
+    api('/api/undo', {}).then(function (r) { applied(r, 'Went back to the previous settings and rebuilt the website.'); });
+  }
+
+  window.addEventListener('beforeunload', function (e) { if (S && dirty()) { e.preventDefault(); e.returnValue = ''; } });
+
+  api('/api/state').then(function (r) {
+    S = r; cfg = clone(r.config); saved = JSON.stringify(cfg); render(); runPlan(); loadGit();
+    if (r.errors && r.errors.length) toast('site-config.json had problems, so the defaults are shown: ' + r.errors[0], true);
+  }).catch(function () { document.getElementById('main').innerHTML = '<div class="loading">Could not load. Start the panel with <b>npm run admin</b> and keep that window open.</div>'; });
+})();
+</script>
+</body>
+</html>
