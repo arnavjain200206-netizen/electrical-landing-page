@@ -46,8 +46,7 @@ function head(ctx, o) {
   <meta name="robots" content="${o.noindex || ctx.single ? 'noindex, follow' : 'index, follow'}">
   <!-- TODO: the address below comes from build/site.js (run: node build/build.js --url https://yourdomain.in/) -->
   <link rel="canonical" href="${canonical}">
-  <link rel="alternate" hreflang="en-IN" href="${alt('en')}">
-  <link rel="alternate" hreflang="hi-IN" href="${alt('hi')}">
+${(ctx.langs || ['en', 'hi']).map((l) => `  <link rel="alternate" hreflang="${l === 'hi' ? 'hi-IN' : 'en-IN'}" href="${alt(l)}">`).join('\n')}
   <link rel="alternate" hreflang="x-default" href="${alt('en')}">
   <meta property="og:type" content="${o.ogType || 'website'}">
   <meta property="og:site_name" content="${esc(SITE.name)}">
@@ -99,12 +98,17 @@ function header(ctx, o) {
   const onHome = page === 'home';
   const hh = (hash) => (onHome && !ctx.single ? '#' + hash : ctx.link('') + '#' + hash);
   const cur = (key) => (o.current === key ? ' aria-current="page"' : '');
+  const cfg = ctx.cfg, multi = ctx.langs.length > 1;
   const other = lang === 'en' ? 'hi' : 'en';
   const switchHref = ctx.link(o.path, other) + (other === 'en' ? '' : '');
-  const langA = (cls) => `<a class="${cls}" href="${switchHref}" hreflang="${t.raw('switchTo.hreflang')}" lang="${t.raw('switchTo.hreflang')}" data-lang="${other}" aria-label="${t('switchTo.aria')}" title="${t('switchTo.aria')}"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg><span>${t('switchTo.label')}</span></a>`;
+  const langA = (cls) => !multi ? '' : `<a class="${cls}" href="${switchHref}" hreflang="${t.raw('switchTo.hreflang')}" lang="${t.raw('switchTo.hreflang')}" data-lang="${other}" aria-label="${t('switchTo.aria')}" title="${t('switchTo.aria')}"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg><span>${t('switchTo.label')}</span></a>`;
+  const say = cfg.announcement;
+  const noteText = say.enabled ? (lang === 'hi' ? say.hi || say.en : say.en || say.hi) : '';
+  const note = noteText ? `<aside class="announce" aria-label="${t('ui.announcementLabel')}"><div class="container announce__inner">${esc(noteText)}</div></aside>\n  ` : '';
+  const li = (show, html) => (show ? `\n          ${html}` : '');
   return `<a class="skip-link" href="#main">${t('ui.skip')}</a>
   <div class="progress" id="progress" aria-hidden="true"></div>
-
+  ${note}
   <aside class="topbar" aria-label="${t('ui.topbarLabel')}">
     <div class="container topbar__inner">
       <span>${t('ui.topbarAddress')}</span>
@@ -121,13 +125,8 @@ function header(ctx, o) {
 
       <nav id="menu" class="nav__menu" aria-label="${t('ui.nav.label')}">
         <ul>
-          <li><a href="${hh('products')}"${o.current === 'home' ? '' : ''}>${t('ui.nav.products')}</a></li>
-          <li><a href="${hh('industries')}">${t('ui.nav.industries')}</a></li>
-          <li><a href="${ctx.link('tools/')}" data-nav="tools"${cur('tools')}>${t('ui.nav.tools')}</a></li>
-          <li><a href="${ctx.link('guides/')}" data-nav="guides"${cur('guides')}>${t('ui.nav.guides')}</a></li>
-          <li><a href="${hh('faq')}">${t('ui.nav.faq')}</a></li>
-          <li><a href="${hh('contact')}">${t('ui.nav.contact')}</a></li>
-          <li class="nav__lang-li">${langA('lang-switch lang-switch--menu')}</li>
+          <li><a href="${hh('products')}"${o.current === 'home' ? '' : ''}>${t('ui.nav.products')}</a></li>${li(cfg.sections.industries, `<li><a href="${hh('industries')}">${t('ui.nav.industries')}</a></li>`)}${li(cfg.toolsAny, `<li><a href="${ctx.link('tools/')}" data-nav="tools"${cur('tools')}>${t('ui.nav.tools')}</a></li>`)}${li(cfg.guidesAny, `<li><a href="${ctx.link('guides/')}" data-nav="guides"${cur('guides')}>${t('ui.nav.guides')}</a></li>`)}${li(cfg.sections.faq, `<li><a href="${hh('faq')}">${t('ui.nav.faq')}</a></li>`)}
+          <li><a href="${hh('contact')}">${t('ui.nav.contact')}</a></li>${li(multi, `<li class="nav__lang-li">${langA('lang-switch lang-switch--menu')}</li>`)}
         </ul>
         <a class="btn btn--wa btn--sm nav__cta" href="${waUrl(t.raw('ui.waGreeting'))}" target="_blank" rel="noopener" data-track="whatsapp_click" data-track-where="nav">
           <svg class="icon" aria-hidden="true"><use href="#i-wa"/></svg> ${t('ui.nav.whatsapp')}
@@ -140,10 +139,10 @@ function header(ctx, o) {
         <svg class="icon" aria-hidden="true"><use href="#i-list"/></svg><span class="enq-btn__count" id="enqCount" data-n="0" aria-hidden="true" hidden></span>
       </button>
 
-      <button class="theme-toggle" id="themeToggle" type="button" aria-label="${t('ui.nav.themeToDark')}" title="${t('ui.nav.themeTitle')}" data-label-dark="${t('ui.nav.themeToDark')}" data-label-light="${t('ui.nav.themeToLight')}">
+      ${cfg.features.themeSwitch ? `<button class="theme-toggle" id="themeToggle" type="button" aria-label="${t('ui.nav.themeToDark')}" title="${t('ui.nav.themeTitle')}" data-label-dark="${t('ui.nav.themeToDark')}" data-label-light="${t('ui.nav.themeToLight')}">
         <svg class="icon i-moon" aria-hidden="true"><use href="#i-moon"/></svg>
         <svg class="icon i-sun" aria-hidden="true"><use href="#i-sun"/></svg>
-      </button>
+      </button>` : ''}
 
       <button class="nav__toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="menu" aria-label="${t('ui.nav.menuOpen')}" data-label-open="${t('ui.nav.menuOpen')}" data-label-close="${t('ui.nav.menuClose')}">
         <span></span><span></span><span></span>
@@ -153,7 +152,8 @@ function header(ctx, o) {
 }
 
 function footer(ctx) {
-  const { t } = ctx;
+  const { t, cfg } = ctx;
+  const li = (show, html) => (show ? `\n          ${html}` : '');
   const onHome = ctx.page === 'home';
   const hh = (hash) => (onHome && !ctx.single ? '#' + hash : ctx.link('') + '#' + hash);
   const review = SITE.googleReviewUrl
@@ -168,19 +168,15 @@ function footer(ctx) {
       </div>
       <nav aria-label="${t('ui.footer.navLabel')}">
         <ul class="footer__links">
-          <li><a href="${hh('products')}">${t('ui.footer.links.products')}</a></li>
-          <li><a href="${ctx.link('tools/')}">${t('ui.footer.links.tools')}</a></li>
-          <li><a href="${ctx.link('guides/')}">${t('ui.footer.links.guides')}</a></li>
-          <li><a href="${hh('about')}">${t('ui.footer.links.about')}</a></li>
-          <li><a href="${hh('faq')}">${t('ui.footer.links.faq')}</a></li>
+          <li><a href="${hh('products')}">${t('ui.footer.links.products')}</a></li>${li(cfg.toolsAny, `<li><a href="${ctx.link('tools/')}">${t('ui.footer.links.tools')}</a></li>`)}${li(cfg.guidesAny, `<li><a href="${ctx.link('guides/')}">${t('ui.footer.links.guides')}</a></li>`)}${li(cfg.sections.about, `<li><a href="${hh('about')}">${t('ui.footer.links.about')}</a></li>`)}${li(cfg.sections.faq, `<li><a href="${hh('faq')}">${t('ui.footer.links.faq')}</a></li>`)}
           <li><a href="${hh('contact')}">${t('ui.footer.links.contact')}</a></li>${review}
         </ul>
       </nav>
       <p class="footer__copy">© <span id="year">2026</span> Electrical Insulation India. ${t('ui.footer.rights')}</p>
     </div>
-  <a class="fab" href="${waUrl(t.raw('ui.waGreeting'))}" target="_blank" rel="noopener" aria-label="${t('ui.fab')}" data-track="whatsapp_click" data-track-where="float">
+  ${cfg.features.floatingWhatsApp ? `<a class="fab" href="${waUrl(t.raw('ui.waGreeting'))}" target="_blank" rel="noopener" aria-label="${t('ui.fab')}" data-track="whatsapp_click" data-track-where="float">
     <svg class="icon" aria-hidden="true"><use href="#i-wa"/></svg><span class="fab__label" aria-hidden="true">${t('ui.fab')}</span>
-  </a>
+  </a>` : ''}
   </footer>
 
   <div class="enq" id="enq" hidden>

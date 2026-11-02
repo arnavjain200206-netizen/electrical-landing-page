@@ -1,14 +1,26 @@
 const SITE = require('../site');
 const L = require('../layout');
-const industries = require('../data/industries');
 const { esc, jsonAttr } = require('../lib');
 
-const ORDER = ['pvc-sheets', 'cut-to-size', 'stretch-film', 'bopp-tape', 'bubble-wrap', 'foam', 'strapping', 'edge-guard'];
+// the order the ticker texts were written in (one text per product)
+const ORDER_ALL = ['pvc-sheets', 'cut-to-size', 'stretch-film', 'bopp-tape', 'bubble-wrap', 'foam', 'strapping', 'edge-guard'];
+const GROUP = { 'pvc-sheets': 'Insulation', 'cut-to-size': 'Insulation' };
+
+/* Which cards get the big layouts. Only when they fill the 4-column grid exactly, so hiding products never leaves a hole. */
+function bentoLayout(on) {
+  const has = (s) => on.includes(s), n = on.length;
+  if (has('pvc-sheets') && has('cut-to-size') && n >= 4) return { xl: 'pvc-sheets', wide: 'cut-to-size', n };
+  if (has('pvc-sheets') && n >= 5) return { xl: 'pvc-sheets', wide: null, n };
+  return { xl: null, wide: null, n };
+}
 const ICON = { switchgear: 'i-switch', meter: 'i-meter', appliance: 'i-appliance', traders: 'i-truck' };
 const TOOL_ICON = { weight: 'i-scale', fit: 'i-fit', thickness: 'i-ruler' };
 
 module.exports = function home(ctx) {
-  const { t, lang, rel } = ctx;
+  const { t, lang, rel, cfg } = ctx;
+  const ORDER = cfg.productsOn;
+  const layout = bentoLayout(ORDER);
+  const dm = (slug) => (cfg.features.threeD ? ` data-model="${slug}"` : '');
   const wa = L.waUrl(t.raw('ui.waGreeting'));
   const hero = 'home.hero';
   const words = t.raw(`${hero}.words`).join('|');
@@ -18,10 +30,10 @@ module.exports = function home(ctx) {
 
   const cards = ORDER.map((slug, i) => {
     const c = `home.products.cards.${slug}`;
-    const cls = slug === 'pvc-sheets' ? ' pcard--xl' : slug === 'cut-to-size' ? ' pcard--wide' : '';
-    const tag = i < 2 ? t('home.products.tagInsulation') : t('home.products.tagPackaging');
+    const cls = slug === layout.xl ? ' pcard--xl' : slug === layout.wide ? ' pcard--wide' : '';
+    const tag = GROUP[slug] ? t('home.products.tagInsulation') : t('home.products.tagPackaging');
     return `          <article class="pcard${cls}" data-tilt>
-            <div class="pcard__img" data-model="${slug}"><img src="${rel}assets/products/${slug}.svg" alt="" width="600" height="450" loading="lazy"><span class="pcard__tag">${tag}</span></div>
+            <div class="pcard__img"${dm(slug)}><img src="${rel}assets/products/${slug}.svg" alt="" width="600" height="450" loading="lazy"><span class="pcard__tag">${tag}</span></div>
             <div class="pcard__body">
               <h3 class="pcard__title"><a href="${ctx.link('products/' + slug + '/')}">${t(c + '.title')}</a></h3>
               <p>${t(c + '.text')}</p>
@@ -34,8 +46,8 @@ module.exports = function home(ctx) {
           </article>`;
   }).join('\n');
 
-  const indCards = t.raw('home.industries.cards').map((c, i) => {
-    const items = industries[c.id];
+  const indCards = t.raw('home.industries.cards').filter((c) => cfg.industries.includes(c.id)).map((c) => {
+    const items = cfg.industryItems(c.id);
     const chips = items.map((it) => `<li><a href="${ctx.link('products/' + it.slug + '/')}">${esc(productName(it.slug))}</a></li>`).join('');
     return `          <article class="ind">
             <svg class="ind__icon icon" aria-hidden="true"><use href="#${ICON[c.id]}"/></svg>
@@ -47,7 +59,9 @@ module.exports = function home(ctx) {
           </article>`;
   }).join('\n');
 
-  const toolCards = t.raw('home.toolsTeaser.cards').map((c) => `          <a class="tcard" href="${ctx.link('tools/')}#${c.id}">
+  const indCount = t.raw('home.industries.cards').filter((c) => cfg.industries.includes(c.id)).length;
+  const toolsShown = t.raw('home.toolsTeaser.cards').filter((c) => cfg.tools[c.id]);
+  const toolCards = toolsShown.map((c) => `          <a class="tcard" href="${ctx.link('tools/')}#${c.id}">
             <svg class="tcard__icon icon" aria-hidden="true"><use href="#${TOOL_ICON[c.id]}"/></svg>
             <h3>${esc(c.title)}</h3>
             <p>${esc(c.text)}</p>
@@ -67,8 +81,9 @@ module.exports = function home(ctx) {
   const steps = t.raw('home.process.steps').map((s) => `<li><span class="steps__n mono">0</span><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p></li>`)
     .map((h, i) => h.replace('>0<', `>0${i + 1}<`)).join('\n          ');
 
-  const glance = t.raw('home.about.glance').map((g) => `<div><dt>${esc(g.label)}</dt><dd>${esc(g.value)}</dd></div>`).join('\n          ');
-  const faqItems = t.raw('home.faq.items');
+  // when something is hidden, the first row lists the products that are shown, so it is always right
+  const glance = t.raw('home.about.glance').map((g, i) => `<div><dt>${esc(g.label)}</dt><dd>${esc(i === 0 && ORDER.length < ORDER_ALL.length ? ORDER.map(productName).join(', ') : g.value)}</dd></div>`).join('\n          ');
+  const faqItems = t.raw('home.faq.items').filter((f, i) => cfg.faq.includes(i));
   const faq = faqItems.map((f) => `          <details>
             <summary>${esc(f.q)}</summary>
             <p>${esc(f.a)}</p>
@@ -81,11 +96,27 @@ module.exports = function home(ctx) {
   const reviewRow = SITE.googleReviewUrl
     ? `\n            <div><dt>Google</dt><dd><a href="${esc(SITE.googleReviewUrl)}" target="_blank" rel="noopener" data-track="review_click" data-track-where="contact">${t('ui.footer.review')}</a></dd></div>` : '';
 
+  // the hero picture: the PVC stack, or the first product that is shown when PVC is hidden
+  const hs = cfg.heroSlug, heroPvc = hs === 'pvc-sheets';
+  const chipTitle = heroPvc ? t(hero + '.chipTitle') : t(`home.products.cards.${hs}.title`);
+  const chipSpec = heroPvc ? t(hero + '.chipSpec') : t(`home.products.cards.${hs}.spec`);
+  const heroArt = `          <div class="hero__model"${dm(heroPvc ? 'pvc-stack' : hs)}><img class="hero__stack" src="${rel}assets/${heroPvc ? 'hero-stack.svg' : 'products/' + hs + '.svg'}" alt="${heroPvc ? t(hero + '.stackAlt') : esc(productName(hs))}" width="600" height="${heroPvc ? 610 : 450}" fetchpriority="high"></div>
+          <a class="hero__chip" href="${ctx.link('products/' + hs + '/')}">
+            <span><strong>${chipTitle}</strong><span class="mono">${chipSpec}</span></span>
+            <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>
+          </a>`;
+  const factItems = [
+    cfg.insulation ? `<div><dt>${t('home.facts.sheet')}</dt><dd><span data-count="1220">1220</span> × <span data-count="2440">2440</span> mm</dd></div>` : '',
+    cfg.insulation ? `<div><dt>${t('home.facts.thickness')}</dt><dd>1 ${t('home.facts.thicknessTo')} <span data-count="20">20</span> mm</dd></div>` : '',
+    `<div><dt>${t('home.facts.dispatch')}</dt><dd>${t('home.facts.dispatchValue')}</dd></div>`,
+    `<div><dt>${t('home.facts.billing')}</dt><dd>${t('home.facts.billingValue')}</dd></div>`
+  ].filter(Boolean);
+  const tickerItems = t.raw('home.ticker').filter((x, i) => cfg.has(ORDER_ALL[i]));
   const titleLd = [L.localBusinessLd(ctx), L.faqLd(faqItems)];
-  const redirect = lang === 'en' && !ctx.single
+  const redirect = lang === 'en' && !ctx.single && ctx.langs.includes('hi')
     ? `\n  <script>try{if(localStorage.getItem('eii_lang')==='hi'&&!/[?&]lang=en/.test(location.search)&&location.pathname.slice(-3)!=='hi/')location.replace('hi/index.html'+location.hash)}catch(e){}</script>` : '';
 
-  return `${L.head(ctx, { path: '', title: t.raw('home.title'), description: t.raw('home.description'), ogDescription: t.raw('home.ogDescription'), jsonld: titleLd, headExtra: redirect, preload: `  <link rel="preload" href="${rel}assets/hero-stack.svg" as="image" type="image/svg+xml">\n` })}
+  return `${L.head(ctx, { path: '', title: t.raw('home.title'), description: t.raw('home.description'), ogDescription: t.raw('home.ogDescription'), jsonld: titleLd, headExtra: redirect, preload: cfg.heroSlug === 'pvc-sheets' ? `  <link rel="preload" href="${rel}assets/hero-stack.svg" as="image" type="image/svg+xml">\n` : '' })}
 <body data-page="home">
   ${L.header(ctx, { path: '', current: 'home' })}
 
@@ -143,31 +174,24 @@ module.exports = function home(ctx) {
         </div>
 
         <div class="hero__art">
-          <div class="hero__model" data-model="pvc-stack"><img class="hero__stack" src="${rel}assets/hero-stack.svg" alt="${t(hero + '.stackAlt')}" width="600" height="610" fetchpriority="high"></div>
-          <a class="hero__chip" href="${ctx.link('products/pvc-sheets/')}">
-            <span><strong>${t(hero + '.chipTitle')}</strong><span class="mono">${t(hero + '.chipSpec')}</span></span>
-            <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>
-          </a>
+${heroArt}
         </div>
       </div>
 
       <div class="container">
-        <dl class="facts hero__in" style="--d:.85s">
-          <div><dt>${t('home.facts.sheet')}</dt><dd><span data-count="1220">1220</span> × <span data-count="2440">2440</span> mm</dd></div>
-          <div><dt>${t('home.facts.thickness')}</dt><dd>1 ${t('home.facts.thicknessTo')} <span data-count="20">20</span> mm</dd></div>
-          <div><dt>${t('home.facts.dispatch')}</dt><dd>${t('home.facts.dispatchValue')}</dd></div>
-          <div><dt>${t('home.facts.billing')}</dt><dd>${t('home.facts.billingValue')}</dd></div>
+        <dl class="facts hero__in" style="--d:.85s" data-n="${factItems.length}">
+          ${factItems.join('\n          ')}
         </dl>
       </div>
     </section>
 
-    <!-- Ticker (decorative) -->
+${cfg.features.ticker ? `    <!-- Ticker (decorative) -->
     <div class="ticker" aria-hidden="true">
       <div class="ticker__track">
-        ${t.raw('home.ticker').concat(t.raw('home.ticker')).map((x) => `<span>${esc(x)}</span>`).join('')}
+        ${tickerItems.concat(tickerItems).map((x) => `<span>${esc(x)}</span>`).join('')}
       </div>
     </div>
-
+` : ''}
     <!-- ===================== PRODUCTS ===================== -->
     <section class="section" id="products">
       <div class="container">
@@ -177,7 +201,7 @@ module.exports = function home(ctx) {
           <p class="section__sub">${t('home.products.sub')}</p>
         </header>
 
-        <div class="bento" data-stagger>
+        <div class="bento" data-stagger data-n="${layout.n}">
 ${cards}
         </div>
 
@@ -185,7 +209,7 @@ ${cards}
       </div>
     </section>
 
-    <!-- ===================== INDUSTRIES ===================== -->
+${cfg.sections.industries ? `    <!-- ===================== INDUSTRIES ===================== -->
     <section class="section section--tint" id="industries">
       <div class="container">
         <header class="section__head" data-reveal>
@@ -193,13 +217,14 @@ ${cards}
           <h2>${t('home.industries.h2')}</h2>
           <p class="section__sub">${t('home.industries.sub')}</p>
         </header>
-        <div class="ind-grid" data-stagger>
+        <div class="ind-grid" data-stagger data-n="${indCount}">
 ${indCards}
         </div>
       </div>
     </section>
+` : ''}
 
-    <!-- ===================== TOOLS ===================== -->
+${cfg.sections.tools ? `    <!-- ===================== TOOLS ===================== -->
     <section class="section" id="tools">
       <div class="container">
         <header class="section__head" data-reveal>
@@ -207,13 +232,14 @@ ${indCards}
           <h2>${t('home.toolsTeaser.h2')}</h2>
           <p class="section__sub">${t('home.toolsTeaser.sub')}</p>
         </header>
-        <div class="tgrid" data-stagger>
+        <div class="tgrid" data-stagger data-n="${toolsShown.length}">
 ${toolCards}
         </div>
       </div>
     </section>
+` : ''}
 
-    <!-- ===================== PROCESS ===================== -->
+${cfg.sections.process ? `    <!-- ===================== PROCESS ===================== -->
     <section class="section section--tint" id="process">
       <div class="container">
         <header class="section__head" data-reveal>
@@ -225,8 +251,9 @@ ${toolCards}
         </ol>
       </div>
     </section>
+` : ''}
 
-    <!-- ===================== ABOUT ===================== -->
+${cfg.sections.about ? `    <!-- ===================== ABOUT ===================== -->
     <section class="section" id="about">
       <div class="container about">
         <div class="about__copy" data-reveal>
@@ -240,8 +267,9 @@ ${toolCards}
         </dl>
       </div>
     </section>
+` : ''}
 
-    <!-- ===================== GUIDES ===================== -->
+${cfg.sections.guides ? `    <!-- ===================== GUIDES ===================== -->
     <section class="section section--tint" id="guides">
       <div class="container">
         <header class="section__head" data-reveal>
@@ -249,13 +277,14 @@ ${toolCards}
           <h2>${t('home.guides.h2')}</h2>
           <p class="section__sub">${t('home.guides.sub')}</p>
         </header>
-        <div class="gcards" data-stagger>
+        <div class="gcards" data-stagger data-n="${Object.keys(ctx.guides).length}">
 ${guideCards}
         </div>
       </div>
     </section>
+` : ''}
 
-    <!-- ===================== FAQ ===================== -->
+${cfg.sections.faq ? `    <!-- ===================== FAQ ===================== -->
     <section class="section" id="faq">
       <div class="container faqwrap">
         <header class="section__head faqwrap__head" data-reveal>
@@ -269,6 +298,7 @@ ${faq}
         </div>
       </div>
     </section>
+` : ''}
 
     <!-- ===================== CONTACT ===================== -->
     <section class="section section--dark" id="contact">
@@ -291,10 +321,10 @@ ${faq}
             <div><dt>${t('home.contact.labels.hours')}</dt><dd>${t('home.contact.hours')}</dd></div>${reviewRow}
           </dl>
 
-          <div class="map">
+${cfg.sections.contactMap ? `          <div class="map">
             <iframe title="${t('home.contact.mapTitle')}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=${encodeURIComponent(SITE.mapQuery)}&amp;output=embed"></iframe>
           </div>
-        </div>
+` : ''}        </div>
 
         <form class="form" id="quoteForm" data-reveal novalidate>
           <h3>${t('home.contact.form.title')}</h3>

@@ -32,6 +32,9 @@ build/            the generator and ALL the content
   data/           product data (english + hindi), industry starter lists
   layout.js pages/  page templates
   build.js        run this:  node build/build.js
+site-config.json  the on / off switches (which products, sections, tools ... are shown)
+admin/            the control panel (npm run admin): server.js + index.html
+build/config.js catalog.js  check the switches / what depends on what
 style.css         all styles (tokens at the top, light + dark theme, Hindi type)
 models3d/         source of the 3D product models (three.js); built into assets/models3d.js
 build/build-3d.js bundles models3d/ into assets/models3d.js (only when you change a model)
@@ -44,6 +47,30 @@ analytics.js      click tracking (off until you add an ID)
 assets/           favicon, og-image.png, fonts (IBM Plex + Noto Sans Devanagari), animated product art, models3d.js (the 3D models, built file)
 index.html, hi/, products/, tools/, guides/, single/, sitemap.xml, robots.txt, 404.html   <- generated, do not edit by hand
 ```
+
+## Choose what the website shows (control panel)
+
+You decide which products, sections, tools, guides and extras are on the website. Switch something off and the **whole site is rebuilt to match**: nothing is left behind and nothing points at a page that is gone.
+
+```bash
+npm run admin        # opens the control panel in your browser (needs Node; nothing else to install)
+```
+
+Tick or untick, check the **What will change** box, press **Save and rebuild website**. **Go back to previous settings** undoes your last save. The panel runs only on your computer (127.0.0.1); it is not part of the published site. To put the change live, publish the rebuilt files the way you normally do (the panel shows the git commands).
+
+| You can switch off | What happens automatically |
+|---|---|
+| **A product** (8) | Its page (English and Hindi), home card, hero picture / chip, ticker word, related-product links on other pages, contact-form entry, starter lists and sitemap entry go. Tools, guides and FAQ answers that are only about it hide themselves (the panel tells you which, and why). Old enquiry lists in visitors' browsers drop it. If PVC is hidden, the hero shows the first product that is left. The catalogue layout adapts to any number of products (never a gap). At least one product must stay. |
+| **Sections** | Industries, Tools, How to order, About, Guides, FAQ, the map. Switching off Tools or Guides also removes their pages, menu and footer links. |
+| **Single industries, tools, guides, FAQ answers** | Each has its own switch. |
+| **Extras** | Hindi version (the whole `/hi/` site, language button and hreflang tags go), 3D models, floating WhatsApp button, scrolling product strip, light/dark switch. |
+| **Announcement bar** | A strip above the menu (for example "Closed on Diwali"), English and Hindi. |
+
+Also in the panel: **Home page text** (the heading, intro and Google title; change them when you hide a product so they stop mentioning it) and **Publishing details** (website address, Google Analytics ID, review link). These are saved in `site-config.json`, so a rebuild never loses them.
+
+Everything is stored in **`site-config.json`**. You can edit it by hand instead and run `node build/build.js`; a wrong value stops the build with a plain message. `node build/build.js --dry` shows what would change without writing anything. Which tool / guide / FAQ answer belongs to which product is listed in `build/catalog.js`.
+
+Not in the panel (still in `build/site.js` and `build/i18n/`): phone number, email, address and opening hours, and all other wording.
 
 ---
 
@@ -129,7 +156,7 @@ python3 -m http.server 8000
 3. Deploy.
 
 ### Option D — Any hosting / cPanel
-Upload everything except `build/`, `README.md`, `package.json` and (optionally) `single/` (index.html, hi/, products/, tools/, guides/, assets/, the .js and .css files, sitemap.xml, robots.txt, 404.html) into `public_html/` using File Manager or FTP.
+Upload everything except `build/`, `admin/`, `models3d/`, `node_modules/`, `site-config.json`, `README.md`, `package.json` and (optionally) `single/` (index.html, hi/, products/, tools/, guides/, assets/, the .js and .css files, sitemap.xml, robots.txt, 404.html) into `public_html/` using File Manager or FTP.
 
 ### Custom domain
 Buy a domain (e.g. `.in` / `.com`), then add it in your host's **Domains** settings (GitHub Pages: Settings → Pages → *Custom domain*; Netlify/Vercel: Domains) and create the DNS records they show. HTTPS is enabled automatically. Afterwards rebuild with `--url https://yourdomain.in/` and commit the result.

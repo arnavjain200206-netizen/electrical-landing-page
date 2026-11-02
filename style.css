@@ -744,3 +744,26 @@ html.enq-open { overflow: hidden; }
 /* the enquiry count is drawn from data-n so it is not part of the button's accessible name (which already says "(n)") */
 .enq-btn__count::before { content: attr(data-n); }
 .ptable:focus-visible { outline-offset: 2px; }
+
+/* ---------- Fewer items on show ----------
+   Products, industries, tools and guides can be switched off (site-config.json). The grids then use
+   as many columns as there are items, so nothing is left with a gap beside it. */
+@media (min-width: 640px) {
+  .bento[data-n="1"], .ind-grid[data-n="1"], .tgrid[data-n="1"], .gcards[data-n="1"] { grid-template-columns: 1fr; }
+  .tgrid[data-n="2"] { grid-template-columns: repeat(2, 1fr); }
+  .gcards[data-n="1"], .tgrid[data-n="1"], .ind-grid[data-n="1"], .bento[data-n="1"] { max-width: 620px; margin-inline: auto; }
+}
+@media (min-width: 900px) {
+  .bento[data-n="2"] { grid-template-columns: repeat(2, 1fr); }
+  .bento[data-n="3"] { grid-template-columns: repeat(3, 1fr); }
+  .ind-grid[data-n="2"] { grid-template-columns: repeat(2, 1fr); }
+  .ind-grid[data-n="3"] { grid-template-columns: repeat(3, 1fr); }
+  .facts[data-n="2"], .facts[data-n="3"] { grid-template-columns: repeat(2, 1fr); }
+  .facts[data-n="3"] > div:last-child { grid-column: 1 / -1; }
+}
+.bento[data-n="1"] { max-width: 620px; margin-inline: auto; }
+.pcard--xl:only-child, .pcard--wide:only-child { grid-column: auto; grid-row: auto; }
+
+/* ---------- Announcement bar (site-config.json -> announcement) ---------- */
+.announce { background: var(--amber); color: #1a1405; font-weight: 600; font-size: .92rem; line-height: 1.4; }
+.announce__inner { padding-block: 9px; text-align: center; }

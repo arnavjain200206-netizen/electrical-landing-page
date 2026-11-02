@@ -26,13 +26,13 @@ module.exports = function tools(ctx) {
         <h1>${t('tools.h1')}</h1>
         <p class="lead">${t('tools.lead')}</p>
         <nav class="jump" aria-label="${t('ui.common.tools')}">
-          <a href="#weight"><svg class="icon" aria-hidden="true"><use href="#i-scale"/></svg>${t('tools.jump.weight')}</a>
-          <a href="#fit"><svg class="icon" aria-hidden="true"><use href="#i-fit"/></svg>${t('tools.jump.fit')}</a>
-          <a href="#thickness"><svg class="icon" aria-hidden="true"><use href="#i-ruler"/></svg>${t('tools.jump.thickness')}</a>
+          ${ctx.cfg.tools.weight ? `<a href="#weight"><svg class="icon" aria-hidden="true"><use href="#i-scale"/></svg>${t('tools.jump.weight')}</a>` : ''}
+          ${ctx.cfg.tools.fit ? `<a href="#fit"><svg class="icon" aria-hidden="true"><use href="#i-fit"/></svg>${t('tools.jump.fit')}</a>` : ''}
+          ${ctx.cfg.tools.thickness ? `<a href="#thickness"><svg class="icon" aria-hidden="true"><use href="#i-ruler"/></svg>${t('tools.jump.thickness')}</a>` : ''}
         </nav>
       </header>
 
-      <!-- ============ Weight & cost ============ -->
+      ${ctx.cfg.tools.weight ? `      <!-- ============ Weight & cost ============ -->
       <section class="tool" id="weight" data-tool="weight">
         <header class="tool__head"><svg class="icon" aria-hidden="true"><use href="#i-scale"/></svg><div><h2>${t('tools.weight.title')}</h2><p>${t('tools.weight.intro')}</p></div></header>
         <div class="tool__grid">
@@ -48,8 +48,9 @@ module.exports = function tools(ctx) {
           <div class="tool__result"><div class="tool__out" id="wOut" role="status" aria-live="polite"></div><div class="tool__actions" id="wActions" hidden><button type="button" class="btn btn--primary btn--sm" id="wAdd"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg> ${t('tools.weight.add')}</button><a class="btn btn--wa btn--sm" id="wWa" target="_blank" rel="noopener" data-track="whatsapp_click" data-track-where="tool_weight" href="#"><svg class="icon" aria-hidden="true"><use href="#i-wa"/></svg> ${t('tools.weight.wa')}</a></div></div>
         </div>
       </section>
+` : ''}
 
-      <!-- ============ Fit checker ============ -->
+      ${ctx.cfg.tools.fit ? `      <!-- ============ Fit checker ============ -->
       <section class="tool" id="fit" data-tool="fit">
         <header class="tool__head"><svg class="icon" aria-hidden="true"><use href="#i-fit"/></svg><div><h2>${t('tools.fit.title')}</h2><p>${t('tools.fit.intro')}</p></div></header>
         <div class="tool__grid">
@@ -63,8 +64,9 @@ module.exports = function tools(ctx) {
           <div class="tool__result"><div class="tool__out" id="fOut" role="status" aria-live="polite"></div><div class="tool__actions" id="fActions" hidden><button type="button" class="btn btn--primary btn--sm" id="fAdd"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg> ${t('tools.fit.add')}</button><a class="btn btn--wa btn--sm" id="fWa" target="_blank" rel="noopener" data-track="whatsapp_click" data-track-where="tool_fit" href="#"><svg class="icon" aria-hidden="true"><use href="#i-wa"/></svg> ${t('tools.fit.wa')}</a></div></div>
         </div>
       </section>
+` : ''}
 
-      <!-- ============ Which thickness ============ -->
+      ${ctx.cfg.tools.thickness ? `      <!-- ============ Which thickness ============ -->
       <section class="tool" id="thickness" data-tool="thickness">
         <header class="tool__head"><svg class="icon" aria-hidden="true"><use href="#i-ruler"/></svg><div><h2>${t('tools.thickness.title')}</h2><p>${t('tools.thickness.intro')}</p></div></header>
         <div class="tool__grid tool__grid--wiz">
@@ -79,6 +81,7 @@ module.exports = function tools(ctx) {
           <div class="tool__out" id="thkOut" role="status" aria-live="polite"></div>
         </div>
       </section>
+` : ''}
 
       <p class="tools__help"><svg class="icon" aria-hidden="true"><use href="#i-wa"/></svg> <a href="${L.waUrl(t.raw('ui.waGreeting'))}" target="_blank" rel="noopener" data-track="whatsapp_click" data-track-where="tools_help">${t('ui.common.needHelp')}</a></p>
     </div>

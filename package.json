@@ -4,7 +4,8 @@
   "description": "Static site for Electrical Insulation India. The site itself has no dependencies; three.js and esbuild are only needed to rebuild the 3D models.",
   "scripts": {
     "build": "node build/build.js",
-    "build:3d": "node build/build-3d.js"
+    "build:3d": "node build/build-3d.js",
+    "admin": "node admin/server.js"
   },
   "engines": {
     "node": ">=18"

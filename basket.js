@@ -11,7 +11,8 @@
   var items = load(), lastFocus = null, toastTimer = null;
 
   function load() {
-    try { var s = JSON.parse(localStorage.getItem(KEY) || '[]'); if (Array.isArray(s)) return s; } catch (e) {}
+    // items for a product that is no longer on the site are dropped, so an old enquiry list cannot ask for it
+    try { var s = JSON.parse(localStorage.getItem(KEY) || '[]'); if (Array.isArray(s)) return s.filter(function (it) { return !it.slug || E.names[it.slug]; }); } catch (e) {}
     return [];
   }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(items)); } catch (e) {} }

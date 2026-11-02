@@ -141,20 +141,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.example.com/products/strapping/</loc>
-    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/strapping/"/>
-    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/strapping/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/products/strapping/"/>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.example.com/hi/products/strapping/</loc>
-    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/strapping/"/>
-    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/strapping/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/products/strapping/"/>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://www.example.com/products/foam/</loc>
     <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/foam/"/>
     <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/foam/"/>
@@ -166,6 +152,20 @@
     <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/foam/"/>
     <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/foam/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/products/foam/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/products/strapping/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/strapping/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/strapping/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/products/strapping/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/hi/products/strapping/</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://www.example.com/products/strapping/"/>
+    <xhtml:link rel="alternate" hreflang="hi-IN" href="https://www.example.com/hi/products/strapping/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.example.com/products/strapping/"/>
     <priority>0.8</priority>
   </url>
   <url>

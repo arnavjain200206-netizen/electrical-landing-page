@@ -8,6 +8,7 @@ module.exports = {
   ui: {
     skip: 'मुख्य सामग्री पर जाएं',
     topbarLabel: 'पता, समय और फोन',
+    announcementLabel: 'सूचना',
     topbarAddress: '20, अंसारी रोड, दरियागंज, नई दिल्ली – 110002',
     topbarHours: 'सोम–शनि, सुबह 9:30 – शाम 7:00',
     brandSub: 'India',

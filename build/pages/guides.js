@@ -1,6 +1,7 @@
 const SITE = require('../site');
 const L = require('../layout');
 const { esc } = require('../lib');
+const CAT = require('../catalog');
 
 const THICK = [1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20];
 const fmt = (n, d) => n.toFixed(d);
@@ -26,7 +27,7 @@ function index(ctx) {
     <div class="container">
       <nav class="crumbs" aria-label="${t('product.crumbNav')}"><a href="${ctx.link('')}">${t('ui.common.home')}</a><span>/</span><span aria-current="page">${t('ui.common.guides')}</span></nav>
       <header class="pagehead"><p class="kicker">${t('guides.kicker')}</p><h1>${t('guides.h1')}</h1><p class="lead">${t('guides.lead')}</p></header>
-      <div class="gcards gcards--page">
+      <div class="gcards gcards--page" data-n="${Object.keys(ctx.guides).length}">
         ${cards}
       </div>
     </div>
@@ -52,7 +53,7 @@ function article(ctx, slug) {
     return h + '</section>';
   }).join('\n');
   const faq = g.faqs.map((f) => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join('');
-  const relatedProd = slug.startsWith('pvc') ? ['pvc-sheets', 'cut-to-size'] : ['stretch-film', 'edge-guard'];
+  const relatedProd = ((CAT.guides[slug] || {}).related || []).filter(ctx.cfg.has);
   const rel = ctx.rel;
   const relCards = relatedProd.map((s) => `<a class="rel" href="${ctx.link('products/' + s + '/')}"><img src="${rel}assets/products/${s}.svg" alt="" width="600" height="450" loading="lazy"><span><strong>${esc(ctx.products[s].name)}</strong><em>${t('product.viewDetails')}</em></span></a>`).join('');
   const ld = [
@@ -76,9 +77,9 @@ function article(ctx, slug) {
             <p>${t('guides.ctaText')}</p>
             <div class="art__ctaRow">
               <a class="btn btn--wa" href="${L.waUrl('Hi, I read your guide: ' + ctx.guidesEn[slug].h1 + '. I need help choosing.')}" target="_blank" rel="noopener" data-track="whatsapp_click" data-track-where="guide" data-track-item="${slug}"><svg class="icon" aria-hidden="true"><use href="#i-wa"/></svg> ${t('ui.common.whatsappCta')}</a>
-              <a class="btn btn--outline" href="${ctx.link('tools/')}">${t('guides.ctaTools')}</a>
+              ${ctx.cfg.toolsAny ? `<a class="btn btn--outline" href="${ctx.link('tools/')}">${t('guides.ctaTools')}</a>` : ''}
             </div>
-            <div class="relgrid relgrid--2">${relCards}</div>
+            ${relCards ? `<div class="relgrid relgrid--2">${relCards}</div>` : ''}
           </section>
         </article>
         <aside class="art__toc" aria-label="${t('guides.onThisPage')}"><p class="mono">${t('guides.onThisPage')}</p><ol>${toc}</ol></aside>

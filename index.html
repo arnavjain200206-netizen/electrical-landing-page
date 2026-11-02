@@ -40,7 +40,7 @@
 <body data-page="home">
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="progress" id="progress" aria-hidden="true"></div>
-
+  
   <aside class="topbar" aria-label="Address, hours and phone">
     <div class="container topbar__inner">
       <span>20, Ansari Road, Daryaganj, New Delhi – 110002</span>
@@ -150,7 +150,7 @@
       </div>
 
       <div class="container">
-        <dl class="facts hero__in" style="--d:.85s">
+        <dl class="facts hero__in" style="--d:.85s" data-n="4">
           <div><dt>Standard sheet</dt><dd><span data-count="1220">1220</span> × <span data-count="2440">2440</span> mm</dd></div>
           <div><dt>Thickness</dt><dd>1 to <span data-count="20">20</span> mm</dd></div>
           <div><dt>Delhi-NCR dispatch</dt><dd>1–2 working days</dd></div>
@@ -175,7 +175,7 @@
           <p class="section__sub">Insulation sheet and packaging material on one invoice and one delivery. Open any product for sizes, specifications and a ready-made WhatsApp enquiry.</p>
         </header>
 
-        <div class="bento" data-stagger>
+        <div class="bento" data-stagger data-n="8">
           <article class="pcard pcard--xl" data-tilt>
             <div class="pcard__img" data-model="pvc-sheets"><img src="assets/products/pvc-sheets.svg" alt="" width="600" height="450" loading="lazy"><span class="pcard__tag">Insulation</span></div>
             <div class="pcard__body">
@@ -286,7 +286,7 @@
           <h2>Who we supply, and what they usually buy</h2>
           <p class="section__sub">Tap &quot;Add starter list&quot; and we put the usual items in your enquiry list. Change sizes and quantities there, then send it on WhatsApp.</p>
         </header>
-        <div class="ind-grid" data-stagger>
+        <div class="ind-grid" data-stagger data-n="4">
           <article class="ind">
             <svg class="ind__icon icon" aria-hidden="true"><use href="#i-switch"/></svg>
             <h3>Switchgear &amp; panel makers</h3>
@@ -323,6 +323,7 @@
       </div>
     </section>
 
+
     <!-- ===================== TOOLS ===================== -->
     <section class="section" id="tools">
       <div class="container">
@@ -331,7 +332,7 @@
           <h2>Work it out before you ask</h2>
           <p class="section__sub">Quick calculators for buyers. Use the result in your enquiry with one tap.</p>
         </header>
-        <div class="tgrid" data-stagger>
+        <div class="tgrid" data-stagger data-n="3">
           <a class="tcard" href="./tools/index.html#weight">
             <svg class="tcard__icon icon" aria-hidden="true"><use href="#i-scale"/></svg>
             <h3>PVC sheet weight &amp; cost</h3>
@@ -354,6 +355,7 @@
       </div>
     </section>
 
+
     <!-- ===================== PROCESS ===================== -->
     <section class="section section--tint" id="process">
       <div class="container">
@@ -369,6 +371,7 @@
         </ol>
       </div>
     </section>
+
 
     <!-- ===================== ABOUT ===================== -->
     <section class="section" id="about">
@@ -392,6 +395,7 @@
       </div>
     </section>
 
+
     <!-- ===================== GUIDES ===================== -->
     <section class="section section--tint" id="guides">
       <div class="container">
@@ -400,7 +404,7 @@
           <h2>Buying guides</h2>
           <p class="section__sub">Plain-language help for choosing the right material.</p>
         </header>
-        <div class="gcards" data-stagger>
+        <div class="gcards" data-stagger data-n="2">
           <a class="gcard" href="./guides/pvc-sheet-thickness-guide/index.html">
             <svg class="gcard__icon icon" aria-hidden="true"><use href="#i-book"/></svg>
             <h3>PVC sheet thickness guide</h3>
@@ -416,6 +420,7 @@
         </div>
       </div>
     </section>
+
 
     <!-- ===================== FAQ ===================== -->
     <section class="section" id="faq">
@@ -474,6 +479,7 @@
         </div>
       </div>
     </section>
+
 
     <!-- ===================== CONTACT ===================== -->
     <section class="section section--dark" id="contact">
@@ -602,7 +608,7 @@
   <symbol id="i-book" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5zM5 19.5v1A.5.5 0 0 0 5.5 21H19M9 7h6"/></g></symbol>
   </svg>
 
-  <script>window.EII={"lang":"en","base":"./","page":"home","path":"","single":false,"wa":"917982644262","email":"arnavjaincena@gmail.com","ga4":"","plausible":"","names":{"pvc-sheets":"Rigid PVC Sheet","cut-to-size":"Cut-to-Size PVC Panels","stretch-film":"Stretch Film","bopp-tape":"BOPP Packing Tape","bubble-wrap":"Air Bubble Wrap","strapping":"PP Strapping & Accessories","foam":"EPE Foam Sheets & Rolls","edge-guard":"Edge & Corner Guards"},"namesEn":{"pvc-sheets":"Rigid PVC Sheet","cut-to-size":"Cut-to-Size PVC Panels","stretch-film":"Stretch Film","bopp-tape":"BOPP Packing Tape","bubble-wrap":"Air Bubble Wrap","strapping":"PP Strapping & Accessories","foam":"EPE Foam Sheets & Rolls","edge-guard":"Edge & Corner Guards"},"strings":{"basket":{"title":"Enquiry list","empty":"Your list is empty.","emptyHint":"Add products from the catalogue, tools or product pages, then send everything in one WhatsApp message.","browse":"Browse products","remove":"Remove","close":"Close","clear":"Clear list","clearConfirm":"Remove all items from your enquiry list?","yourName":"Your name","yourNamePh":"Your name","city":"Delivery city / pincode","cityPh":"e.g. Jaipur 302001","noteLabel":"Note for this item","notePh":"Quantity, size or anything else","send":"Send on WhatsApp","mail":"Send by email","copy":"Copy message","copied":"Message copied.","added":"Added to enquiry list","addedMany":"Added {n} items to enquiry list","view":"View list","items":"{n} items","item":"1 item","itemFallback":"Custom item","status":"Items in your enquiry list: {n}","emptySend":"Add at least one item first."},"form":{"name":"Please enter your name.","phone":"Please enter a valid 10-digit phone number.","product":"Please select a product."},"qb":{"edited":"You edited the message. Press Reset to refresh it from the form.","reset":"Message reset from the form.","copied":"Message copied.","added":"Added to your enquiry list."}}};</script>
+  <script>window.EII={"lang":"en","base":"./","page":"home","path":"","single":false,"wa":"917982644262","email":"arnavjaincena@gmail.com","ga4":"","plausible":"","names":{"pvc-sheets":"Rigid PVC Sheet","cut-to-size":"Cut-to-Size PVC Panels","stretch-film":"Stretch Film","bopp-tape":"BOPP Packing Tape","bubble-wrap":"Air Bubble Wrap","foam":"EPE Foam Sheets & Rolls","strapping":"PP Strapping & Accessories","edge-guard":"Edge & Corner Guards"},"namesEn":{"pvc-sheets":"Rigid PVC Sheet","cut-to-size":"Cut-to-Size PVC Panels","stretch-film":"Stretch Film","bopp-tape":"BOPP Packing Tape","bubble-wrap":"Air Bubble Wrap","foam":"EPE Foam Sheets & Rolls","strapping":"PP Strapping & Accessories","edge-guard":"Edge & Corner Guards"},"strings":{"basket":{"title":"Enquiry list","empty":"Your list is empty.","emptyHint":"Add products from the catalogue, tools or product pages, then send everything in one WhatsApp message.","browse":"Browse products","remove":"Remove","close":"Close","clear":"Clear list","clearConfirm":"Remove all items from your enquiry list?","yourName":"Your name","yourNamePh":"Your name","city":"Delivery city / pincode","cityPh":"e.g. Jaipur 302001","noteLabel":"Note for this item","notePh":"Quantity, size or anything else","send":"Send on WhatsApp","mail":"Send by email","copy":"Copy message","copied":"Message copied.","added":"Added to enquiry list","addedMany":"Added {n} items to enquiry list","view":"View list","items":"{n} items","item":"1 item","itemFallback":"Custom item","status":"Items in your enquiry list: {n}","emptySend":"Add at least one item first."},"form":{"name":"Please enter your name.","phone":"Please enter a valid 10-digit phone number.","product":"Please select a product."},"qb":{"edited":"You edited the message. Press Reset to refresh it from the form.","reset":"Message reset from the form.","copied":"Message copied.","added":"Added to your enquiry list."}}};</script>
   <script src="view.js" defer></script>
   <script src="analytics.js" defer></script>
   <script src="basket.js" defer></script>
