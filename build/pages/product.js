@@ -10,7 +10,7 @@ module.exports = function product(ctx, slug) {
   const quickMsg = `Hi, I would like the price for ${pe.name}. Please share details.`;
 
   const list = (items, cls) => `<ul class="${cls}">${items.map((i) => `<li>${esc(i)}</li>`).join('')}</ul>`;
-  const table = (head, rows, label) => `<div class="ptable" tabindex="0" role="region" aria-label="${esc(label)}"><table><thead><tr>${head.map((h) => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c, i) => (i === 0 ? `<th scope="row">${esc(c)}</th>` : `<td>${esc(c)}</td>`)).join('')}</tr>`).join('')}</tbody></table></div>`;
+  const table = (head, rows) => `<div class="ptable"><table><thead><tr>${head.map((h) => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c, i) => (i === 0 ? `<th scope="row">${esc(c)}</th>` : `<td>${esc(c)}</td>`)).join('')}</tr>`).join('')}</tbody></table></div>`;
 
   const fields = pe.fields.map((f, i) => {
     const id = 'qf' + i;
@@ -37,10 +37,11 @@ module.exports = function product(ctx, slug) {
 
   <main id="main" class="pv">
     <div class="container">
-      <nav class="crumbs" aria-label="${t('product.crumbNav')}"><a href="${ctx.link('')}">${t('ui.common.home')}</a><span aria-hidden="true">/</span><a href="${ctx.link('')}#products">${t('ui.common.products')}</a><span aria-hidden="true">/</span><span aria-current="page">${esc(p.name)}</span></nav>
+      <nav class="crumbs" aria-label="${t('product.crumbNav')}"><a href="${ctx.link('')}">${t('ui.common.home')}</a><span>/</span><a href="${ctx.link('')}#products">${t('ui.common.products')}</a><span>/</span><span aria-current="page">${esc(p.name)}</span></nav>
       <section class="phero">
         <div class="phero__media"><img src="${rel}assets/products/${slug}.svg" alt="${esc(p.name)}" width="600" height="450" fetchpriority="high"></div>
         <div class="phero__copy">
+          <p class="kicker">${t('product.kicker')}</p>
           <h1 id="pvTitle">${esc(p.name)}</h1>
           <p class="phero__tag">${esc(p.tagline)}</p>
           <ul class="pchips">${p.highlights.map((h) => `<li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>${esc(h)}</li>`).join('')}</ul>
@@ -56,7 +57,7 @@ module.exports = function product(ctx, slug) {
         <div class="pmain">
           <section class="pblock"><h2>${t('product.overview')}</h2>${p.overview.map((x) => `<p>${esc(x)}</p>`).join('')}</section>
           <section class="pblock"><h2>${t('product.specs')}</h2><dl class="pspecs">${p.specs.map((s) => `<div><dt>${esc(s[0])}</dt><dd>${esc(s[1])}</dd></div>`).join('')}</dl></section>
-          <section class="pblock"><h2>${esc(p.sizesTitle)}</h2>${table(p.sizesHead, p.sizes, p.sizesTitle)}${p.sizesNote ? `<p class="pnote">${esc(p.sizesNote)}</p>` : ''}</section>
+          <section class="pblock"><h2>${esc(p.sizesTitle)}</h2>${table(p.sizesHead, p.sizes)}${p.sizesNote ? `<p class="pnote">${esc(p.sizesNote)}</p>` : ''}</section>
           <section class="pblock pblock--cols"><div><h2>${t('product.applications')}</h2>${list(p.applications, 'ticks')}</div><div><h2>${t('product.features')}</h2>${list(p.features, 'ticks')}</div></section>
           <section class="pblock"><h2>${t('product.packing')}</h2>${list(p.packing, 'ticks')}</section>
           <section class="pblock"><h2>${t('product.faqs')}</h2><div class="faq">${faqs}</div></section>

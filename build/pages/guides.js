@@ -8,7 +8,7 @@ const fmt = (n, d) => n.toFixed(d);
 function weightsTable(ctx) {
   const { t } = ctx;
   const rows = THICK.map((m) => `<tr><th scope="row">${m} mm</th><td>${fmt(1.22 * 2.44 * m * 1.35, 1)} kg</td><td>${fmt(m * 1.35, 2)} kg</td></tr>`).join('');
-  return `<div class="ptable" tabindex="0" role="region" aria-label="${t('guides.weights.perSheet')}"><table><thead><tr><th scope="col">${t('guides.weights.thickness')}</th><th scope="col">${t('guides.weights.perSheet')}</th><th scope="col">${t('guides.weights.perSqm')}</th></tr></thead><tbody>${rows}</tbody></table></div><p class="pnote">${t('guides.weights.note')}</p>`;
+  return `<div class="ptable"><table><thead><tr><th scope="col">${t('guides.weights.thickness')}</th><th scope="col">${t('guides.weights.perSheet')}</th><th scope="col">${t('guides.weights.perSqm')}</th></tr></thead><tbody>${rows}</tbody></table></div><p class="pnote">${t('guides.weights.note')}</p>`;
 }
 
 function index(ctx) {
@@ -16,7 +16,7 @@ function index(ctx) {
   const path = 'guides/';
   const cards = Object.keys(ctx.guides).map((slug) => {
     const g = ctx.guides[slug];
-    return `<a class="gcard" href="${ctx.link('guides/' + slug + '/')}"><h2>${esc(g.h1)}</h2><p>${esc(g.excerpt)}</p><span class="gcard__more">${t('guides.readMore')}</span></a>`;
+    return `<a class="gcard" href="${ctx.link('guides/' + slug + '/')}"><svg class="gcard__icon icon" aria-hidden="true"><use href="#i-book"/></svg><h2>${esc(g.h1)}</h2><p>${esc(g.excerpt)}</p><span class="tcard__more">${t('guides.readMore')} <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></span></a>`;
   }).join('\n        ');
   const ld = [L.breadcrumbLd(ctx, [[t.raw('ui.common.home'), ctx.abs('', ctx.lang)], [t.raw('ui.common.guides'), ctx.abs(path, ctx.lang)]])];
   return `${L.head(ctx, { path, title: t.raw('guides.indexTitle'), description: t.raw('guides.indexDescription'), jsonld: ld })}
@@ -24,8 +24,8 @@ function index(ctx) {
   ${L.header(ctx, { path, current: 'guides' })}
   <main id="main" class="pv">
     <div class="container">
-      <nav class="crumbs" aria-label="${t('product.crumbNav')}"><a href="${ctx.link('')}">${t('ui.common.home')}</a><span aria-hidden="true">/</span><span aria-current="page">${t('ui.common.guides')}</span></nav>
-      <header class="pagehead"><h1>${t('guides.h1')}</h1><p class="lead">${t('guides.lead')}</p></header>
+      <nav class="crumbs" aria-label="${t('product.crumbNav')}"><a href="${ctx.link('')}">${t('ui.common.home')}</a><span>/</span><span aria-current="page">${t('ui.common.guides')}</span></nav>
+      <header class="pagehead"><p class="kicker">${t('guides.kicker')}</p><h1>${t('guides.h1')}</h1><p class="lead">${t('guides.lead')}</p></header>
       <div class="gcards gcards--page">
         ${cards}
       </div>
@@ -46,7 +46,7 @@ function article(ctx, slug) {
   const body = g.sections.map((s) => {
     let h = `<section class="art__sec" id="${s.id}"><h2>${esc(s.h2)}</h2>`;
     (s.p || []).forEach((p) => { h += `<p>${esc(p)}</p>`; });
-    if (s.table) h += `<div class="ptable" tabindex="0" role="region" aria-label="${esc(s.h2)}"><table><thead><tr>${s.table.head.map((x) => `<th scope="col">${esc(x)}</th>`).join('')}</tr></thead><tbody>${s.table.rows.map((r) => `<tr>${r.map((c, i) => (i === 0 ? `<th scope="row">${esc(c)}</th>` : `<td>${esc(c)}</td>`)).join('')}</tr>`).join('')}</tbody></table></div>`;
+    if (s.table) h += `<div class="ptable"><table><thead><tr>${s.table.head.map((x) => `<th scope="col">${esc(x)}</th>`).join('')}</tr></thead><tbody>${s.table.rows.map((r) => `<tr>${r.map((c, i) => (i === 0 ? `<th scope="row">${esc(c)}</th>` : `<td>${esc(c)}</td>`)).join('')}</tr>`).join('')}</tbody></table></div>`;
     if (s.ul) h += `<ul class="ticks">${s.ul.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`;
     if (s.weights) h += weightsTable(ctx);
     return h + '</section>';
@@ -65,10 +65,10 @@ function article(ctx, slug) {
   ${L.header(ctx, { path, current: 'guides' })}
   <main id="main" class="pv">
     <div class="container">
-      <nav class="crumbs" aria-label="${t('product.crumbNav')}"><a href="${ctx.link('')}">${t('ui.common.home')}</a><span aria-hidden="true">/</span><a href="${ctx.link('guides/')}">${t('ui.common.guides')}</a><span aria-hidden="true">/</span><span aria-current="page">${esc(g.h1)}</span></nav>
+      <nav class="crumbs" aria-label="${t('product.crumbNav')}"><a href="${ctx.link('')}">${t('ui.common.home')}</a><span>/</span><a href="${ctx.link('guides/')}">${t('ui.common.guides')}</a><span>/</span><span aria-current="page">${esc(g.h1)}</span></nav>
       <div class="art">
         <article class="art__main">
-          <header class="pagehead"><h1>${esc(g.h1)}</h1><p class="art__meta">${t('guides.published')}: <time datetime="${SITE.guidesPublished}">${SITE.guidesPublished}</time></p><p class="lead">${esc(g.intro)}</p></header>
+          <header class="pagehead"><p class="kicker">${t('guides.kicker')}</p><h1>${esc(g.h1)}</h1><p class="art__meta mono">${t('guides.published')}: <time datetime="${SITE.guidesPublished}">${SITE.guidesPublished}</time></p><p class="lead">${esc(g.intro)}</p></header>
           ${body}
           <section class="art__sec" id="faq"><h2>${t('guides.faqTitle')}</h2><div class="faq">${faq}</div></section>
           <section class="art__cta">
@@ -81,7 +81,7 @@ function article(ctx, slug) {
             <div class="relgrid relgrid--2">${relCards}</div>
           </section>
         </article>
-        <aside class="art__toc" aria-label="${t('guides.onThisPage')}"><p class="art__tochead">${t('guides.onThisPage')}</p><ol>${toc}</ol></aside>
+        <aside class="art__toc" aria-label="${t('guides.onThisPage')}"><p class="mono">${t('guides.onThisPage')}</p><ol>${toc}</ol></aside>
       </div>
     </div>
   </main>

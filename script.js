@@ -4,6 +4,7 @@
   'use strict';
   var E = window.EII || { lang: 'en', base: './', strings: { form: {} } };
   var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var FINE = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   var root = document.documentElement;
   root.classList.add('js');
 
@@ -30,7 +31,7 @@
       themeBtn.setAttribute('aria-label', t === 'dark' ? themeBtn.getAttribute('data-label-light') : themeBtn.getAttribute('data-label-dark'));
       themeBtn.setAttribute('aria-pressed', String(t === 'dark'));
     }
-    if (themeMeta) themeMeta.setAttribute('content', t === 'dark' ? '#12171c' : '#dde1df');
+    if (themeMeta) themeMeta.setAttribute('content', t === 'dark' ? '#0f161f' : '#f6f4ef');
   }
   function setTheme(t, save) {
     if (!RM) { root.classList.add('theme-anim'); window.setTimeout(function () { root.classList.remove('theme-anim'); }, 450); }
@@ -62,18 +63,20 @@
       if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') { setMenu(false); toggle.focus(); }
     });
     document.addEventListener('click', function (e) { if (!e.target.closest('.nav__inner')) setMenu(false); });
-    window.matchMedia('(min-width: 1100px)').addEventListener('change', function () { setMenu(false); });
+    window.matchMedia('(min-width: 900px)').addEventListener('change', function () { setMenu(false); });
   }
 
-  // ---------- Scroll progress (the earth-wire stripe along the top) ----------
+  // ---------- Nav over the hero, scroll progress ----------
+  var nav = document.getElementById('top');
   var progress = document.getElementById('progress');
   var queued = false;
   function onScrollFx() {
     queued = false;
-    root.classList.toggle('scrolled', window.scrollY > 420);   // the floating WhatsApp button waits until the hero has been passed
+    var y = window.scrollY;
+    if (nav) nav.classList.toggle('is-top', !!document.getElementById('hero') && y < 24);
     if (progress) {
       var max = root.scrollHeight - window.innerHeight;
-      progress.style.setProperty('--p', max > 0 ? Math.min(1, window.scrollY / max).toFixed(4) : '0');
+      progress.style.setProperty('--p', max > 0 ? Math.min(1, y / max).toFixed(4) : '0');
     }
   }
   function queueScrollFx() { if (!queued) { queued = true; window.requestAnimationFrame(onScrollFx); } }
@@ -93,102 +96,133 @@
   // =====================================================================
   // Everything below belongs to the current view and runs again whenever a view is shown
   // =====================================================================
+  var rotTimer = null;
   function mount() {
+  // ---------- Scroll reveal ----------
+  document.querySelectorAll('[data-stagger]').forEach(function (group) {
+    Array.prototype.forEach.call(group.children, function (child, i) {
+      child.setAttribute('data-reveal', '');
+      child.style.setProperty('--d', (i * 70) + 'ms');
+    });
+  });
+  var revealEls = document.querySelectorAll('[data-reveal]');
+  if (!RM && 'IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    revealEls.forEach(function (el) { io.observe(el); });
+  } else {
+    revealEls.forEach(function (el) { el.classList.add('is-in'); });
+  }
 
-    // ---------- Hero: the sheet and its thickness gauge ----------
-    (function gauge() {
-      var g = document.getElementById('gauge'), stage = document.getElementById('stage'), art = document.getElementById('stageArt');
-      var Sheet = window.EIISheet;
-      if (!g || !stage || !art || !Sheet) return;
-      var STD = Sheet.STD, range = document.getElementById('gRange'), ticks = g.querySelectorAll('.gauge__tick');
-      var figure = stage.getAttribute('data-figure') || '', waTpl = g.getAttribute('data-wa-tpl'), waLabel = g.getAttribute('data-wa-label'), addLabel = g.getAttribute('data-add-label');
-      var num = document.getElementById('gNum'), kg = document.getElementById('gKg'), sqm = document.getElementById('gSqm');
-      var wa = document.getElementById('gWa'), waTxt = document.getElementById('gWaTxt'), add = document.getElementById('gAdd'), addTxt = document.getElementById('gAddTxt');
-      var index = parseInt(g.getAttribute('data-start'), 10) || 0, shown = STD[index], raf = 0;
-
-      function paint(t) { art.innerHTML = Sheet.svg(t, figure.replace('{n}', STD[index]), STD[index]); }
-      function readouts() {
-        var n = STD[index];
-        num.textContent = n;
-        kg.textContent = Sheet.kg(n).toFixed(1) + ' kg';
-        sqm.textContent = (n * Sheet.DENSITY).toFixed(2) + ' kg';
-        wa.href = 'https://wa.me/' + E.wa + '?text=' + encodeURIComponent(waTpl.replace('{n}', n));
-        waTxt.textContent = waLabel.replace('{n}', n);
-        addTxt.textContent = addLabel.replace('{n}', n);
-        add.setAttribute('data-add', JSON.stringify({ slug: 'pvc-sheets', details: [['Thickness', n + ' mm'], ['Sheet size', '1220 × 2440 mm (4 × 8 ft)']] }));
-        range.value = index;
-        range.setAttribute('aria-valuetext', n + ' mm');
-        range.style.setProperty('--fill', 'calc(12px + (100% - 24px) * ' + (index / (STD.length - 1)) + ')');
-        ticks.forEach(function (b, i) { b.setAttribute('aria-pressed', String(i === index)); });
-      }
-      function go(i) {
-        index = Math.max(0, Math.min(STD.length - 1, i));
-        stage.setAttribute('data-live', '');               // the entrance is over: stop replaying it on redraw
-        readouts();
-        window.cancelAnimationFrame(raf);
-        var target = STD[index];
-        if (RM) { shown = target; paint(shown); return; }
-        var from = shown, t0 = null;
-        raf = window.requestAnimationFrame(function step(ts) {
-          if (t0 === null) t0 = ts;
-          var p = Math.min(1, (ts - t0) / 260), e = 1 - Math.pow(1 - p, 3);
-          shown = from + (target - from) * e;
-          paint(shown);
-          if (p < 1) raf = window.requestAnimationFrame(step); else shown = target;
-        });
-      }
-      readouts();
-      range.addEventListener('input', function () { go(parseInt(range.value, 10)); });
-      ticks.forEach(function (b) { b.addEventListener('click', function () { go(parseInt(b.getAttribute('data-i'), 10)); }); });
-    })();
-
-    // ---------- Products: the preview follows the row under the pointer or keyboard focus ----------
-    (function preview() {
-      var rows = document.querySelectorAll('.prow'), imgs = document.querySelectorAll('[data-pi]');
-      var nameEl = document.getElementById('piName'), specEl = document.getElementById('piSpec');
-      if (!rows.length || !imgs.length) return;
-      function activate(row) {
-        var slug = row.getAttribute('data-slug');
-        rows.forEach(function (r) { r.classList.toggle('is-active', r === row); });
-        imgs.forEach(function (im) { im.classList.toggle('is-on', im.getAttribute('data-pi') === slug); });
-        if (nameEl) nameEl.textContent = row.getAttribute('data-name');
-        if (specEl) specEl.textContent = row.getAttribute('data-spec');
-      }
-      rows.forEach(function (r) {
-        r.addEventListener('pointerenter', function () { activate(r); });
-        r.addEventListener('focusin', function () { activate(r); });
+  // ---------- Count-up numbers (final value is already in the markup) ----------
+  var counters = document.querySelectorAll('[data-count]');
+  function countUp(el) {
+    var target = parseInt(el.dataset.count, 10), t0 = null;
+    function step(t) {
+      if (t0 === null) t0 = t;
+      var p = Math.min((t - t0) / 1500, 1);
+      el.textContent = Math.round(target * (1 - Math.pow(1 - p, 4)));
+      if (p < 1) window.requestAnimationFrame(step); else el.textContent = target;
+    }
+    el.textContent = '0';
+    window.requestAnimationFrame(step);
+  }
+  if (!RM && 'IntersectionObserver' in window) {
+    var cio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { cio.unobserve(en.target); window.setTimeout(function () { countUp(en.target); }, 900); }
       });
-      activate(rows[0]);
-    })();
+    }, { threshold: 0.6 });
+    counters.forEach(function (el) { cio.observe(el); });
+  }
 
-    // ---------- Contact form -> WhatsApp / email ----------
-    var form = document.getElementById('quoteForm');
-    var errorEl = document.getElementById('formError');
-    var FS = (E.strings && E.strings.form) || {};
-    function showError(msg, field) {
-      errorEl.textContent = msg; errorEl.hidden = false;
+  // ---------- Rotating word in the headline ----------
+  var rot = document.getElementById('rot');
+  window.clearInterval(rotTimer);
+  if (rot && !RM) {
+    var words = rot.dataset.words.split('|'), word = rot.querySelector('.rot__w'), wi = 0;
+    word.textContent = words[0];
+    rotTimer = window.setInterval(function () {
+      if (document.hidden) return;
+      word.classList.add('is-out');
+      window.setTimeout(function () {
+        wi = (wi + 1) % words.length;
+        word.textContent = words[wi];
+        word.classList.remove('is-out');
+        word.classList.add('is-pre');
+        void word.offsetWidth;
+        word.classList.remove('is-pre');
+      }, 450);
+    }, 2600);
+  }
+
+  // ---------- Pointer effects (mouse / trackpad only) ----------
+  if (FINE && !RM) {
+    var hero = document.getElementById('hero');
+    var art = hero && hero.querySelector('.hero__art');
+    if (hero && art) {
+      hero.addEventListener('pointerenter', function () { hero.classList.add('is-hover'); });
+      hero.addEventListener('pointermove', function (e) {
+        var r = hero.getBoundingClientRect();
+        hero.style.setProperty('--sx', (e.clientX - r.left) + 'px');
+        hero.style.setProperty('--sy', (e.clientY - r.top) + 'px');
+        art.style.setProperty('--px', (((e.clientX - r.left) / r.width - 0.5) * -18).toFixed(1) + 'px');
+        art.style.setProperty('--py', (((e.clientY - r.top) / r.height - 0.5) * -12).toFixed(1) + 'px');
+      });
+      hero.addEventListener('pointerleave', function () {
+        hero.classList.remove('is-hover');
+        art.style.setProperty('--px', '0px'); art.style.setProperty('--py', '0px');
+      });
+    }
+    document.querySelectorAll('[data-tilt]').forEach(function (card) {
+      var k = card.classList.contains('pcard--xl') ? 3 : 7;
+      card.addEventListener('pointermove', function (e) {
+        var r = card.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        card.style.setProperty('--mx', (x * 100).toFixed(1) + '%');
+        card.style.setProperty('--my', (y * 100).toFixed(1) + '%');
+        card.style.setProperty('--ry', ((x - 0.5) * k).toFixed(2) + 'deg');
+        card.style.setProperty('--rx', ((0.5 - y) * k).toFixed(2) + 'deg');
+      });
+      card.addEventListener('pointerleave', function () { card.style.setProperty('--rx', '0deg'); card.style.setProperty('--ry', '0deg'); });
+    });
+    document.querySelectorAll('.magnetic').forEach(function (btn) {
+      btn.addEventListener('pointermove', function (e) {
+        var r = btn.getBoundingClientRect();
+        btn.style.transform = 'translate(' + ((e.clientX - r.left - r.width / 2) * 0.16).toFixed(1) + 'px,' + ((e.clientY - r.top - r.height / 2) * 0.28).toFixed(1) + 'px)';
+      });
+      btn.addEventListener('pointerleave', function () { btn.style.transform = ''; });
+    });
+  }
+
+  // ---------- Contact form -> WhatsApp / email ----------
+  var form = document.getElementById('quoteForm');
+  var errorEl = document.getElementById('formError');
+  var FS = (E.strings && E.strings.form) || {};
+  function showError(msg, field) {
+    errorEl.textContent = msg; errorEl.hidden = false;
+    form.querySelectorAll('.is-invalid').forEach(function (el) { el.classList.remove('is-invalid'); });
+    if (field) { field.classList.add('is-invalid'); field.focus(); }
+  }
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = form.elements.name, phone = form.elements.phone, product = form.elements.product, details = form.elements.details;
+      if (!name.value.trim()) return showError(FS.name, name);
+      if (phone.value.replace(/\D/g, '').length < 10) return showError(FS.phone, phone);
+      if (!product.value) return showError(FS.product, product);
+      errorEl.hidden = true;
       form.querySelectorAll('.is-invalid').forEach(function (el) { el.classList.remove('is-invalid'); });
-      if (field) { field.classList.add('is-invalid'); field.focus(); }
-    }
-    if (form) {
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var name = form.elements.name, phone = form.elements.phone, product = form.elements.product, details = form.elements.details;
-        if (!name.value.trim()) return showError(FS.name, name);
-        if (phone.value.replace(/\D/g, '').length < 10) return showError(FS.phone, phone);
-        if (!product.value) return showError(FS.product, product);
-        errorEl.hidden = true;
-        form.querySelectorAll('.is-invalid').forEach(function (el) { el.classList.remove('is-invalid'); });
-        var text = ['Hi, I would like a quote.', '', 'Name: ' + name.value.trim(), 'Phone: ' + phone.value.trim(), 'Product: ' + product.value, 'Details: ' + (details.value.trim() || '-'), '(Sent from the website: contact form)'].join('\n');
-        var channel = e.submitter && e.submitter.dataset.channel;
-        if (window.track) window.track('quote_form_submit', { item: channel === 'mail' ? 'email' : 'whatsapp', where: 'contact_form' });
-        if (channel === 'mail') {
-          window.location.href = 'mailto:' + E.email + '?subject=' + encodeURIComponent('Quote request - ' + product.value) + '&body=' + encodeURIComponent(text);
-        } else {
-          window.open('https://wa.me/' + E.wa + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
-        }
-      });
-    }
+      var text = ['Hi, I would like a quote.', '', 'Name: ' + name.value.trim(), 'Phone: ' + phone.value.trim(), 'Product: ' + product.value, 'Details: ' + (details.value.trim() || '-'), '(Sent from the website: contact form)'].join('\n');
+      var channel = e.submitter && e.submitter.dataset.channel;
+      if (window.track) window.track('quote_form_submit', { item: channel === 'mail' ? 'email' : 'whatsapp', where: 'contact_form' });
+      if (channel === 'mail') {
+        window.location.href = 'mailto:' + E.email + '?subject=' + encodeURIComponent('Quote request - ' + product.value) + '&body=' + encodeURIComponent(text);
+      } else {
+        window.open('https://wa.me/' + E.wa + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
+      }
+    });
+  }
   }
   window.EIIView.on(mount);
   window.EIIView.on(spy);

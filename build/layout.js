@@ -23,7 +23,7 @@ const ICONS = `
   <symbol id="i-ruler" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17 17 3l4 4L7 21z"/><path d="m7 13 2 2M10 10l2 2M13 7l2 2"/></g></symbol>
   <symbol id="i-book" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5zM5 19.5v1A.5.5 0 0 0 5.5 21H19M9 7h6"/></g></symbol>`;
 
-const themeInit = `(function(){var t=null;try{t=localStorage.getItem('eii_theme')}catch(e){}if(t!=='light'&&t!=='dark')t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',t==='dark'?'#12171c':'#dde1df')})();`;
+const themeInit = `(function(){var t=null;try{t=localStorage.getItem('eii_theme')}catch(e){}if(t!=='light'&&t!=='dark')t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',t==='dark'?'#0f161f':'#f6f4ef')})();`;
 
 function waUrl(text) { return 'https://wa.me/' + SITE.whatsapp + '?text=' + encodeURIComponent(text); }
 
@@ -41,7 +41,7 @@ function head(ctx, o) {
   <title>${esc(o.title)}</title>
   <meta name="description" content="${esc(o.description)}">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" content="#dde1df">
+  <meta name="theme-color" content="#f6f4ef">
   <script>${themeInit}</script>${o.headExtra || ''}
   <meta name="robots" content="${o.noindex || ctx.single ? 'noindex, follow' : 'index, follow'}">
   <!-- TODO: the address below comes from build/site.js (run: node build/build.js --url https://yourdomain.in/) -->
@@ -65,7 +65,7 @@ function head(ctx, o) {
   <meta name="twitter:image" content="${img}">
   <link rel="icon" type="image/svg+xml" href="${rel}assets/favicon.svg">
   <link rel="apple-touch-icon" href="${rel}assets/apple-touch-icon.png">
-${o.preload || ''}  <script>if(/^https?:/.test(location.protocol)){['Archivo-latin-var'${lang === 'hi' ? ",'NotoSansDevanagari-var'" : ''}].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='font';l.type='font/woff2';l.crossOrigin='';l.href='${rel}assets/fonts/'+f+'.woff2';document.head.appendChild(l)})}</script>
+${o.preload || ''}  <script>if(/^https?:/.test(location.protocol)){['IBMPlexSansCondensed-700','IBMPlexSans-var'${lang === 'hi' ? ",'NotoSansDevanagari-var'" : ''}].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='font';l.type='font/woff2';l.crossOrigin='';l.href='${rel}assets/fonts/'+f+'.woff2';document.head.appendChild(l)})}</script>
   <link rel="stylesheet" href="${rel}style.css">
 ${ld}
 </head>`;
@@ -94,36 +94,34 @@ function faqLd(items) {
   return { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: items.map((q) => ({ '@type': 'Question', name: q.q, acceptedAnswer: { '@type': 'Answer', text: q.a } })) };
 }
 
-const MARK = '<svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true"><rect class="m-bg" width="40" height="40" rx="3"/><rect class="m-bar" x="8" y="8" width="24" height="7"/><rect class="m-core" x="8" y="17.5" width="24" height="5"/><rect class="m-bar" x="8" y="25" width="24" height="7"/></svg>';
-
 function header(ctx, o) {
   const { t, lang, rel, page } = ctx;
   const onHome = page === 'home';
   const hh = (hash) => (onHome && !ctx.single ? '#' + hash : ctx.link('') + '#' + hash);
   const cur = (key) => (o.current === key ? ' aria-current="page"' : '');
   const other = lang === 'en' ? 'hi' : 'en';
-  const switchHref = ctx.link(o.path, other);
+  const switchHref = ctx.link(o.path, other) + (other === 'en' ? '' : '');
   const langA = (cls) => `<a class="${cls}" href="${switchHref}" hreflang="${t.raw('switchTo.hreflang')}" lang="${t.raw('switchTo.hreflang')}" data-lang="${other}" aria-label="${t('switchTo.aria')}" title="${t('switchTo.aria')}"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg><span>${t('switchTo.label')}</span></a>`;
   return `<a class="skip-link" href="#main">${t('ui.skip')}</a>
   <div class="progress" id="progress" aria-hidden="true"></div>
 
-  <aside class="topbar" aria-label="${t('ui.topbarLabel')}">
+  <div class="topbar">
     <div class="container topbar__inner">
       <span>${t('ui.topbarAddress')}</span>
-      <span class="topbar__right"><span>${t('ui.topbarHours')}</span><a href="tel:${SITE.phoneTel}" data-track="call_click" data-track-where="topbar">${esc(SITE.phoneDisplay)}</a></span>
+      <span class="topbar__right">${t('ui.topbarHours')} <span aria-hidden="true">·</span> <a href="tel:${SITE.phoneTel}" data-track="call_click" data-track-where="topbar">${esc(SITE.phoneDisplay)}</a></span>
     </div>
-  </aside>
+  </div>
 
-  <header class="nav" id="top">
+  <header class="nav${onHome ? ' is-top' : ''}" id="top">
     <div class="container nav__inner">
       <a class="brand" href="${ctx.link('')}" aria-label="${t('ui.brandHome')}">
-        ${MARK}
-        <span class="brand__name">Electrical Insulation <small>${t('ui.brandSub')}</small></span>
+        <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="6"/><path d="M23 6 9 23h9l-2 11 15-18h-9z"/></svg>
+        <span class="brand__name">Electrical Insulation<small>${t('ui.brandSub')}</small></span>
       </a>
 
       <nav id="menu" class="nav__menu" aria-label="${t('ui.nav.label')}">
         <ul>
-          <li><a href="${hh('products')}">${t('ui.nav.products')}</a></li>
+          <li><a href="${hh('products')}"${o.current === 'home' ? '' : ''}>${t('ui.nav.products')}</a></li>
           <li><a href="${hh('industries')}">${t('ui.nav.industries')}</a></li>
           <li><a href="${ctx.link('tools/')}" data-nav="tools"${cur('tools')}>${t('ui.nav.tools')}</a></li>
           <li><a href="${ctx.link('guides/')}" data-nav="guides"${cur('guides')}>${t('ui.nav.guides')}</a></li>
@@ -136,22 +134,20 @@ function header(ctx, o) {
         </a>
       </nav>
 
-      <div class="nav__tools">
-        ${langA('lang-switch lang-switch--bar')}
+      ${langA('lang-switch lang-switch--bar')}
 
-        <button class="enq-btn" id="enqBtn" type="button" aria-haspopup="dialog" aria-controls="enq" aria-label="${t('ui.nav.enquiryOpen')}" title="${t('ui.nav.enquiry')}">
-          <svg class="icon" aria-hidden="true"><use href="#i-list"/></svg><span class="enq-btn__count" id="enqCount" data-n="0" aria-hidden="true" hidden></span>
-        </button>
+      <button class="enq-btn" id="enqBtn" type="button" aria-haspopup="dialog" aria-controls="enq" aria-label="${t('ui.nav.enquiryOpen')}" title="${t('ui.nav.enquiry')}">
+        <svg class="icon" aria-hidden="true"><use href="#i-list"/></svg><span class="enq-btn__count" id="enqCount" hidden>0</span>
+      </button>
 
-        <button class="theme-toggle" id="themeToggle" type="button" aria-label="${t('ui.nav.themeToDark')}" title="${t('ui.nav.themeTitle')}" data-label-dark="${t('ui.nav.themeToDark')}" data-label-light="${t('ui.nav.themeToLight')}">
-          <svg class="icon i-moon" aria-hidden="true"><use href="#i-moon"/></svg>
-          <svg class="icon i-sun" aria-hidden="true"><use href="#i-sun"/></svg>
-        </button>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="${t('ui.nav.themeToDark')}" title="${t('ui.nav.themeTitle')}" data-label-dark="${t('ui.nav.themeToDark')}" data-label-light="${t('ui.nav.themeToLight')}">
+        <svg class="icon i-moon" aria-hidden="true"><use href="#i-moon"/></svg>
+        <svg class="icon i-sun" aria-hidden="true"><use href="#i-sun"/></svg>
+      </button>
 
-        <button class="nav__toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="menu" aria-label="${t('ui.nav.menuOpen')}" data-label-open="${t('ui.nav.menuOpen')}" data-label-close="${t('ui.nav.menuClose')}">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
+      <button class="nav__toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="menu" aria-label="${t('ui.nav.menuOpen')}" data-label-open="${t('ui.nav.menuOpen')}" data-label-close="${t('ui.nav.menuClose')}">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </header>`;
 }
@@ -161,19 +157,15 @@ function footer(ctx) {
   const onHome = ctx.page === 'home';
   const hh = (hash) => (onHome && !ctx.single ? '#' + hash : ctx.link('') + '#' + hash);
   const review = SITE.googleReviewUrl
-    ? `\n          <li><a href="${esc(SITE.googleReviewUrl)}" target="_blank" rel="noopener" data-track="review_click" data-track-where="footer">${t('ui.footer.review')}</a></li>` : '';
+    ? `\n        <li><a href="${esc(SITE.googleReviewUrl)}" target="_blank" rel="noopener" data-track="review_click" data-track-where="footer">${t('ui.footer.review')}</a></li>` : '';
   return `<footer class="footer">
     <div class="container footer__inner">
       <div class="footer__brand">
-        <a class="brand" href="${ctx.link('')}" aria-label="${t('ui.brandHome')}">${MARK}<span class="brand__name">Electrical Insulation <small>${t('ui.brandSub')}</small></span></a>
+        <strong>Electrical Insulation India</strong>
         <p>${t('ui.footer.tagline')}</p>
-      </div>
-      <address class="footer__contact">
         <p>${t('ui.topbarAddress')}</p>
-        <p>${t('ui.topbarHours')}</p>
-        <p><a href="tel:${SITE.phoneTel}" data-track="call_click" data-track-where="footer">${esc(SITE.phoneDisplay)}</a></p>
-        <p><a href="mailto:${SITE.email}" data-track="email_click" data-track-where="footer">${esc(SITE.email)}</a></p>
-      </address>
+        <p><a href="tel:${SITE.phoneTel}" data-track="call_click" data-track-where="footer">${esc(SITE.phoneDisplay)}</a> · <a href="mailto:${SITE.email}" data-track="email_click" data-track-where="footer">${esc(SITE.email)}</a></p>
+      </div>
       <nav aria-label="${t('ui.footer.navLabel')}">
         <ul class="footer__links">
           <li><a href="${hh('products')}">${t('ui.footer.links.products')}</a></li>
@@ -186,18 +178,19 @@ function footer(ctx) {
       </nav>
       <p class="footer__copy">© <span id="year">2026</span> Electrical Insulation India. ${t('ui.footer.rights')}</p>
     </div>
+  </footer>
+
   <a class="fab" href="${waUrl(t.raw('ui.waGreeting'))}" target="_blank" rel="noopener" aria-label="${t('ui.fab')}" data-track="whatsapp_click" data-track-where="float">
     <svg class="icon" aria-hidden="true"><use href="#i-wa"/></svg><span class="fab__label" aria-hidden="true">${t('ui.fab')}</span>
   </a>
-  </footer>
 
   <div class="enq" id="enq" hidden>
     <div class="enq__backdrop" data-enq-close></div>
-    <div class="enq__panel" role="dialog" aria-modal="true" aria-labelledby="enqTitle" tabindex="-1">
-      <div class="enq__head"><h2 id="enqTitle">${t('js.basket.title')}</h2><button class="enq__x" type="button" data-enq-close aria-label="${t('js.basket.close')}"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <aside class="enq__panel" role="dialog" aria-modal="true" aria-labelledby="enqTitle" tabindex="-1">
+      <header class="enq__head"><h2 id="enqTitle">${t('js.basket.title')}</h2><button class="enq__x" type="button" data-enq-close aria-label="${t('js.basket.close')}"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button></header>
       <div class="enq__body" id="enqBody"></div>
       <div class="enq__foot" id="enqFoot"></div>
-    </div>
+    </aside>
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
@@ -223,10 +216,10 @@ function scripts(ctx, list, extraStrings) {
   let extra = extraStrings, pageScripts = list || [];
   if (ctx.single) {
     extra = { tools: Object.assign({}, ctx.dict.tools, { js: ctx.dict.js.tools, en: require('./i18n/en').tools.thickness }) };
-    pageScripts = ['sheet-art.js', 'quote-builder.js', 'tools.js'];
+    pageScripts = ['quote-builder.js', 'tools.js'];
   }
   const all = ['view.js', 'analytics.js', 'basket.js', 'script.js'].concat(pageScripts, ['start.js']);
   return clientConfig(ctx, extra) + '\n  ' + all.map((s) => `<script src="${ctx.rel}${s}" defer></script>`).join('\n  ');
 }
 
-module.exports = { head, header, footer, MARK, scripts, waUrl, localBusinessLd, breadcrumbLd, faqLd, ICONS, esc, jsonAttr };
+module.exports = { head, header, footer, scripts, waUrl, localBusinessLd, breadcrumbLd, faqLd, ICONS, esc, jsonAttr };

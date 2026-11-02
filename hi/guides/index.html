@@ -6,8 +6,8 @@
   <title>खरीदारी गाइड: PVC शीट और पैकेजिंग | Electrical Insulation India</title>
   <meta name="description" content="आसान भाषा में खरीदारी गाइड: PVC शीट की मोटाई और स्ट्रेच फिल्म का माइक्रोन कैसे चुनें, वज़न, साइज़ और आम गलतियों के साथ।">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" content="#dde1df">
-  <script>(function(){var t=null;try{t=localStorage.getItem('eii_theme')}catch(e){}if(t!=='light'&&t!=='dark')t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',t==='dark'?'#12171c':'#dde1df')})();</script>
+  <meta name="theme-color" content="#f6f4ef">
+  <script>(function(){var t=null;try{t=localStorage.getItem('eii_theme')}catch(e){}if(t!=='light'&&t!=='dark')t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',t==='dark'?'#0f161f':'#f6f4ef')})();</script>
   <meta name="robots" content="index, follow">
   <!-- TODO: the address below comes from build/site.js (run: node build/build.js --url https://yourdomain.in/) -->
   <link rel="canonical" href="https://www.example.com/hi/guides/">
@@ -30,7 +30,7 @@
   <meta name="twitter:image" content="https://www.example.com/assets/og-image.png">
   <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
   <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
-  <script>if(/^https?:/.test(location.protocol)){['Archivo-latin-var','NotoSansDevanagari-var'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='font';l.type='font/woff2';l.crossOrigin='';l.href='../../assets/fonts/'+f+'.woff2';document.head.appendChild(l)})}</script>
+  <script>if(/^https?:/.test(location.protocol)){['IBMPlexSansCondensed-700','IBMPlexSans-var','NotoSansDevanagari-var'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='font';l.type='font/woff2';l.crossOrigin='';l.href='../../assets/fonts/'+f+'.woff2';document.head.appendChild(l)})}</script>
   <link rel="stylesheet" href="../../style.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"होम","item":"https://www.example.com/hi/"},{"@type":"ListItem","position":2,"name":"गाइड","item":"https://www.example.com/hi/guides/"}]}</script>
 </head>
@@ -38,18 +38,18 @@
   <a class="skip-link" href="#main">मुख्य सामग्री पर जाएं</a>
   <div class="progress" id="progress" aria-hidden="true"></div>
 
-  <aside class="topbar" aria-label="पता, समय और फोन">
+  <div class="topbar">
     <div class="container topbar__inner">
       <span>20, अंसारी रोड, दरियागंज, नई दिल्ली – 110002</span>
-      <span class="topbar__right"><span>सोम–शनि, सुबह 9:30 – शाम 7:00</span><a href="tel:+917982644262" data-track="call_click" data-track-where="topbar">+91 79826 44262</a></span>
+      <span class="topbar__right">सोम–शनि, सुबह 9:30 – शाम 7:00 <span aria-hidden="true">·</span> <a href="tel:+917982644262" data-track="call_click" data-track-where="topbar">+91 79826 44262</a></span>
     </div>
-  </aside>
+  </div>
 
   <header class="nav" id="top">
     <div class="container nav__inner">
       <a class="brand" href="../../hi/index.html" aria-label="Electrical Insulation India — होम">
-        <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true"><rect class="m-bg" width="40" height="40" rx="3"/><rect class="m-bar" x="8" y="8" width="24" height="7"/><rect class="m-core" x="8" y="17.5" width="24" height="5"/><rect class="m-bar" x="8" y="25" width="24" height="7"/></svg>
-        <span class="brand__name">Electrical Insulation <small>India</small></span>
+        <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="6"/><path d="M23 6 9 23h9l-2 11 15-18h-9z"/></svg>
+        <span class="brand__name">Electrical Insulation<small>India</small></span>
       </a>
 
       <nav id="menu" class="nav__menu" aria-label="मुख्य मेन्यू">
@@ -67,46 +67,40 @@
         </a>
       </nav>
 
-      <div class="nav__tools">
-        <a class="lang-switch lang-switch--bar" href="../../guides/index.html" hreflang="en" lang="en" data-lang="en" aria-label="View in English" title="View in English"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg><span>English</span></a>
+      <a class="lang-switch lang-switch--bar" href="../../guides/index.html" hreflang="en" lang="en" data-lang="en" aria-label="View in English" title="View in English"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg><span>English</span></a>
 
-        <button class="enq-btn" id="enqBtn" type="button" aria-haspopup="dialog" aria-controls="enq" aria-label="इंक्वायरी लिस्ट खोलें" title="इंक्वायरी लिस्ट">
-          <svg class="icon" aria-hidden="true"><use href="#i-list"/></svg><span class="enq-btn__count" id="enqCount" data-n="0" aria-hidden="true" hidden></span>
-        </button>
+      <button class="enq-btn" id="enqBtn" type="button" aria-haspopup="dialog" aria-controls="enq" aria-label="इंक्वायरी लिस्ट खोलें" title="इंक्वायरी लिस्ट">
+        <svg class="icon" aria-hidden="true"><use href="#i-list"/></svg><span class="enq-btn__count" id="enqCount" hidden>0</span>
+      </button>
 
-        <button class="theme-toggle" id="themeToggle" type="button" aria-label="डार्क थीम चालू करें" title="थीम बदलें" data-label-dark="डार्क थीम चालू करें" data-label-light="लाइट थीम चालू करें">
-          <svg class="icon i-moon" aria-hidden="true"><use href="#i-moon"/></svg>
-          <svg class="icon i-sun" aria-hidden="true"><use href="#i-sun"/></svg>
-        </button>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="डार्क थीम चालू करें" title="थीम बदलें" data-label-dark="डार्क थीम चालू करें" data-label-light="लाइट थीम चालू करें">
+        <svg class="icon i-moon" aria-hidden="true"><use href="#i-moon"/></svg>
+        <svg class="icon i-sun" aria-hidden="true"><use href="#i-sun"/></svg>
+      </button>
 
-        <button class="nav__toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="menu" aria-label="मेन्यू खोलें" data-label-open="मेन्यू खोलें" data-label-close="मेन्यू बंद करें">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
+      <button class="nav__toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="menu" aria-label="मेन्यू खोलें" data-label-open="मेन्यू खोलें" data-label-close="मेन्यू बंद करें">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </header>
   <main id="main" class="pv">
     <div class="container">
-      <nav class="crumbs" aria-label="ब्रेडक्रम्ब"><a href="../../hi/index.html">होम</a><span aria-hidden="true">/</span><span aria-current="page">गाइड</span></nav>
-      <header class="pagehead"><h1>खरीदारी गाइड</h1><p class="lead">दरियागंज के काउंटर से छोटे और काम के गाइड। ऑर्डर से पहले सही मटीरियल चुनने में इनकी मदद लीजिए।</p></header>
+      <nav class="crumbs" aria-label="ब्रेडक्रम्ब"><a href="../../hi/index.html">होम</a><span>/</span><span aria-current="page">गाइड</span></nav>
+      <header class="pagehead"><p class="kicker">गाइड</p><h1>खरीदारी गाइड</h1><p class="lead">दरियागंज के काउंटर से छोटे और काम के गाइड। ऑर्डर से पहले सही मटीरियल चुनने में इनकी मदद लीजिए।</p></header>
       <div class="gcards gcards--page">
-        <a class="gcard" href="../../hi/guides/pvc-sheet-thickness-guide/index.html"><h2>PVC शीट मोटाई गाइड</h2><p>काम के हिसाब से झटपट रेफरेंस, मोटाई किस पर निर्भर है, स्टैंडर्ड शीट के वज़न और बचने लायक गलतियां।</p><span class="gcard__more">गाइड पढ़ें</span></a>
-        <a class="gcard" href="../../hi/guides/stretch-film-micron-guide/index.html"><h2>स्ट्रेच फिल्म माइक्रोन गाइड</h2><p>हैंड बनाम मशीन फिल्म, लोड के हिसाब से माइक्रोन, रोल कितना लंबा होता है और रेट की सही तुलना कैसे करें।</p><span class="gcard__more">गाइड पढ़ें</span></a>
+        <a class="gcard" href="../../hi/guides/pvc-sheet-thickness-guide/index.html"><svg class="gcard__icon icon" aria-hidden="true"><use href="#i-book"/></svg><h2>PVC शीट मोटाई गाइड</h2><p>काम के हिसाब से झटपट रेफरेंस, मोटाई किस पर निर्भर है, स्टैंडर्ड शीट के वज़न और बचने लायक गलतियां।</p><span class="tcard__more">गाइड पढ़ें <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></span></a>
+        <a class="gcard" href="../../hi/guides/stretch-film-micron-guide/index.html"><svg class="gcard__icon icon" aria-hidden="true"><use href="#i-book"/></svg><h2>स्ट्रेच फिल्म माइक्रोन गाइड</h2><p>हैंड बनाम मशीन फिल्म, लोड के हिसाब से माइक्रोन, रोल कितना लंबा होता है और रेट की सही तुलना कैसे करें।</p><span class="tcard__more">गाइड पढ़ें <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></span></a>
       </div>
     </div>
   </main>
   <footer class="footer">
     <div class="container footer__inner">
       <div class="footer__brand">
-        <a class="brand" href="../../hi/index.html" aria-label="Electrical Insulation India — होम"><svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true"><rect class="m-bg" width="40" height="40" rx="3"/><rect class="m-bar" x="8" y="8" width="24" height="7"/><rect class="m-core" x="8" y="17.5" width="24" height="5"/><rect class="m-bar" x="8" y="25" width="24" height="7"/></svg><span class="brand__name">Electrical Insulation <small>India</small></span></a>
+        <strong>Electrical Insulation India</strong>
         <p>थोक PVC शीट और पैकेजिंग मटीरियल।</p>
-      </div>
-      <address class="footer__contact">
         <p>20, अंसारी रोड, दरियागंज, नई दिल्ली – 110002</p>
-        <p>सोम–शनि, सुबह 9:30 – शाम 7:00</p>
-        <p><a href="tel:+917982644262" data-track="call_click" data-track-where="footer">+91 79826 44262</a></p>
-        <p><a href="mailto:arnavjaincena@gmail.com" data-track="email_click" data-track-where="footer">arnavjaincena@gmail.com</a></p>
-      </address>
+        <p><a href="tel:+917982644262" data-track="call_click" data-track-where="footer">+91 79826 44262</a> · <a href="mailto:arnavjaincena@gmail.com" data-track="email_click" data-track-where="footer">arnavjaincena@gmail.com</a></p>
+      </div>
       <nav aria-label="फुटर मेन्यू">
         <ul class="footer__links">
           <li><a href="../../hi/index.html#products">प्रोडक्ट</a></li>
@@ -119,18 +113,19 @@
       </nav>
       <p class="footer__copy">© <span id="year">2026</span> Electrical Insulation India. सर्वाधिकार सुरक्षित।</p>
     </div>
+  </footer>
+
   <a class="fab" href="https://wa.me/917982644262?text=Hi%2C%20I%20need%20a%20quote%20for%20PVC%20sheets%20%2F%20packaging%20material." target="_blank" rel="noopener" aria-label="WhatsApp पर चैट करें" data-track="whatsapp_click" data-track-where="float">
     <svg class="icon" aria-hidden="true"><use href="#i-wa"/></svg><span class="fab__label" aria-hidden="true">WhatsApp पर चैट करें</span>
   </a>
-  </footer>
 
   <div class="enq" id="enq" hidden>
     <div class="enq__backdrop" data-enq-close></div>
-    <div class="enq__panel" role="dialog" aria-modal="true" aria-labelledby="enqTitle" tabindex="-1">
-      <div class="enq__head"><h2 id="enqTitle">इंक्वायरी लिस्ट</h2><button class="enq__x" type="button" data-enq-close aria-label="बंद करें"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <aside class="enq__panel" role="dialog" aria-modal="true" aria-labelledby="enqTitle" tabindex="-1">
+      <header class="enq__head"><h2 id="enqTitle">इंक्वायरी लिस्ट</h2><button class="enq__x" type="button" data-enq-close aria-label="बंद करें"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button></header>
       <div class="enq__body" id="enqBody"></div>
       <div class="enq__foot" id="enqFoot"></div>
-    </div>
+    </aside>
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
