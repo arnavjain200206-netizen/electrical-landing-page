@@ -8,6 +8,7 @@ module.exports = {
 
   ui: {
     skip: 'Skip to content',
+    topbarLabel: 'Address, hours and phone',
     topbarAddress: '20, Ansari Road, Daryaganj, New Delhi – 110002',
     topbarHours: 'Mon–Sat, 9:30 am – 7:00 pm',
     brandSub: 'India',

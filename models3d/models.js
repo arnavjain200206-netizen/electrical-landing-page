@@ -66,8 +66,8 @@ function tail(rib, rOut, y, theta) {
 function pvcStack(n, hero) {
   const g = new T.Group(), W = 3.2, D = 1.7, H = .14, GAP = .006;
   const geo = new RoundedBoxGeometry(W, H, D, 3, .03);
-  const mat = phys('#7f8a96', .45, { clearcoat: .35, clearcoatRoughness: .4 });
-  const topMat = phys('#99a3ae', .36, { clearcoat: .5, clearcoatRoughness: .3 });
+  const mat = std('#7f8a96', .42, 0, { envMapIntensity: 1.1 });
+  const topMat = std('#99a3ae', .34, 0, { envMapIntensity: 1.2 });
   const sheets = [];
   for (let i = 0; i < n; i++) {
     const m = lit(new T.Mesh(geo, i === n - 1 ? topMat : mat));
@@ -124,7 +124,7 @@ function pvcStack(n, hero) {
 /* ---------------------------------------------------------------- Cut-to-size panels */
 function cutToSize() {
   const g = new T.Group(), H = .13, GAP = .06;
-  const mat = phys('#7f8a96', .45, { clearcoat: .35, clearcoatRoughness: .4 });
+  const mat = std('#7f8a96', .42, 0, { envMapIntensity: 1.1 });
   const holeMat = std('#1a1e23', .6);
   const rows = [{ d: .94, w: [1.25, .85, 1.0] }, { d: .98, w: [.8, 1.4, .95] }];
   const totalD = rows[0].d + rows[1].d + GAP;

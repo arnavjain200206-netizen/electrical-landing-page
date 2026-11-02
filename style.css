@@ -740,3 +740,7 @@ html.enq-open { overflow: hidden; }
 .pcard__tag { z-index: 2; }
 .hero__model { position: relative; }
 .hero__chip { z-index: 2; }
+
+/* the enquiry count is drawn from data-n so it is not part of the button's accessible name (which already says "(n)") */
+.enq-btn__count::before { content: attr(data-n); }
+.ptable:focus-visible { outline-offset: 2px; }

@@ -8,7 +8,7 @@ const fmt = (n, d) => n.toFixed(d);
 function weightsTable(ctx) {
   const { t } = ctx;
   const rows = THICK.map((m) => `<tr><th scope="row">${m} mm</th><td>${fmt(1.22 * 2.44 * m * 1.35, 1)} kg</td><td>${fmt(m * 1.35, 2)} kg</td></tr>`).join('');
-  return `<div class="ptable"><table><thead><tr><th scope="col">${t('guides.weights.thickness')}</th><th scope="col">${t('guides.weights.perSheet')}</th><th scope="col">${t('guides.weights.perSqm')}</th></tr></thead><tbody>${rows}</tbody></table></div><p class="pnote">${t('guides.weights.note')}</p>`;
+  return `<div class="ptable" tabindex="0" role="region" aria-label="${t('guides.weights.perSheet')}"><table><thead><tr><th scope="col">${t('guides.weights.thickness')}</th><th scope="col">${t('guides.weights.perSheet')}</th><th scope="col">${t('guides.weights.perSqm')}</th></tr></thead><tbody>${rows}</tbody></table></div><p class="pnote">${t('guides.weights.note')}</p>`;
 }
 
 function index(ctx) {
@@ -46,7 +46,7 @@ function article(ctx, slug) {
   const body = g.sections.map((s) => {
     let h = `<section class="art__sec" id="${s.id}"><h2>${esc(s.h2)}</h2>`;
     (s.p || []).forEach((p) => { h += `<p>${esc(p)}</p>`; });
-    if (s.table) h += `<div class="ptable"><table><thead><tr>${s.table.head.map((x) => `<th scope="col">${esc(x)}</th>`).join('')}</tr></thead><tbody>${s.table.rows.map((r) => `<tr>${r.map((c, i) => (i === 0 ? `<th scope="row">${esc(c)}</th>` : `<td>${esc(c)}</td>`)).join('')}</tr>`).join('')}</tbody></table></div>`;
+    if (s.table) h += `<div class="ptable" tabindex="0" role="region" aria-label="${esc(s.h2)}"><table><thead><tr>${s.table.head.map((x) => `<th scope="col">${esc(x)}</th>`).join('')}</tr></thead><tbody>${s.table.rows.map((r) => `<tr>${r.map((c, i) => (i === 0 ? `<th scope="row">${esc(c)}</th>` : `<td>${esc(c)}</td>`)).join('')}</tr>`).join('')}</tbody></table></div>`;
     if (s.ul) h += `<ul class="ticks">${s.ul.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`;
     if (s.weights) h += weightsTable(ctx);
     return h + '</section>';

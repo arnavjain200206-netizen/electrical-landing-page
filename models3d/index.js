@@ -9,6 +9,7 @@ import { MODELS } from './models.js';
 const RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const viewers = new Map();            // element -> viewer
 let renderer = null, glCanvas = null, env = null, GW = 0, GH = 0, io = null, ro = null, raf = 0, last = 0, lastDraw = 0, dead = false;
+let dprCap = 1.75, quality = 2, samples = 0, acc = 0, prevNow = 0, frames = 0, workAcc = 0, workN = 0;
 
 function boot() {
   if (dead) return false;
@@ -16,12 +17,16 @@ function boot() {
   try {
     glCanvas = document.createElement('canvas');
     renderer = new T.WebGLRenderer({ canvas: glCanvas, antialias: true, alpha: true, powerPreference: 'low-power' });
+    // No GPU (a software renderer) would run the page's main thread flat out: keep the illustrations instead.
+    const gl = renderer.getContext(), info = gl.getExtension('WEBGL_debug_renderer_info');
+    const gpu = info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : '';
+    if (!window.EII3D_FORCE && /swiftshader|llvmpipe|softpipe|software|basic render/i.test(gpu)) { renderer.dispose(); renderer = null; dead = true; return false; }
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = T.SRGBColorSpace;
     renderer.toneMapping = T.ACESFilmicToneMapping;
     renderer.toneMappingExposure = .78;
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = T.PCFSoftShadowMap;
+    renderer.shadowMap.type = T.PCFShadowMap;
     renderer.setScissorTest(true);
     const pm = new T.PMREMGenerator(renderer);
     env = pm.fromScene(new RoomEnvironment(), .04).texture;
@@ -39,6 +44,31 @@ function fail() {              // WebGL went away: put the illustrations back
   dead = true;
   viewers.forEach((v) => { v.el.classList.remove('is-3d'); v.canvas.remove(); });
   viewers.clear();
+}
+
+/* If frames are slow (weak GPU, software rendering), first draw lighter, then give up and show the illustrations,
+   so the page never gets sluggish because of the models. window.EII3D_FORCE turns this off (used for testing). */
+function worse() {
+  samples = 0; acc = 0; frames = 0; workAcc = 0; workN = 0;
+  if (quality === 2) {
+    quality = 1; dprCap = 1; renderer.shadowMap.enabled = false;
+    viewers.forEach((v) => { v.dirty = true; v.scene.traverse((o) => { if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => { m.needsUpdate = true; }); }); });
+  } else fail();
+}
+function adapt(now, work) {
+  if (window.EII3D_FORCE) return;
+  // time the page's own thread spends drawing: a few slow frames are enough to know
+  if (++frames > 3) {
+    workAcc += work;
+    if (++workN === 6) { const avg = workAcc / 6; workAcc = 0; workN = 0; if (avg > 45) { worse(); return; } }
+  }
+  const d = now - prevNow; prevNow = now;
+  if (d > 1000) { samples = 0; acc = 0; return; }           // tab was in the background
+  if (++samples <= 15) return;                              // ignore shader compilation at the start
+  acc += d;
+  if (samples < 15 + 30) return;
+  const avg = acc / 30; samples = 0; acc = 0;
+  if (avg > 55) worse();
 }
 
 function create(el, name) {
@@ -110,7 +140,7 @@ function place(v) {
 }
 
 function draw(v) {
-  const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+  const dpr = Math.min(window.devicePixelRatio || 1, dprCap);
   const cw = v.el.clientWidth, ch = v.el.clientHeight;
   const w = Math.max(2, Math.round(cw * dpr)), h = Math.max(2, Math.round(ch * dpr));
   if (v.canvas.width !== w || v.canvas.height !== h) { v.canvas.width = w; v.canvas.height = h; }
@@ -134,6 +164,7 @@ function frame(now) {
   const gap = live > 4 ? 1000 / 30 : live > 2 ? 1000 / 45 : 0;
   if (gap && now - lastDraw < gap - 2) { raf = window.requestAnimationFrame(frame); return; }
   lastDraw = now; last = t;
+  const w0 = performance.now();
   viewers.forEach((v) => {
     if (!v.visible) return;
     if (v.t0 === null) v.t0 = t;
@@ -148,6 +179,8 @@ function frame(now) {
     v.dirty = false;
     again = again || !RM || v.drag || Math.abs(v.vel) > .02 || Math.abs(v.pitch - v.pitchTarget) > .002;
   });
+  adapt(now, performance.now() - w0);
+  if (dead) return;
   if (again) raf = window.requestAnimationFrame(frame);
 }
 function kick() { if (!raf && !dead) { last = 0; raf = window.requestAnimationFrame(frame); } }

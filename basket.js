@@ -71,7 +71,7 @@
 
   function render() {
     var n = items.length;
-    badge.textContent = n; badge.hidden = n === 0;
+    badge.setAttribute('data-n', n); badge.hidden = n === 0;
     btn.setAttribute('aria-label', (btn.getAttribute('data-base-label') || (btn.setAttribute('data-base-label', btn.getAttribute('aria-label')), btn.getAttribute('aria-label'))) + (n ? ' (' + n + ')' : ''));
     btn.classList.toggle('has-items', n > 0);
 

@@ -105,18 +105,18 @@ function header(ctx, o) {
   return `<a class="skip-link" href="#main">${t('ui.skip')}</a>
   <div class="progress" id="progress" aria-hidden="true"></div>
 
-  <div class="topbar">
+  <aside class="topbar" aria-label="${t('ui.topbarLabel')}">
     <div class="container topbar__inner">
       <span>${t('ui.topbarAddress')}</span>
       <span class="topbar__right">${t('ui.topbarHours')} <span aria-hidden="true">·</span> <a href="tel:${SITE.phoneTel}" data-track="call_click" data-track-where="topbar">${esc(SITE.phoneDisplay)}</a></span>
     </div>
-  </div>
+  </aside>
 
   <header class="nav${onHome ? ' is-top' : ''}" id="top">
     <div class="container nav__inner">
       <a class="brand" href="${ctx.link('')}" aria-label="${t('ui.brandHome')}">
         <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="6"/><path d="M23 6 9 23h9l-2 11 15-18h-9z"/></svg>
-        <span class="brand__name">Electrical Insulation<small>${t('ui.brandSub')}</small></span>
+        <span class="brand__name">Electrical Insulation <small>${t('ui.brandSub')}</small></span>
       </a>
 
       <nav id="menu" class="nav__menu" aria-label="${t('ui.nav.label')}">
@@ -137,7 +137,7 @@ function header(ctx, o) {
       ${langA('lang-switch lang-switch--bar')}
 
       <button class="enq-btn" id="enqBtn" type="button" aria-haspopup="dialog" aria-controls="enq" aria-label="${t('ui.nav.enquiryOpen')}" title="${t('ui.nav.enquiry')}">
-        <svg class="icon" aria-hidden="true"><use href="#i-list"/></svg><span class="enq-btn__count" id="enqCount" hidden>0</span>
+        <svg class="icon" aria-hidden="true"><use href="#i-list"/></svg><span class="enq-btn__count" id="enqCount" data-n="0" aria-hidden="true" hidden></span>
       </button>
 
       <button class="theme-toggle" id="themeToggle" type="button" aria-label="${t('ui.nav.themeToDark')}" title="${t('ui.nav.themeTitle')}" data-label-dark="${t('ui.nav.themeToDark')}" data-label-light="${t('ui.nav.themeToLight')}">
@@ -178,19 +178,18 @@ function footer(ctx) {
       </nav>
       <p class="footer__copy">© <span id="year">2026</span> Electrical Insulation India. ${t('ui.footer.rights')}</p>
     </div>
-  </footer>
-
   <a class="fab" href="${waUrl(t.raw('ui.waGreeting'))}" target="_blank" rel="noopener" aria-label="${t('ui.fab')}" data-track="whatsapp_click" data-track-where="float">
     <svg class="icon" aria-hidden="true"><use href="#i-wa"/></svg><span class="fab__label" aria-hidden="true">${t('ui.fab')}</span>
   </a>
+  </footer>
 
   <div class="enq" id="enq" hidden>
     <div class="enq__backdrop" data-enq-close></div>
-    <aside class="enq__panel" role="dialog" aria-modal="true" aria-labelledby="enqTitle" tabindex="-1">
-      <header class="enq__head"><h2 id="enqTitle">${t('js.basket.title')}</h2><button class="enq__x" type="button" data-enq-close aria-label="${t('js.basket.close')}"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button></header>
+    <div class="enq__panel" role="dialog" aria-modal="true" aria-labelledby="enqTitle" tabindex="-1">
+      <div class="enq__head"><h2 id="enqTitle">${t('js.basket.title')}</h2><button class="enq__x" type="button" data-enq-close aria-label="${t('js.basket.close')}"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button></div>
       <div class="enq__body" id="enqBody"></div>
       <div class="enq__foot" id="enqFoot"></div>
-    </aside>
+    </div>
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 

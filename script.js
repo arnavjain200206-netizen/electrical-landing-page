@@ -109,8 +109,10 @@
     if (m3d.state === 'failed') return;
     m3d.queue.push(cb);
     if (m3d.state === 'loading') return;
-    var conn = navigator.connection;
-    if ((conn && conn.saveData) || !hasWebGL()) { m3d.state = 'failed'; return; }
+    var conn = navigator.connection, gl = hasWebGL();
+    // skip: no WebGL, data saver, and weak devices (little memory or few CPU cores)
+    var weak = (navigator.deviceMemory && navigator.deviceMemory < 4) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4);
+    if (!gl || (!window.EII3D_FORCE && ((conn && conn.saveData) || weak))) { m3d.state = 'failed'; return; }
     m3d.state = 'loading';
     function inject() {
       var s = document.createElement('script');
