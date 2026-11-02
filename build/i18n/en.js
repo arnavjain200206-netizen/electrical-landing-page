@@ -8,6 +8,7 @@ module.exports = {
 
   ui: {
     skip: 'Skip to content',
+    topbarLabel: 'Address, hours and phone',
     topbarAddress: '20, Ansari Road, Daryaganj, New Delhi – 110002',
     topbarHours: 'Mon–Sat, 9:30 am – 7:00 pm',
     brandSub: 'India',
@@ -68,7 +69,14 @@ module.exports = {
       lead: 'Rigid PVC sheet for electrical insulation, plus the stretch film, tape, bubble wrap and strapping you pack and ship with. Send us the product, size and quantity on WhatsApp and we will quote, usually the same business day.',
       ctaWa: 'Get a quote on WhatsApp', ctaCall: 'Call +91 79826 44262',
       stackAlt: 'Stack of PVC insulation sheets stopping an electric spark',
-      chipTitle: 'Rigid PVC sheet', chipSpec: '1–20 mm · 1220 × 2440 mm'
+      chipTitle: 'Rigid PVC sheet', chipSpec: '1–20 mm · 1220 × 2440 mm',
+      gauge: {
+        label: 'Thickness', unit: 'mm', slider: 'Sheet thickness in millimetres', presets: 'Standard thicknesses',
+        weight: 'Weight per sheet', perSqm: 'Per m²',
+        note: 'Edge height is exaggerated so you can see it. Weight at 1.35 g/cm³, indicative.',
+        wa: 'Quote {n} mm on WhatsApp', add: 'Add {n} mm to enquiry',
+        figure: 'Drawing of a 1220 × 2440 mm PVC sheet, {n} mm thick, with a cutting plan on its face.'
+      }
     },
     facts: {
       sheet: 'Standard sheet', thickness: 'Thickness', thicknessTo: 'to', dispatch: 'Delhi-NCR dispatch', dispatchValue: '1–2 working days',

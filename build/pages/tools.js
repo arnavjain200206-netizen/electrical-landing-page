@@ -20,9 +20,8 @@ module.exports = function tools(ctx) {
   ${L.header(ctx, { path, current: 'tools' })}
   <main id="main" class="pv">
     <div class="container">
-      <nav class="crumbs" aria-label="${t('product.crumbNav')}"><a href="${ctx.link('')}">${t('ui.common.home')}</a><span>/</span><span aria-current="page">${t('ui.common.tools')}</span></nav>
+      <nav class="crumbs" aria-label="${t('product.crumbNav')}"><a href="${ctx.link('')}">${t('ui.common.home')}</a><span aria-hidden="true">/</span><span aria-current="page">${t('ui.common.tools')}</span></nav>
       <header class="pagehead">
-        <p class="kicker">${t('tools.kicker')}</p>
         <h1>${t('tools.h1')}</h1>
         <p class="lead">${t('tools.lead')}</p>
         <nav class="jump" aria-label="${t('ui.common.tools')}">

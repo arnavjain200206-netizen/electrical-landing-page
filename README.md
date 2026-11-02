@@ -25,6 +25,8 @@ Both are generated from the same content (`node build/build.js`), so they always
 
 Also: **enquiry list** (visitors collect products from any page and send one WhatsApp message), light / dark theme, page transitions, click tracking, `sitemap.xml`, `robots.txt`, `404.html`.
 
+**The look.** The page is "cut from a PVC sheet": light panels on a grey ground with a thin saw-cut gap between them, square corners, no shadows. The hero is a live drawing of one 1220 × 2440 mm sheet. The visitor drags the thickness gauge (1–20 mm, the thicknesses you stock) and the sheet's edge thickens, the weight updates, and the WhatsApp / enquiry buttons carry the chosen thickness. The green-and-yellow stripe (the earth-wire colours) is the one signature detail: scroll bar, "at a glance" plate and footer edge. Type is Archivo (variable weight and width) with Noto Sans Devanagari for Hindi.
+
 ```
 build/            the generator and ALL the content
   site.js         business details, site address, analytics IDs
@@ -33,13 +35,14 @@ build/            the generator and ALL the content
   layout.js pages/  page templates
   build.js        run this:  node build/build.js
 style.css         all styles (tokens at the top, light + dark theme, Hindi type)
+sheet-art.js      draws the hero sheet; used by the build (so the page works without JavaScript) and by script.js (live gauge)
 view.js start.js  small helpers: re-run page scripts on each view; in-page router for the single-page copy
-script.js         menu, theme, nav, scroll effects, contact form
+script.js         menu, theme, nav, scroll bar, hero gauge, product preview, contact form
 basket.js         enquiry list
 quote-builder.js  WhatsApp message builder on product pages
 tools.js          calculators, fit checker, thickness guide
 analytics.js      click tracking (off until you add an ID)
-assets/           favicon, og-image.png, fonts (IBM Plex + Noto Sans Devanagari), animated product art
+assets/           favicon, og-image.png, fonts (Archivo + Noto Sans Devanagari), animated product art
 index.html, hi/, products/, tools/, guides/, single/, sitemap.xml, robots.txt, 404.html   <- generated, do not edit by hand
 ```
 
@@ -63,7 +66,7 @@ node build/build.js --url https://yourdomain.in/      # or: npm run build
 | What | Where |
 |---|---|
 | **Live site address.** Currently `https://www.example.com/`. It feeds canonical links, the sitemap, hreflang and share previews. On GitHub Pages use the full address including the folder, e.g. `https://username.github.io/electrical-landing-page/`. | run the build with `--url ...` (or edit `build/site.js`) |
-| **Product photos.** The pictures in `assets/products/` are animated illustrations. Replace each with a real photo of your stock (same name, 4:3, plain light background). Photos are static; the card tilt and zoom still apply. To use `.jpg`, replace `.svg` with `.jpg` in `build/pages/*.js` and rebuild. | `assets/products/` |
+| **Product photos.** The pictures in `assets/products/` are animated illustrations. Replace each with a real photo of your stock (same name, 4:3, plain light background; the catalogue shows it on a light panel). Photos are static. To use `.jpg`, replace `.svg` with `.jpg` in `build/pages/*.js` and rebuild. | `assets/products/` |
 | **Claims.** Thickness range, test certificates, credit terms, delivery times. Make sure they match what you really offer. | `build/i18n/*.js`, `build/data/products.*.js` |
 | **Estimates.** The calculators say "indicative"; the thickness guide and guides are general advice, not an engineering standard. Review the guide text once. | `build/i18n/*.js` (`guides`, `tools`) |
 | **GSTIN, Udyam badge** (optional, builds trust) | add to the footer in `build/layout.js` |
@@ -147,8 +150,8 @@ Buy a domain (e.g. `.in` / `.com`), then add it in your host's **Domains** setti
 
 ## Notes
 - The quote form has no backend: it builds a message and opens WhatsApp (`wa.me`) or the visitor's email app. This keeps hosting free and gets leads straight to your phone.
-- Keyboard accessible, text contrast checked against WCAG AA in both themes and both languages. Content is visible without JavaScript; the calculators, enquiry list, menu and form need JavaScript.
-- Animations respect the visitor's "reduce motion" setting. Pointer effects (tilt, spotlight, magnetic buttons) only run on mouse / trackpad.
+- Keyboard accessible, text contrast checked against WCAG AA in both themes and both languages. Content is visible without JavaScript (the hero shows the 5 mm sheet with its WhatsApp link, and the menu becomes a row of links); the gauge, calculators, enquiry list and form need JavaScript.
+- Animations respect the visitor's "reduce motion" setting. The only automatic motion is the sheet landing and its cutting plan drawing in once on the home page; everything else moves in response to the visitor.
 - Internal links point at `.../index.html` (for example `tools/index.html`) so they also work from a downloaded folder. Search engines are told the clean address through each page's canonical link and the sitemap.
 - Old links such as `index.html#/product/foam` and `#showcase` still work and are redirected to the new pages.
 - Page-to-page fade-slide uses the browser's View Transitions (Chrome, Edge, Safari 18+); other browsers simply load the page.
